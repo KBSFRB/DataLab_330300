@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base target="_top">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>3-30-300</title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+	<link rel="stylesheet" href="style/geosearch.css"/>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+	<script src="scripts/layers_handling.js"></script>
+
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+
+<div id="map" class="w-full h-full"></div>
+
+<form class="absolute bottom-4 left-4 z-[100000] bg-white/75 border rounded py-2 px-3 border-black">
+	<fieldset>
+		<legend>Scoring</legend>
+		<div>
+			<input type="radio" name="scoring" value="overall" checked id="scoring_overall">
+			<label for="scoring_overall">Overall</label>
+		</div>
+		<div>
+			<input type="radio" name="scoring" value="rule3" id="scoring_rule3">
+			<label for="scoring_rule3">Rule 3: Trees</label>
+		</div>
+		<div>
+			<input type="radio" name="scoring" value="rule30" id="scoring_rule30">
+			<label for="scoring_rule30">Rule 30: canopy cover</label>
+		</div>
+		<div>
+			<input type="radio" name="scoring" value="rule300" id="scoring_rule300">
+			<label for="scoring_rule300">Rule 300: access to parks</label>
+		</div>
+	</fieldset>
+</form>
+
+
+<script>
+
+	let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
+	
+
+	const map = L.map('map', {
+		renderer: L.canvas()
+	}).setView([50.6, 4.4], 9);
+
+	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+	
+	const search = new GeoSearch.GeoSearchControl({
+	  provider: new GeoSearch.OpenStreetMapProvider({
+	    params: {
+	      countrycodes: 'be'
+	    }
+	  }),
+	  style: 'bar',
+	});
+
+	map.addControl(search);
+
+	const format_percent = new Intl.NumberFormat(navigator.language, {style: 'percent', maximumSignificantDigits: 3}).format;
+	const format_score = new Intl.NumberFormat(navigator.language, {maximumSignificantDigits: 3}).format;
+
+	
+
+	function rule3(f) {
+		const p = f.properties;
+		return p.rule3_perc ? p.rule3_perc : (p.rule3 == 1 || p.rule3 == 'True') ? 1 : 0;
+	}
+	function rule30(f) {
+		const p = f.properties;
+		return p.rule30_perc ? p.rule30_perc : (p.rule30 == 1 || p.rule30 == 'True') ? 1 : 0;
+	}
+	function rule300(f) {
+		const p = f.properties;
+		return p.rule300_perc ? p.rule300_perc : (p.rule300 == 1 || p.rule300 == 'True') ? 1 : 0;
+	}
+
+	function make_area_popup_text(level) {
+		function area_name(f) {
+			let lang = 'NL';
+			if (navigator.language.startsWith('fr')) {
+				lang = 'FR';
+			} else if (navigator.language.startsWith('de')) {
+				lang = 'DE';
+			}
+			
+			return f.properties[`T_${level}_${lang}`];
+		}
+
+		return function(f) {
+			return `${area_name(f)}<br>
+					At least 3 trees: ${format_percent(rule3(f))} of population<br>
+					At least 30% canopy: ${format_percent(rule30(f))} of population<br>
+					Public green space less than 300m away: ${format_percent(rule300(f))} of population<br>
+					Score: ${format_score(rule3(f) + rule30(f) + rule300(f))} / 3`;
+		}
+	}
+
+	function score(f) {
+		switch (scoring_mode) {
+			case 'rule3':
+				return rule3(f);
+			case 'rule30':
+				return rule30(f);
+			case 'rule300':
+				return rule300(f);
+			default:
+				return (rule3(f) + rule30(f) + rule300(f))/3;
+		}
+
+	}
+
+	const layers = [
+		{
+			name: 'buildings', min_zoom: 15, tiling: true, 
+			extent: {min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739}, grid_size: 100, 
+			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`,
+			popup_text: f => `
+				At least 3 trees: ${(rule3(f)) ? 'Yes' : 'No'}<br>
+				At least 30% canopy: ${(rule30(f)) ? 'Yes' : 'No'}<br>
+				Public green space less than 300m away: ${(rule300(f)) ? 'Yes' : 'No'}<br>
+				Score: ${rule3(f) + rule30(f) + rule300(f)}/3
+			`,
+		},
+		{
+			name: 'statistical_sectors', min_zoom: 12, tiling: true, 
+			"extent": {"min_x": 2.541329, "max_x": 6.4081, "min_y": 49.496956, "max_y": 51.505113}, "grid_size": 10, 
+			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_sectors/tile_${i}_${j}.geojson`,
+			popup_text: make_area_popup_text('SEC'),
+		},
+		{
+			name: 'municipalities', min_zoom: 10, tiling: true, 
+			"extent": {"min_x": 2.541329, "max_x": 6.4081, "min_y": 49.496955, "max_y": 51.505113}, "grid_size": 5, 
+			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_mun/tile_${i}_${j}.geojson`,
+			popup_text: make_area_popup_text('MUN'),
+		},
+		// {
+		// 	name: 'arrondissements', min_zoom: 9, tiling: false,
+		// 	url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/arr_3_30_300.geojson',
+		// 	popup_text: make_area_popup_text('ARRD'),
+		// },
+		{
+			name: 'provinces', min_zoom: 8, tiling: false,
+			url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/prov_3_30_300.geojson',
+			popup_text: make_area_popup_text('PROVI'),
+		},
+		{
+			name: 'regions', min_zoom: 0, tiling: false,
+			url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/reg_3_30_300.geojson',
+			popup_text: make_area_popup_text('REGIO'),
+		}
+	];
+
+	// Create the layers
+	for (let layer of layers) {
+		layer.data = new Map();
+
+		layer.layer = L.geoJSON({type: "FeatureCollection", features: []}, {
+			onEachFeature: function(f, l) {
+				if (f.properties) {
+					l.bindPopup(layer.popup_text(f));
+				}
+			},
+			style: function(f) {
+				let color_id = Math.floor(score(f) * 3);
+				let colors = {
+					3: '#1a9641',
+					2: '#a6d96a',
+					1: '#fdae61',
+					0: '#d7191c'
+				}
+				return {
+					fillColor: colors[color_id],
+					color: 'black',
+					weight: 1,
+					fillOpacity: 0.8
+				};
+			}
+		});
+	}
+
+
+	update_map();
+	map.on('moveend', update_map);
+	map.on('zoomend', update_map);
+
+	function repaint() {
+		for (let layer of layers) {
+			layer.layer.resetStyle();
+		}
+	}
+
+	document.querySelectorAll('input[name="scoring"]').forEach((radio) => {
+    radio.addEventListener('change', () => {scoring_mode = radio.value; repaint()});
+  });
+
+</script>
+
+
+
+
+</body>
+</html>
