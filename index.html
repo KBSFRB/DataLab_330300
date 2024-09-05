@@ -58,11 +58,16 @@
 <script>
 
 	let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
+	const init_zoom = 9;
+	const min_building_zoom = 15;
+	
+	const format_percent = new Intl.NumberFormat(navigator.language, {style: 'percent', maximumSignificantDigits: 3}).format;
+	const format_score = new Intl.NumberFormat(navigator.language, {maximumSignificantDigits: 3}).format;
 	
 
 	const map = L.map('map', {
 		renderer: L.canvas()
-	}).setView([50.6, 4.4], 9);
+	}).setView([50.6, 4.4], init_zoom);
 
 	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom: 19,
@@ -80,22 +85,109 @@
 
 	map.addControl(search);
 
-	const format_percent = new Intl.NumberFormat(navigator.language, {style: 'percent', maximumSignificantDigits: 3}).format;
-	const format_score = new Intl.NumberFormat(navigator.language, {maximumSignificantDigits: 3}).format;
+	const colors_scheme = ['#c51b7d','#de77ae','#f1b6da','#fde0ef','#e6f5d0','#b8e186','#7fbc41','#4d9221'];
 
-	
+	let legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function () {
+	    this._div = L.DomUtil.create('div', 'bg-white/75 border rounded py-2 px-3 border-black');
+	    this.update();
+    	return this._div;
+	};
+
+	legend.update = function(mode=scoring_mode) {
+
+		let zoom = map.getZoom();
+
+		let grades = [];
+
+		if (zoom < min_building_zoom) {
+			// compute grades by splitting the range 0-1 into n equal parts, where n is the number of colors in the color scheme
+	    	grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length);
+
+	    	this._div.innerHTML = '<p>Average score</p>'
+	    	for (let i = 0; i < grades.length-1; i++) {
+		        this._div.innerHTML +=
+		            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, (grades[i] + grades[i+1])/2) + '"></span> ' +
+		            format_percent(grades[i]) + '&ndash;' + format_percent(grades[i + 1]) + '<br>';
+		    }
+
+		} else {
+
+			if (mode == 'overall') {
+				grades = [0, 1, 2, 3];
+				this._div.innerHTML = '<p>Number of rules satisfied</p>'
+				for (let i = 0; i < grades.length; i++) {
+			        this._div.innerHTML +=
+			            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, grades[i]/3) + '"></span> ' +
+			            grades[i] + '<br>';
+			    }
+			} else {
+				this._div.innerHTML = `
+					<p>Is ${mode} satisfied?</p>
+					<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> No<br>
+					<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> Yes<br>
+				`
+			}
+			
+		}
+
+	    return this._div;
+	}
+
+
+
+	legend.addTo(map);
+
+
+
+	/**
+	 * Return a color from the color scheme, based on the given value
+	 * @param {Array[string]} scheme: array of colors
+	 * @param {number} value: value between 0 and 1
+	 * the range 0-1 is split in n classes of equal size, where n is the length of the color scheme
+	 */
+	function get_color(scheme, value) {
+		let color_id = clamp(Math.floor(value * scheme.length), 0, scheme.length - 1);
+		return scheme[color_id];
+	}
+
 
 	function rule3(f) {
 		const p = f.properties;
-		return p.rule3_perc ? p.rule3_perc : (p.rule3 == 1 || p.rule3 == 'True') ? 1 : 0;
+		if (p.rule3_perc || p.rule3_perc === 0) {
+			return p.rule3_perc;
+		} else if (p.rule3) {
+			return p.rule3 == 1 || p.rule3 == 'True' ? 1 : 0;
+		} else if (p.r3) {
+			return p.r3 == 1 || p.r3 == 'True' ? 1 : 0;
+		} else {
+			return 0;
+		}
 	}
 	function rule30(f) {
 		const p = f.properties;
-		return p.rule30_perc ? p.rule30_perc : (p.rule30 == 1 || p.rule30 == 'True') ? 1 : 0;
+		if (p.rule30_perc || p.rule30_perc === 0) {
+			return p.rule30_perc;
+		} else if (p.rule30) {
+			return p.rule30 == 1 || p.rule30 == 'True' ? 1 : 0;
+		} else if (p.r30) {
+			return p.r30 == 1 || p.r30 == 'True' ? 1 : 0;
+		} else {
+			return 0;
+		}
 	}
 	function rule300(f) {
 		const p = f.properties;
-		return p.rule300_perc ? p.rule300_perc : (p.rule300 == 1 || p.rule300 == 'True') ? 1 : 0;
+		if (p.rule300_perc || p.rule300_perc === 0) {
+			return p.rule300_perc;
+		} else if (p.rule300) {
+			return p.rule300 == 1 || p.rule300 == 'True' ? 1 : 0;
+		} else if (p.r300) {
+			return p.r300 == 1 || p.r300 == 'True' ? 1 : 0;
+		} else {
+			return 0;
+		}
 	}
 
 	function make_area_popup_text(level) {
@@ -135,7 +227,7 @@
 
 	const layers = [
 		{
-			name: 'buildings', min_zoom: 15, tiling: true, 
+			name: 'buildings', min_zoom: min_building_zoom, tiling: true, 
 			extent: {min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739}, grid_size: 100, 
 			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`,
 			popup_text: f => `
@@ -185,15 +277,9 @@
 				}
 			},
 			style: function(f) {
-				let color_id = Math.floor(score(f) * 3);
-				let colors = {
-					3: '#1a9641',
-					2: '#a6d96a',
-					1: '#fdae61',
-					0: '#d7191c'
-				}
+				
 				return {
-					fillColor: colors[color_id],
+					fillColor: get_color(colors_scheme, score(f)),
 					color: 'black',
 					weight: 1,
 					fillOpacity: 0.8
@@ -205,7 +291,7 @@
 
 	update_map();
 	map.on('moveend', update_map);
-	map.on('zoomend', update_map);
+	map.on('zoomend', () => {update_map(); legend.update()});
 
 	function repaint() {
 		for (let layer of layers) {
@@ -214,7 +300,7 @@
 	}
 
 	document.querySelectorAll('input[name="scoring"]').forEach((radio) => {
-    radio.addEventListener('change', () => {scoring_mode = radio.value; repaint()});
+    radio.addEventListener('change', () => {scoring_mode = radio.value; repaint(); legend.update()});
   });
 
 </script>
