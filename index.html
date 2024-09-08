@@ -14,6 +14,7 @@
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+	<script src="scripts/utils.js"></script>
 	<script src="scripts/layers_handling.js"></script>
 
 
@@ -60,10 +61,11 @@
 	let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
 	const init_zoom = 9;
 	const min_building_zoom = 15;
+	const colors_scheme = ['#c51b7d','#de77ae','#f1b6da','#fde0ef','#e6f5d0','#b8e186','#7fbc41','#4d9221'];
 	
-	const format_percent = new Intl.NumberFormat(navigator.language, {style: 'percent', maximumSignificantDigits: 3}).format;
-	const format_score = new Intl.NumberFormat(navigator.language, {maximumSignificantDigits: 3}).format;
 	
+	
+	/* Create the base map */
 
 	const map = L.map('map', {
 		renderer: L.canvas()
@@ -74,6 +76,7 @@
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(map);
 	
+	/* Add the search bar */
 	const search = new GeoSearch.GeoSearchControl({
 	  provider: new GeoSearch.OpenStreetMapProvider({
 	    params: {
@@ -85,7 +88,9 @@
 
 	map.addControl(search);
 
-	const colors_scheme = ['#c51b7d','#de77ae','#f1b6da','#fde0ef','#e6f5d0','#b8e186','#7fbc41','#4d9221'];
+	/* Add the legend */
+
+	
 
 	let legend = L.control({position: 'bottomright'});
 
@@ -141,17 +146,7 @@
 
 
 
-	/**
-	 * Return a color from the color scheme, based on the given value
-	 * @param {Array[string]} scheme: array of colors
-	 * @param {number} value: value between 0 and 1
-	 * the range 0-1 is split in n classes of equal size, where n is the length of the color scheme
-	 */
-	function get_color(scheme, value) {
-		let color_id = clamp(Math.floor(value * scheme.length), 0, scheme.length - 1);
-		return scheme[color_id];
-	}
-
+	
 
 	function rule3(f) {
 		const p = f.properties;
@@ -225,6 +220,8 @@
 
 	}
 
+	/* Layers' description */
+
 	const layers = [
 		{
 			name: 'buildings', min_zoom: min_building_zoom, tiling: true, 
@@ -267,30 +264,16 @@
 	];
 
 	// Create the layers
-	for (let layer of layers) {
-		layer.data = new Map();
+	initialize_layers(layers);
+	
 
-		layer.layer = L.geoJSON({type: "FeatureCollection", features: []}, {
-			onEachFeature: function(f, l) {
-				if (f.properties) {
-					l.bindPopup(layer.popup_text(f));
-				}
-			},
-			style: function(f) {
-				
-				return {
-					fillColor: get_color(colors_scheme, score(f)),
-					color: 'black',
-					weight: 1,
-					fillOpacity: 0.8
-				};
-			}
-		});
-	}
-
-
+	// Initialise the map
 	update_map();
+
+	/* Event listeners: control when map is updated */
+	// 1. When we move thourgh the map
 	map.on('moveend', update_map);
+	// 2. When we zoom in or out
 	map.on('zoomend', () => {update_map(); legend.update()});
 
 	function repaint() {
@@ -299,6 +282,7 @@
 		}
 	}
 
+	// 3. When we change the scoring mode
 	document.querySelectorAll('input[name="scoring"]').forEach((radio) => {
     radio.addEventListener('change', () => {scoring_mode = radio.value; repaint(); legend.update()});
   });

@@ -125,3 +125,26 @@ function draw_bounds() {
 	console.log(bounds);
 	let rect = L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
 }
+
+function initialize_layers(layers) {
+	for (let layer of layers) {
+		layer.data = new Map();
+
+		layer.layer = L.geoJSON({type: "FeatureCollection", features: []}, {
+			onEachFeature: function(f, l) {
+				if (f.properties) {
+					l.bindPopup(layer.popup_text(f));
+				}
+			},
+			style: function(f) {
+				
+				return {
+					fillColor: get_color(colors_scheme, score(f)),
+					color: 'black',
+					weight: 1,
+					fillOpacity: 0.8
+				};
+			}
+		});
+	}
+}
