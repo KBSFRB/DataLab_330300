@@ -43,6 +43,24 @@ function extent_tiles2latlng(min_y_tile, max_y_tile, min_x_tile, max_x_tile, til
 	return {min_lat, max_lat, min_lng, max_lng};
 }
 
+/**
+ * Use the layer.ids set to identify the areas that are already in the dataset.
+ * returns an array containing only the element of data that were not already present.
+ * @param {Array} data: array of geojson features
+ * @param {Object} layer: layer object
+ * @returns {Array} array of geojson features
+ * 
+ */
+function filter_new_data(data, layer) {
+	if (layer.data_id === undefined) {
+		return data;
+	}
+
+	let new_data = data.filter(d => !layer.ids.has(d.properties[layer.data_id]));
+	console.log(`filtering data for ${layer.name}: ${data.length} -> ${new_data.length}`);
+	return new_data;
+}
+
 function get_data(layer, tile) {
 	let i = tile[0];
 	let j = tile[1];
@@ -64,9 +82,16 @@ function get_data(layer, tile) {
 		.then(response => response.json())
 		.then(data => {
 			console.log(`fetched ${layer.name} ${i}, ${j}`);
+			// save data in the layer object
 			layer.data.set(`${i}_${j}`, data);
-
-			layer.layer.addData(data);
+			// find the new data that is not already on the map
+			let new_data = filter_new_data(data.features, layer);
+			// add the new data to the map
+			layer.layer.addData(new_data);
+			// update the ids set
+			for (let d of new_data) {
+				layer.ids.add(d.properties[layer.data_id]);
+			}
 		});
 }
 
@@ -128,7 +153,10 @@ function draw_bounds() {
 
 function initialize_layers(layers) {
 	for (let layer of layers) {
+		// map to store the tiles data
 		layer.data = new Map();
+		// map to store the set of nis of the area that have been fetched. needed to avoid adding multiple copies of an area that lies on two tiles
+		layer.ids = new Set();
 
 		layer.layer = L.geoJSON({type: "FeatureCollection", features: []}, {
 			onEachFeature: function(f, l) {

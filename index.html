@@ -259,13 +259,13 @@
 			name: 'statistical_sectors', min_zoom: 12, tiling: true, 
 			"extent": {"min_x": 2.541329, "max_x": 6.4081, "min_y": 49.496956, "max_y": 51.505113}, "grid_size": 10, 
 			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_sectors/tile_${i}_${j}.geojson`,
-			popup_text: make_area_popup_text('SEC'), score: score,
+			popup_text: make_area_popup_text('SEC'), score: score, data_id: 'sector_nis',
 		},
 		{
 			name: 'municipalities', min_zoom: 10, tiling: true, 
 			"extent": {"min_x": 2.541329, "max_x": 6.4081, "min_y": 49.496955, "max_y": 51.505113}, "grid_size": 5, 
 			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_mun/tile_${i}_${j}.geojson`,
-			popup_text: make_area_popup_text('MUN'), score: score,
+			popup_text: make_area_popup_text('MUN'), score: score, data_id: 'mun_nis',
 		},
 		// {
 		// 	name: 'arrondissements', min_zoom: 9, tiling: false,
@@ -275,12 +275,12 @@
 		{
 			name: 'provinces', min_zoom: 8, tiling: false,
 			url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/prov_3_30_300.geojson',
-			popup_text: make_area_popup_text('PROVI'), score: score,
+			popup_text: make_area_popup_text('PROVI'), score: score, data_id: 'prov_nis',
 		},
 		{
 			name: 'regions', min_zoom: 0, tiling: false,
 			url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/reg_3_30_300.geojson',
-			popup_text: make_area_popup_text('REGIO'), score: score,
+			popup_text: make_area_popup_text('REGIO'), score: score, data_id: 'reg_nis',
 		}
 	];
 
