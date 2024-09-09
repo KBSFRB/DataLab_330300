@@ -63,10 +63,7 @@
 	let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
 	const init_zoom = 8;
 	const min_building_zoom = 15;
-	// const colors_scheme = ['#edf8fb','#b2e2e2','#66c2a4','#238b45'];
-	const colors_scheme = ['#edf8e9','#bae4b3','#74c476','#238b45'];
-	
-	
+	const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
 	
 	/* Create the base map */
 	
@@ -81,7 +78,7 @@
 	}).addTo(map);
 
 	/* Force user inside of bounds */
-	const southWest = L.latLng(49.4, 2.4),
+	const southWest = L.latLng(49.5, 2.4),
 	northEast = L.latLng(51.7, 6.6);
 	const bounds = L.latLngBounds(southWest, northEast);
 
