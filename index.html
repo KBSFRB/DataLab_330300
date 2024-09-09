@@ -117,14 +117,24 @@
 
 		if (zoom < min_building_zoom) {
 			// compute grades by splitting the range 0-1 into n equal parts, where n is the number of colors in the color scheme
-	    	grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length);
+			if (mode == 'overall') {
+				grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length * 3);
+				this._div.innerHTML = '<p>Average number of rules satisfied</p>'
+				for (let i = 0; i < grades.length-1; i++) {
+			        this._div.innerHTML +=
+			            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, (grades[i] + grades[i+1])/2/3) + '"></span> ' +
+			            grades[i] + '&ndash;' + grades[i + 1] + '<br>';
+			    }
+			} else {
+		    	grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length);
 
-	    	this._div.innerHTML = '<p>Average score</p>'
-	    	for (let i = 0; i < grades.length-1; i++) {
-		        this._div.innerHTML +=
-		            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, (grades[i] + grades[i+1])/2) + '"></span> ' +
-		            format_percent(grades[i]) + '&ndash;' + format_percent(grades[i + 1]) + '<br>';
-		    }
+		    	this._div.innerHTML = `<p>Percentage of buildings satisfying ${mode}</p>`
+		    	for (let i = 0; i < grades.length-1; i++) {
+			        this._div.innerHTML +=
+			            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, (grades[i] + grades[i+1])/2) + '"></span> ' +
+			            format_percent(grades[i]) + '&ndash;' + format_percent(grades[i + 1]) + '<br>';
+			    }
+			}
 
 		} else {
 
