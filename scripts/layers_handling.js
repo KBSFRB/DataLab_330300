@@ -139,7 +139,7 @@ function initialize_layers(layers) {
 			style: function(f) {
 				
 				return {
-					fillColor: get_color(colors_scheme, score(f)),
+					fillColor: get_color(colors_scheme, layer.score(f)),
 					color: 'black',
 					weight: 1,
 					fillOpacity: 0.8

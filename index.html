@@ -159,8 +159,8 @@
 
 	function rule3(f) {
 		const p = f.properties;
-		if (p.rule3_perc || p.rule3_perc === 0) {
-			return p.rule3_perc;
+		if (p.rule3_perc_buildings || p.rule3_perc_buildings === 0) {
+			return p.rule3_perc_buildings;
 		} else if (p.rule3) {
 			return p.rule3 == 1 || p.rule3 == 'True' ? 1 : 0;
 		} else if (p.r3) {
@@ -171,8 +171,8 @@
 	}
 	function rule30(f) {
 		const p = f.properties;
-		if (p.rule30_perc || p.rule30_perc === 0) {
-			return p.rule30_perc;
+		if (p.rule30_perc_buildings || p.rule30_perc_buildings === 0) {
+			return p.rule30_perc_buildings;
 		} else if (p.rule30) {
 			return p.rule30 == 1 || p.rule30 == 'True' ? 1 : 0;
 		} else if (p.r30) {
@@ -183,8 +183,8 @@
 	}
 	function rule300(f) {
 		const p = f.properties;
-		if (p.rule300_perc || p.rule300_perc === 0) {
-			return p.rule300_perc;
+		if (p.rule300_perc_buildings || p.rule300_perc_buildings === 0) {
+			return p.rule300_perc_buildings;
 		} else if (p.rule300) {
 			return p.rule300 == 1 || p.rule300 == 'True' ? 1 : 0;
 		} else if (p.r300) {
@@ -208,10 +208,10 @@
 
 		return function(f) {
 			return `${area_name(f)}<br>
-					At least 3 trees: ${format_percent(rule3(f))} of population<br>
-					At least 30% canopy: ${format_percent(rule30(f))} of population<br>
-					Public green space less than 300m away: ${format_percent(rule300(f))} of population<br>
-					Score: ${format_score(rule3(f) + rule30(f) + rule300(f))} / 3`;
+					At least 3 trees: ${format_percent(rule3(f))} of buildings<br>
+					At least 30% canopy: ${format_percent(rule30(f))} of buildings<br>
+					Public green space less than 300m away: ${format_percent(rule300(f))} of buildings<br>
+					Average score: ${format_score(rule3(f) + rule30(f) + rule300(f))} / 3`;
 		}
 	}
 
@@ -224,6 +224,7 @@
 			case 'rule300':
 				return rule300(f);
 			default:
+				// Turns out this is equivalent to computing the average score of all buildings in the area
 				return (rule3(f) + rule30(f) + rule300(f))/3;
 		}
 
@@ -242,18 +243,19 @@
 				Public green space less than 300m away: ${(rule300(f)) ? 'Yes' : 'No'}<br>
 				Score: ${rule3(f) + rule30(f) + rule300(f)}/3
 			`,
+			score: score,
 		},
 		{
 			name: 'statistical_sectors', min_zoom: 12, tiling: true, 
 			"extent": {"min_x": 2.541329, "max_x": 6.4081, "min_y": 49.496956, "max_y": 51.505113}, "grid_size": 10, 
 			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_sectors/tile_${i}_${j}.geojson`,
-			popup_text: make_area_popup_text('SEC'),
+			popup_text: make_area_popup_text('SEC'), score: score,
 		},
 		{
 			name: 'municipalities', min_zoom: 10, tiling: true, 
 			"extent": {"min_x": 2.541329, "max_x": 6.4081, "min_y": 49.496955, "max_y": 51.505113}, "grid_size": 5, 
 			url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_mun/tile_${i}_${j}.geojson`,
-			popup_text: make_area_popup_text('MUN'),
+			popup_text: make_area_popup_text('MUN'), score: score,
 		},
 		// {
 		// 	name: 'arrondissements', min_zoom: 9, tiling: false,
@@ -263,12 +265,12 @@
 		{
 			name: 'provinces', min_zoom: 8, tiling: false,
 			url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/prov_3_30_300.geojson',
-			popup_text: make_area_popup_text('PROVI'),
+			popup_text: make_area_popup_text('PROVI'), score: score,
 		},
 		{
 			name: 'regions', min_zoom: 0, tiling: false,
 			url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/reg_3_30_300.geojson',
-			popup_text: make_area_popup_text('REGIO'),
+			popup_text: make_area_popup_text('REGIO'), score: score,
 		}
 	];
 
