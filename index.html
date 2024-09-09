@@ -28,7 +28,9 @@
 	
 </head>
 <body>
-
+	<div class="popup" onclick="myFunction()">Click me!
+		<span class="popuptext" id="myPopup">Popup text...</span>
+	  </div>
 
 
 <div id="map" class="w-full h-full"></div>
@@ -59,23 +61,35 @@
 <script>
 
 	let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
-	const init_zoom = 9;
+	const init_zoom = 8;
 	const min_building_zoom = 15;
-	const colors_scheme = ['#c51b7d','#de77ae','#f1b6da','#fde0ef','#e6f5d0','#b8e186','#7fbc41','#4d9221'];
+	// const colors_scheme = ['#edf8fb','#b2e2e2','#66c2a4','#238b45'];
+	const colors_scheme = ['#edf8e9','#bae4b3','#74c476','#238b45'];
 	
 	
 	
 	/* Create the base map */
-
-	const map = L.map('map', {
-		renderer: L.canvas()
-	}).setView([50.6, 4.4], init_zoom);
-
-	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		maxZoom: 19,
-		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-	}).addTo(map);
 	
+	const map = L.map('map', {
+		renderer: L.canvas(),
+		minZoom: 7
+	}).setView([50.6, 4.4], init_zoom);
+	
+	var CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		maxZoom: 19,
+	}).addTo(map);
+
+	/* Force user inside of bounds */
+	const southWest = L.latLng(49.4, 2.4),
+	northEast = L.latLng(51.7, 6.6);
+	const bounds = L.latLngBounds(southWest, northEast);
+
+	map.setMaxBounds(bounds);
+	map.on('drag', function() {
+	    map.panInsideBounds(bounds, { animate: false });
+	});
+
 	/* Add the search bar */
 	const search = new GeoSearch.GeoSearchControl({
 	  provider: new GeoSearch.OpenStreetMapProvider({
@@ -89,8 +103,6 @@
 	map.addControl(search);
 
 	/* Add the legend */
-
-	
 
 	let legend = L.control({position: 'bottomright'});
 
