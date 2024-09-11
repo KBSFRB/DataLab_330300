@@ -226,7 +226,7 @@
 		}
 
 		return function(f) {
-			return `${area_name(f)}<br>
+			return `<strong>${area_name(f)}</strong><br>
 					At least 3 trees: ${format_percent(rule3(f))} of buildings<br>
 					At least 30% canopy: ${format_percent(rule30(f))} of buildings<br>
 					Public green space less than 300m away: ${format_percent(rule300(f))} of buildings<br>
