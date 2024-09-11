@@ -12,3 +12,26 @@ function get_color(scheme, value) {
 
 const format_percent = new Intl.NumberFormat(navigator.language, {style: 'percent', maximumSignificantDigits: 3}).format;
 const format_score = new Intl.NumberFormat(navigator.language, {maximumSignificantDigits: 3}).format;
+
+function make_color_scale_legend(color_scale, min, max, text_format) {
+	grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length);
+				
+
+	let legend_html = '<div class="flex w-full h-3">'
+    for (let i = 0; i < grades.length-1; i++) {
+        legend_html +=
+            `<div class="flex-1" style="background:${get_color(colors_scheme, (grades[i] + grades[i+1])/2)}"></div> `;
+    }
+    legend_html += '</div><div class="w-full h-3 relative">'
+    for (let i = 0; i < grades.length; i++) {
+    	const percent = grades[i]*100;
+    	const value = min + (max - min) * grades[i];
+        legend_html +=
+            `<span class="absolute w-4 -ml-2 text-center" style="left:${percent}%">${text_format(value)}</span>`;
+    }
+    legend_html += '</div>';
+
+    console.log(legend_html);
+
+    return legend_html;
+}

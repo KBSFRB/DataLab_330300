@@ -72,7 +72,8 @@
 	let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
 	const init_zoom = 8;
 	const min_building_zoom = 15;
-	const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
+	//const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
+	const colors_scheme = ['#8c510a','#d8b365','#f6e8c3','#c7eae5','#5ab4ac','#01665e'];
 	
 	/* Create the base map */
 	
@@ -127,22 +128,15 @@
 		if (zoom < min_building_zoom) {
 			// compute grades by splitting the range 0-1 into n equal parts, where n is the number of colors in the color scheme
 			if (mode == 'overall') {
-				grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length * 3);
 				this._div.innerHTML = '<p>Average number of rules satisfied</p>'
-				for (let i = 0; i < grades.length-1; i++) {
-			        this._div.innerHTML +=
-			            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, (grades[i] + grades[i+1])/2/3) + '"></span> ' +
-			            grades[i] + '&ndash;' + grades[i + 1] + '<br>';
-			    }
-			} else {
-		    	grades = Array.from({length: colors_scheme.length+1}, (_, i) => i / colors_scheme.length);
 
+			    this._div.innerHTML += make_color_scale_legend(colors_scheme, 0, 3, format_score);
+
+			} else {
 		    	this._div.innerHTML = `<p>Percentage of buildings satisfying ${mode}</p>`
-		    	for (let i = 0; i < grades.length-1; i++) {
-			        this._div.innerHTML +=
-			            '<span class="inline-block w-3 h-3" style="background:' + get_color(colors_scheme, (grades[i] + grades[i+1])/2) + '"></span> ' +
-			            format_percent(grades[i]) + '&ndash;' + format_percent(grades[i + 1]) + '<br>';
-			    }
+		    	let format = (v) => new Intl.NumberFormat(navigator.language, {maximumSignificantDigits: 2}).format(v*100);
+		    	this._div.innerHTML += make_color_scale_legend(colors_scheme, 0, 1, format);
+
 			}
 
 		} else {
