@@ -11,9 +11,9 @@ relies on the following libraries:
 - tailwindcss (for styling)
 
 TODO
-- [ ] Make places names more visible
+- [x] Make places names more visible
 - [ ] add loading indicator
 - [ ] add error handling for failed fetches
 - [ ] allow users to correct data
 - [ ] increase the bounds
-- [ ] allow deeper zoom
+- [x] allow deeper zoom
