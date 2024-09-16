@@ -15,5 +15,5 @@ TODO
 - [ ] add loading indicator
 - [ ] add error handling for failed fetches
 - [ ] allow users to correct data
-- [ ] increase the bounds
+- [x] increase the bounds
 - [x] allow deeper zoom
