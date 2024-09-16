@@ -170,7 +170,7 @@ function initialize_layers(layers) {
 					fillColor: get_color(colors_scheme, layer.score(f)),
 					color: 'black',
 					weight: 1,
-					fillOpacity: 0.8
+					fillOpacity: 0.5
 				};
 			}
 		});
