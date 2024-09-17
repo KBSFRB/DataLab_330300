@@ -37,33 +37,39 @@
   <body>
     <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden z-[100001]">
       <div class="bg-white rounded-lg shadow-lg p-6 w-8/12 h-5/6 relative">
-        <button class="absolute top-1 right-3 text-black text-2xl font-bold" id="closeModalBtn">&times;</button>
+        <!-- <button class="absolute top-1 right-3 text-black text-2xl font-bold" id="closeModalBtn">&times;</button> -->
         <div class="overflow-auto h-full w-full p-2">
-          <p class="text-center text-md">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas suscipit erat tortor, eu placerat velit sollicitudin quis.
-            Aliquam dolor eros, commodo tempus purus vel, hendrerit efficitur lectus. Vivamus ac dignissim elit, eu rhoncus ipsum. Nulla sit
-            amet tempor diam, vel egestas nisi. Sed bibendum sodales risus, eget hendrerit tortor suscipit non. Etiam eleifend dolor nec
-            suscipit varius. Sed consequat elementum sapien, vitae convallis orci molestie vel. Aliquam eleifend sodales elementum. Etiam
-            scelerisque justo dignissim eros aliquet tempus. Nulla facilisi. Morbi feugiat porttitor mattis. In ac elit leo. Duis ac sem
-            eget risus malesuada porta sit amet aliquet metus. Proin in dignissim nulla. Phasellus luctus tincidunt est sit amet congue.
-            Aenean et dui ut dolor porttitor feugiat sed quis nisi. Aenean nisi nunc, dictum vel mi ut, viverra dapibus augue. Curabitur a
-            venenatis augue. Duis commodo convallis laoreet. Duis et risus vel massa fermentum lacinia. Donec tempus felis at elit sagittis
-            posuere. Pellentesque eget consequat leo. Donec a mauris varius, dictum libero ac, lacinia urna. Proin vitae porta leo. Praesent
-            sed risus augue. Cras sollicitudin risus et orci feugiat, et finibus mi ultricies. Phasellus eleifend turpis sed nulla finibus,
-            vitae aliquam mi blandit. Maecenas porttitor, neque non varius porta, neque magna mattis est, quis tincidunt ligula enim a
-            tortor. Fusce id mauris sit amet dolor pretium porttitor. Pellentesque augue leo, vehicula at efficitur luctus, semper quis
-            nulla. Donec sem lacus, mattis eu tortor at, egestas vehicula lectus. Donec eget dolor tincidunt, lobortis nisl nec, pretium
-            dui. Nulla enim eros, mattis id lorem sit amet, interdum posuere eros. Donec at pretium purus. Nulla ullamcorper lectus eu
-            vestibulum accumsan. Mauris viverra magna id magna blandit, tempus efficitur dolor efficitur. Etiam mollis augue in ex egestas
-            venenatis. In malesuada quis nisl at egestas. In dictum nisi ex, eu porttitor arcu feugiat ut. Integer mattis justo vel erat
-            ornare pellentesque. Phasellus luctus leo sed facilisis fermentum. Cras sagittis tempus nisl eget aliquam. Mauris ut quam et
-            arcu condimentum maximus sed quis sem. Sed porttitor elit ac lobortis malesuada. Praesent cursus quis diam in sollicitudin.
-            Donec vitae augue vel nisi tempor interdum. Donec dapibus enim sit amet tincidunt efficitur. Curabitur placerat pretium mauris
-            sed commodo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tristique vitae purus a laoreet. Curabitur placerat
-            ullamcorper auctor. Nam ut purus orci. Cras iaculis ex in vestibulum efficitur. Sed pretium cursus scelerisque. Cras et sapien
-            nisi. Integer euismod leo sed nulla semper eleifend. Sed rhoncus tristique faucibus. Suspendisse fermentum tempus velit, at
-            interdum urna mattis in. Etiam vel rutrum nunc.
-          </p>
+          <h1 class="font-bold text-center">WARNING: THIS IS FIRST A BETA VERSION </h1>
+          <div class="flex flex-col gap-4 mt-8">
+            <p class="text-md">This map displays the score of each building in Belgium on the 3-30-300 rule. This rule from Dr. Cecil Konijndijk states that: </p>
+            
+            <ul>
+              <li class="ml-8">3 : every citizen should be able to see 3 trees from their windows </li>
+              <li class="ml-8">30 : the neighbourhood around each building should have 30% tree canopy </li>
+              <li class="ml-8">300 :  every citizen should have access to a public green space at maximum 300 metres </li>
+            </ul>
+            
+            <p>
+            Studies show that following this rule improves health and well-being of citizens while creating cleaner, greener and fairer environments. 
+            </p>
+            
+            <p>
+            To be able to calculate this, we, DataLab, used available open data which was different for each region, which make it difficult to compare regions between them. We also had to make a lot of assumptions to be able to get to a score per building, doing the same exercise with different sources and different assumptions will result in different results. Find out the complete description of our methodology and the known limitations <a href="/" style="color: #01665E">here</a>. 
+            </p>
+            
+            <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracy or have any question don’t hesitate to contact us: <a href="datalab@kbs-frb.be" style="color: #01665E;">datalab@kbs-frb.be</a> </p>
+            
+            <p>The data in the map is subject to change at any time without notice. The user assumes all responsibility and risks for the use of the data on this website. </p>
+            
+            <p>Do you want to know more about DataLab? <a href="about-us.html" style="color: #01665E;">Click here</a>. Stay tuned for version 2 ! Follow us on <a href="/" style="color: #01665E;">Social media</a>.</p>
+            
+            <p>By clicking ‘Go to the map’ you acknowledge that you have read this disclaimer </p>
+            
+            <div class="flex justify-center align-center">
+            <button class="p-2 border-black rounded text-white" style="background-color: #01665E;" id="closeModalBtn">Go to the map</button>
+            </div>
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -130,11 +136,11 @@
         modal.classList.remove("hidden");
       };
 
-      window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.classList.add("hidden");
-        }
-      };
+      // window.onclick = function (event) {
+      //   if (event.target == modal) {
+      //     modal.classList.add("hidden");
+      //   }
+      // };
 
       let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
       const init_zoom = 8;
