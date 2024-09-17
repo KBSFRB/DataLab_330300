@@ -17,6 +17,6 @@ TODO
 - [ ] allow users to correct data
 - [x] increase the bounds
 - [x] allow deeper zoom
-- [ ] less transparency for the legend overlay
+- [x] less transparency for the legend overlay
 - [ ] Visual 300m and 500m radius
 - [ ] investigate wrong tile fetching
