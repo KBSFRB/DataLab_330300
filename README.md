@@ -25,4 +25,6 @@ TODO
 - [x] remove aggregate layers
 - [ ] add centroid layer ?
 - [ ] improve/stress-test search bar
+  - [ ] set autocomplete false if using nominatim
+  - [ ] see if we can use other providers. need to proxy ?
 - [ ] move to new cloudflare account
