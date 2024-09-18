@@ -20,3 +20,8 @@ TODO
 - [x] less transparency for the legend overlay
 - [ ] Visual 300m and 500m radius
 - [ ] investigate wrong tile fetching
+- [ ] multi-language support
+- [ ] remove aggregate layers
+- [ ] add centroid layer ?
+- [ ] improve/stress-test search bar
+- [ ] move to new cloudflare account
