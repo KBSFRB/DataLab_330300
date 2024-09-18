@@ -20,7 +20,8 @@ TODO
 - [x] less transparency for the legend overlay
 - [ ] Visual 300m and 500m radius
 - [ ] investigate wrong tile fetching
-- [ ] multi-language support
+- [x] multi-language support
+- [ ] translate everything
 - [x] remove aggregate layers
 - [ ] add centroid layer ?
 - [ ] improve/stress-test search bar
