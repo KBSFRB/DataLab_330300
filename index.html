@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <base target="_top" />
     <meta charset="utf-8" />
@@ -16,6 +16,7 @@
       crossorigin=""
     />
     <link rel="stylesheet" href="style/geosearch.css" />
+    <link rel="stylesheet" href="style/style.css" />
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -25,6 +26,7 @@
     <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
     <script src="scripts/utils.js"></script>
     <script src="scripts/layers_handling.js"></script>
+    <script src="scripts/i18n.js"></script>
 
     <style>
       html,
@@ -79,22 +81,42 @@
     <div class="absolute bottom-4 left-4 z-[100000]">
       <form class="bg-white/75 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
         <fieldset>
-          <legend>Scoring</legend>
+          <legend>
+            <span lang="en">Scoring</span>
+            <span lang="fr">Score</span>
+            <span lang="nl">Scoring</span>
+          </legend>
           <div>
             <input type="radio" name="scoring" value="overall" checked id="scoring_overall" />
-            <label for="scoring_overall">Overall</label>
+            <label for="scoring_overall">
+              <span lang="en">Overall</span>
+              <span lang="fr">Combiné</span>
+              <span lang="nl">Overall</span>
+            </label>
           </div>
           <div>
             <input type="radio" name="scoring" value="rule3" id="scoring_rule3" />
-            <label for="scoring_rule3">Rule 3: Trees</label>
+            <label for="scoring_rule3">
+              <span lang="en">Rule 3: Trees</span>
+              <span lang="fr">Règle 3: Arbres</span>
+              <span lang="nl">Rule 3: Trees</span>
+            </label>
           </div>
           <div>
             <input type="radio" name="scoring" value="rule30" id="scoring_rule30" />
-            <label for="scoring_rule30">Rule 30: canopy cover</label>
+            <label for="scoring_rule30">
+              <span lang="en">Rule 30: canopy cover</span>
+              <span lang="fr">Règle 30: Canopée</span>
+              <span lang="nl">Rule 30: canopy cover</span>
+            </label>
           </div>
           <div>
             <input type="radio" name="scoring" value="rule300" id="scoring_rule300" />
-            <label for="scoring_rule300">Rule 300: access to parks</label>
+            <label for="scoring_rule300">
+              <span lang="en">Rule 300: access to parks</span>
+              <span lang="fr">Règle 300: accès aux parcs</span>
+              <span lang="nl">Rule 300: access to parks</span>
+            </label>
           </div>
         </fieldset>
       </form>
@@ -113,12 +135,19 @@
       </div>
     </div>
 
-    <div class="absolute top-4 right-4 z-[100000]">
-      <button id="openModalBtn" class="bg-white p-1 border-black border rounded hover:bg-gray-100">?</button>
+    <div class="absolute top-4 right-4 z-[100000] flex">
+      <button id="openModalBtn" class="bg-white py-1 px-2 border-black border rounded hover:bg-gray-100">?</button>
+      <div id="lang-picker" class="flex ml-2">
+        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-l">nl</button>
+        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-y">fr</button>
+        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-r">en</button>
+      </div>
     </div>
 
     <div id="zoom-message" class="absolute top-1/2 right-1/2 w-[200px] -mr-[100px] z-[100000] bg-white/75 border rounded py-2 px-3 border-black text-center">
-      <span>Zoom to see buildings</span>
+      <span lang="en">Zoom to see buildings</span>
+      <span lang="fr">Zoomer pour voir les batiments</span>
+      <span lang="nl">Zoom to see buildings</span>
     </div>
 
     <script>
@@ -152,6 +181,9 @@
       //const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
       const colors_scheme = ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"];
 
+      // start language options
+      i18n.start(['nl', 'fr', 'en']);
+
       /* Create the base map */
 
       const map = L.map("map", {
@@ -169,7 +201,6 @@
       }).addTo(map);
 
       var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
-        attribution: '©OpenStreetMap, ©CartoDB',
         pane: 'labels'
 			}).addTo(map);
 
@@ -212,7 +243,7 @@
 
         if (mode == "overall") {
           grades = [0, 1, 2, 3];
-          this._div.innerHTML = "<p>Number of rules satisfied</p>";
+          this._div.innerHTML = `<p>${i18n.span({fr: 'Nombre de règles respectées', en: 'Number of rules satisfied', nl: 'Number of rules satisfied'})}</p>`;
           for (let i = 0; i < grades.length; i++) {
             this._div.innerHTML +=
               '<span class="inline-block w-3 h-3" style="background:' +
@@ -222,10 +253,16 @@
               "<br>";
           }
         } else {
+          let rule_number = mode.replace("rule", "");
+          let title_dict = {
+            fr: "Règle " + rule_number + " respectée ?",
+            en: "Is Rule " + rule_number + " satisfied ?",
+            nl: "Is Rule " + rule_number + " satisfied ?",
+          };
           this._div.innerHTML = `
-				<p>Is ${mode} satisfied?</p>
-				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> No<br>
-				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> Yes<br>
+				<p>${i18n.span(title_dict)}</p>
+				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> ${i18n.span({fr: 'Non', en: 'No', nl: 'Nee'})}<br>
+				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> ${i18n.span({fr: 'Oui', en: 'Yes', nl: 'Ja'})}<br>
 			`;
         }
 
