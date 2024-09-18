@@ -115,8 +115,12 @@
 }
 
 .leaflet-touch .leaflet-geosearch-bar form {
-  border: 2px solid rgba(0,0,0,0.2);
+  border: 2px solid #01665e;
   box-shadow: none;
+}
+
+.leaflet-touch .leaflet-geosearch-bar form:has(input:focus) {
+  box-shadow: 0 0 3px #01665e;
 }
 
 .leaflet-touch .leaflet-geosearch-bar form input {
