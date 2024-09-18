@@ -160,8 +160,11 @@ function initialize_layers(layers) {
 
 		layer.layer = L.geoJSON({type: "FeatureCollection", features: []}, {
 			onEachFeature: function(f, l) {
-				if (f.properties) {
+				if (f.properties && layer.popup_text !== undefined) {
 					l.bindPopup(layer.popup_text(f));
+				}
+				if (layer.on !== undefined) {
+					l.on(layer.on)
 				}
 			},
 			style: function(f) {

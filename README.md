@@ -18,7 +18,7 @@ TODO
 - [x] increase the bounds
 - [x] allow deeper zoom
 - [x] less transparency for the legend overlay
-- [ ] Visual 300m and 500m radius
+- [x] Visual 300m and 500m radius
 - [ ] investigate wrong tile fetching
 - [x] multi-language support
 	- [ ] translate everything

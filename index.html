@@ -79,7 +79,7 @@
     <div id="map" class="w-full h-full"></div>
 
     <div class="absolute bottom-4 left-4 z-[100000]">
-      <form class="bg-white/75 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
+      <form class="bg-white/90 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
         <fieldset>
           <legend>
             <span lang="en">Scoring</span>
@@ -135,12 +135,12 @@
       </div>
     </div>
 
-    <div class="absolute top-4 right-4 z-[100000] flex">
+    <div class="absolute top-4 right-4 z-[100000] flex flex-col">
       <button id="openModalBtn" class="bg-white py-1 px-2 border-black border rounded hover:bg-gray-100">?</button>
-      <div id="lang-picker" class="flex ml-2">
-        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-l">nl</button>
-        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-y">fr</button>
-        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-r">en</button>
+      <div id="lang-picker" class="flex flex-col mt-2">
+        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">nl</button>
+        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">fr</button>
+        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">en</button>
       </div>
     </div>
 
@@ -182,6 +182,7 @@
 
       let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
       const init_zoom = 9;
+      const init_center = [50.6, 4.4];
       const min_building_zoom = 14;
       //const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
       const colors_scheme = ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"];
@@ -194,21 +195,21 @@
       const map = L.map("map", {
         renderer: L.canvas(),
         minZoom: 7,
-      }).setView([50.6, 4.4], init_zoom);
-      map.createPane('labels');
+      }).setView(init_center, init_zoom);
+      /*map.createPane('labels');
       map.getPane('labels').style.zIndex = 650;
-      map.getPane('labels').style.pointerEvents = 'none';
+      map.getPane('labels').style.pointerEvents = 'none';*/
 
-      var CartoDB_Positron = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+      var CartoDB_Positron = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         maxZoom: 20,
       }).addTo(map);
 
-      var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+      /*var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
         pane: 'labels'
 			}).addTo(map);
-
+*/
       /* Force user inside of bounds */
       const southWest = L.latLng(49.4, 2.3),
         northEast = L.latLng(51.7, 6.6);
@@ -350,6 +351,74 @@
         }
       }
 
+      function makeCircleAndLegend(map,radius) {
+
+        let marker = {};
+
+
+        marker.circle = L.circle([0,0], { radius: radius, weight: 2 }).addTo(map).bringToBack();
+        marker.legendText = L.divIcon({ className: "legend-text", html: "" });
+        marker.legendMarker = L.marker([0,0], { icon: marker.legendText }).addTo(map);
+
+        marker.setLatLng = function(LatLng) {
+          this.circle.setLatLng(LatLng);
+          let bottomEdge = L.latLng(
+              LatLng.lat - (radius / 111319) - 0.0001, // approximate conversion from meters to degrees
+              LatLng.lng
+          );
+          this.legendMarker.setLatLng(bottomEdge);
+        }
+
+        marker.setColor = function(color) {
+          this.circle.setStyle({ color: color, fillColor: color });
+        }
+
+        marker.setText = function(text) {
+          this.legendText.options.html = `<div class="w-[250px] -ml-[125px] text-center text-sm"><span class="backdrop-blur-sm bg-white/75 px-2 py-1">${text}</span></div>`;
+          this.legendMarker.setIcon(this.legendText);
+        }
+
+        return marker;
+      }
+
+      
+
+      let highlightBuilding = function() {
+
+        let l3 = makeCircleAndLegend(map, 60);
+        let l300 = makeCircleAndLegend(map, 300);
+        let l30 = makeCircleAndLegend(map, 500);
+
+        return function(e) {
+          var layer = e.target;
+          console.log('event triggered');
+          console.log(layer.feature.properties);
+
+          
+          let center = layer.getCenter();
+          l300.setLatLng(center);
+          l30.setLatLng(center);
+          l3.setLatLng(center);
+
+          l3.setColor(get_color(colors_scheme, rule3(layer.feature)));
+          l30.setColor(get_color(colors_scheme, rule30(layer.feature)));
+          l300.setColor(get_color(colors_scheme, rule300(layer.feature)));
+
+          let legend3 = `3 trees visible: ${rule3(layer.feature) ? 'Yes': 'No'}`;
+          l3.setText(legend3);
+
+          let legend30 = `Over 30% canopy cover: ${rule30(layer.feature) ? 'Yes': 'No'}<br>
+          (In a 500m radius)`;
+          l30.setText(legend30);
+
+          let legend300 = `Less than 300m from public park: ${rule300(layer.feature) ? 'Yes': 'No'}`;
+          l300.setText(legend300);
+
+          map.flyTo(center, 16);
+
+        }
+      }();
+
       /* Layers' description */
 
       const layers = [
@@ -360,59 +429,9 @@
           extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
           grid_size: 100,
           url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`,
-          popup_text: (f) => `
-				At least 3 trees: ${rule3(f) ? "Yes" : "No"}<br>
-				At least 30% canopy: ${rule30(f) ? "Yes" : "No"}<br>
-				Public green space less than 300m away: ${rule300(f) ? "Yes" : "No"}<br>
-				Score: ${rule3(f) + rule30(f) + rule300(f)}/3
-			`,
           score: score,
+          on: {'click': highlightBuilding},
         },
-        /*{
-          name: "statistical_sectors",
-          min_zoom: 12,
-          tiling: true,
-          extent: { min_x: 2.541329, max_x: 6.4081, min_y: 49.496956, max_y: 51.505113 },
-          grid_size: 10,
-          url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_sectors/tile_${i}_${j}.geojson`,
-          popup_text: make_area_popup_text("SEC"),
-          score: score,
-          data_id: "sector_nis",
-        },*/
-        /*{
-          name: "municipalities",
-          min_zoom: 10,
-          tiling: true,
-          extent: { min_x: 2.541329, max_x: 6.4081, min_y: 49.496955, max_y: 51.505113 },
-          grid_size: 5,
-          url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_mun/tile_${i}_${j}.geojson`,
-          popup_text: make_area_popup_text("MUN"),
-          score: score,
-          data_id: "mun_nis",
-        },*/
-        // {
-        // 	name: 'arrondissements', min_zoom: 9, tiling: false,
-        // 	url: () => 'https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/arr_3_30_300.geojson',
-        // 	popup_text: make_area_popup_text('ARRD'),
-        // },
-        /*{
-          name: "provinces",
-          min_zoom: 8,
-          tiling: false,
-          url: () => "https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/prov_3_30_300.geojson",
-          popup_text: make_area_popup_text("PROVI"),
-          score: score,
-          data_id: "prov_nis",
-        },
-        {
-          name: "regions",
-          min_zoom: 0,
-          tiling: false,
-          url: () => "https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/reg_3_30_300.geojson",
-          popup_text: make_area_popup_text("REGIO"),
-          score: score,
-          data_id: "reg_nis",
-        },*/
       ];
 
       // Create the layers
@@ -427,7 +446,6 @@
       // 2. When we zoom in or out
       map.on("zoomend", () => {
         update_map();
-        legend.update();
         toggle_zoom_message();
       });
 
