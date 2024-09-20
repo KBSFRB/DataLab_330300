@@ -428,9 +428,11 @@
           tiling: true,
           extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
           grid_size: 100,
-          url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`,
+          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, // datalab account
+          //url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, // robin's account
           score: score,
           on: {'click': highlightBuilding},
+          data_id: 'id',
         },
       ];
 
