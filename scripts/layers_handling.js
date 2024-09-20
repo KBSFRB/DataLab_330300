@@ -17,15 +17,10 @@ function extent_latlng2tiles(bounds, tiles_extent, gridsize) {
 	let tile_height = (tiles_extent.max_y - tiles_extent.min_y) / gridsize;
 	let tile_width = (tiles_extent.max_x - tiles_extent.min_x) / gridsize;
 
-	let min_lng = clamp(bounds._southWest.lng, tiles_extent.min_x, tiles_extent.max_x);
-	let max_lng = clamp(bounds._northEast.lng, tiles_extent.min_x, tiles_extent.max_x);
-	let min_lat = clamp(bounds._southWest.lat, tiles_extent.min_y, tiles_extent.max_y);
-	let max_lat = clamp(bounds._northEast.lat, tiles_extent.min_y, tiles_extent.max_y);
-
-	let min_y_tile = Math.floor((min_lat - tiles_extent.min_y) / tile_height);
-	let max_y_tile = Math.floor((max_lat - tiles_extent.min_y) / tile_height);
-	let min_x_tile = Math.floor((min_lng - tiles_extent.min_x) / tile_width);
-	let max_x_tile = Math.floor((max_lng - tiles_extent.min_x) / tile_width);
+	let min_y_tile = clamp(Math.floor((bounds._southWest.lat - tiles_extent.min_y) / tile_height), 0, gridsize-1);
+	let max_y_tile = clamp(Math.floor((bounds._northEast.lat - tiles_extent.min_y) / tile_height), 0, gridsize-1);
+	let min_x_tile = clamp(Math.floor((bounds._southWest.lng - tiles_extent.min_x) / tile_width), 0, gridsize-1);
+	let max_x_tile = clamp(Math.floor((bounds._northEast.lng - tiles_extent.min_x) / tile_width), 0, gridsize-1);
 
 	return {min_y_tile, max_y_tile, min_x_tile, max_x_tile};
 
