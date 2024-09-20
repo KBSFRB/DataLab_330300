@@ -252,14 +252,13 @@
         if (mode == "overall") {
           grades = [0, 1, 2, 3];
           this._div.innerHTML = `<p>${i18n.span({fr: 'Nombre de règles respectées', en: 'Number of rules satisfied', nl: 'Number of rules satisfied'})}</p>`;
+          let legend = '<div class="flex gap-2">'
           for (let i = 0; i < grades.length; i++) {
-            this._div.innerHTML +=
-              '<span class="inline-block w-3 h-3" style="background:' +
-              get_color(colors_scheme, grades[i] / 3) +
-              '"></span> ' +
-              grades[i] +
-              "<br>";
+            legend +=
+              `<div class="text-center">${grades[i]}<br><span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, grades[i] / 3)}"></span></div>`;
           }
+          legend += '</div>'
+          this._div.innerHTML += legend;
         } else {
           let rule_number = mode.replace("rule", "");
           let title_dict = {
@@ -314,27 +313,6 @@
         } else {
           return 0;
         }
-      }
-
-      function make_area_popup_text(level) {
-        function area_name(f) {
-          let lang = "NL";
-          if (navigator.language.startsWith("fr")) {
-            lang = "FR";
-          } else if (navigator.language.startsWith("de")) {
-            lang = "DE";
-          }
-
-          return f.properties[`T_${level}_${lang}`];
-        }
-
-        return function (f) {
-          return `<strong>${area_name(f)}</strong><br>
-					At least 3 trees: ${format_percent(rule3(f))} of buildings<br>
-					At least 30% canopy: ${format_percent(rule30(f))} of buildings<br>
-					Public green space less than 300m away: ${format_percent(rule300(f))} of buildings<br>
-					Average score: ${format_score(rule3(f) + rule30(f) + rule300(f))} / 3`;
-        };
       }
 
       function score(f) {
