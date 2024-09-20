@@ -111,7 +111,7 @@ function get_data(layer, tile) {
     .then((data) => {
       console.log(`fetched ${layer.name} ${i}, ${j}`);
       // save data in the layer object
-      layer.data.set(`${i}_${j}`, data);
+      layer.data.set(`${i}_${j}`, true);
       // find the new data that is not already on the map
       let new_data = filter_new_data(data.features, layer);
       // add the new data to the map
