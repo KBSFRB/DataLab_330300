@@ -74,7 +74,12 @@ function get_data(layer, tile) {
 
 	let url = layer.url(i, j);
 	fetch(url)
-		.then(response => response.json())
+		.then(response => {
+			if (!response.ok) {
+		      throw new Error(`Failed to fetch tile ${i}, ${j} -> status: ${response.status}`);
+		    }
+            return response.json()
+		})
 		.then(data => {
 			console.log(`fetched ${layer.name} ${i}, ${j}`);
 			// save data in the layer object
@@ -87,7 +92,11 @@ function get_data(layer, tile) {
 			for (let d of new_data) {
 				layer.ids.add(d.properties[layer.data_id]);
 			}
-		});
+		})
+        .catch(error => {
+            console.error(`Error fetching or processing tile ${i}, ${j}:`, error);
+            layer.data.delete(`${i}_${j}`);
+        });
 }
 
 
