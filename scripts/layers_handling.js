@@ -171,6 +171,13 @@ function update_map() {
   // find layer corresponding to zoom level
   let layer = layers.find((l) => l.min_zoom <= zoom);
   if (layer === undefined) {
+    // hide all layers
+    for (let l of layers) {
+      if (l.layer !== undefined && map.hasLayer(l.layer)) {
+        map.removeLayer(l.layer);
+      }
+    }
+
     console.log("no layer found");
     return;
   }
@@ -210,6 +217,14 @@ function initialize_layers(layers) {
             weight: 1,
             fillOpacity: 0.5,
           };
+        },
+        pointToLayer: function (f, latlng) {
+          return L.circleMarker(latlng, {
+            radius: 4,
+            fillColor: get_color(colors_scheme, layer.score(f)),
+            stroke: false,
+            fillOpacity: 0.9,
+          });
         },
       },
     );
