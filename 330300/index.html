@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>3-30-300</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="style/geosearch.css" />
+    <link rel="stylesheet" href="style/style.css" />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/queue.js"></script>
+    <script src="scripts/layers_handling.js"></script>
+    <script src="scripts/i18n.js"></script>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden z-[100001]">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-8/12 h-5/6 relative">
+        <!-- <button class="absolute top-1 right-3 text-black text-2xl font-bold" id="closeModalBtn">&times;</button> -->
+        <div class="flex flex-col h-full">
+          <div class="overflow-auto h-full w-full p-2">
+            <h1 class="font-bold text-center mb-3">⚠️ THIS IS A BETA VERSION ⚠️</h1>
+          
+            <p class="text-md">This map displays the score of each building in Belgium on the 3-30-300 rule. This rule from Dr. Cecil Konijndijk states that: </p>
+            
+            <ul>
+              <li class="ml-8">3 : every citizen should be able to see 3 trees from their windows </li>
+              <li class="ml-8">30 : the neighbourhood around each building should have 30% tree canopy </li>
+              <li class="ml-8">300 :  every citizen should have access to a public green space at maximum 300 metres </li>
+            </ul>
+            
+            <p>
+            Studies show that following this rule improves health and well-being of citizens while creating cleaner, greener and fairer environments. 
+            </p>
+            
+            <p>
+            To be able to calculate this, we, DataLab, used available open data which was different for each region, which make it difficult to compare regions between them. We also had to make a lot of assumptions to be able to get to a score per building, doing the same exercise with different sources and different assumptions will result in different results. Find out the complete description of our methodology and the known limitations <a href="/" style="color: #01665E">here</a>. 
+            </p>
+            
+            <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracy or have any question don’t hesitate to contact us: <a href="datalab@kbs-frb.be" style="color: #01665E;">datalab@kbs-frb.be</a> </p>
+            
+            <p>The data in the map is subject to change at any time without notice. The user assumes all responsibility and risks for the use of the data on this website. </p>
+            
+            <p>Do you want to know more about DataLab? <a href="../index.html" style="color: #01665E;">Click here</a>. Stay tuned for version 2 ! Follow us on <a href="/" style="color: #01665E;">Social media</a>.</p>
+            
+            <p>By clicking ‘Go to the map’ you acknowledge that you have read this disclaimer </p>
+          </div>
+          <div class="flex justify-center align-center">
+            <button class="p-2 border-black rounded text-white" style="background-color: #01665E;" id="closeModalBtn">Go to the map</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="map" class="w-full h-full"></div>
+
+    <div class="absolute bottom-4 left-4 z-[100000]">
+      <form class="bg-white/90 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
+        <fieldset>
+          <legend>
+            <span lang="en">Scoring</span>
+            <span lang="fr">Score</span>
+            <span lang="nl">Scoring</span>
+          </legend>
+          <div>
+            <input type="radio" name="scoring" value="overall" checked id="scoring_overall" />
+            <label for="scoring_overall">
+              <span lang="en">Overall</span>
+              <span lang="fr">Combiné</span>
+              <span lang="nl">Overall</span>
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="scoring" value="rule3" id="scoring_rule3" />
+            <label for="scoring_rule3">
+              <span lang="en">Rule 3: Trees</span>
+              <span lang="fr">Règle 3: Arbres</span>
+              <span lang="nl">Rule 3: Trees</span>
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="scoring" value="rule30" id="scoring_rule30" />
+            <label for="scoring_rule30">
+              <span lang="en">Rule 30: canopy cover</span>
+              <span lang="fr">Règle 30: Canopée</span>
+              <span lang="nl">Rule 30: canopy cover</span>
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="scoring" value="rule300" id="scoring_rule300" />
+            <label for="scoring_rule300">
+              <span lang="en">Rule 300: access to parks</span>
+              <span lang="fr">Règle 300: accès aux parcs</span>
+              <span lang="nl">Rule 300: access to parks</span>
+            </label>
+          </div>
+        </fieldset>
+      </form>
+      <div
+        class="sm:hidden bg-white/75 border rounded py-2 px-3 border-black inline-block mt-2 cursor-pointer"
+        onclick="document.getElementById('mode_menu').classList.toggle('hidden')"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline-block" viewBox="0 0 16 16">
+          <path
+            d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.6.6 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.6.6 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.6.6 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535z"
+          />
+          <path
+            d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.6.6 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0z"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <div class="absolute top-4 right-4 z-[100000] flex flex-col">
+      <button id="openModalBtn" class="bg-white py-1 px-2 border-black border rounded hover:bg-gray-100">?</button>
+      <div id="lang-picker" class="flex flex-col mt-2">
+        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">nl</button>
+        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">fr</button>
+        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">en</button>
+      </div>
+    </div>
+
+    <div id="zoom-message" class="absolute top-[100px] right-1/2 w-[300px] -mr-[150px] sm:w-[400px] sm:-mr-[200px] z-[500] bg-[#f6e8c3] shadow-lg text-lg py-2 px-3 border-black text-center flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-lightbulb" viewBox="0 0 16 16">
+        <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
+      </svg>
+      <div class="grow text-center">
+        <span lang="en">Search or zoom to see buildings</span>
+        <span lang="fr">Faites une recherche ou zoomez pour voir les batiments</span>
+        <span lang="nl">Search or zoom to see buildings</span>
+      </div>
+    </div>
+
+    <div id="loading-message" class="hidden absolute bottom-0 right-1/2 w-[300px] -mr-[150px] z-[500] text-center items-center bg-white/75 text-sm rounded-t pt-1 text-gray-500">
+      <svg fill="#6b7280" class="inline-block" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><style>.spinner_qM83{animation:spinner_8HQG 1.05s infinite}.spinner_oXPr{animation-delay:.1s}.spinner_ZTLf{animation-delay:.2s}@keyframes spinner_8HQG{0%,57.14%{animation-timing-function:cubic-bezier(0.33,.66,.66,1);transform:translate(0)}28.57%{animation-timing-function:cubic-bezier(0.33,0,.66,.33);transform:translateY(-6px)}100%{transform:translate(0)}}</style><circle class="spinner_qM83" cx="4" cy="12" r="3"/><circle class="spinner_qM83 spinner_oXPr" cx="12" cy="12" r="3"/><circle class="spinner_qM83 spinner_ZTLf" cx="20" cy="12" r="3"/></svg>
+      <span lang="en">Loading data..</span>
+      <span lang="fr">Téléchargement des données...</span>
+      <span lang="nl">Loading data..</span>
+    </div>
+
+    <script>
+      // Modal
+
+      var modal = document.getElementById("myModal");
+      var closeModalBtn = document.getElementById("closeModalBtn");
+      var openModalBtn = document.getElementById("openModalBtn");
+
+      window.onload = function () {
+        modal.classList.remove("hidden");
+      };
+
+      closeModalBtn.onclick = function () {
+        modal.classList.add("hidden");
+      };
+
+      openModalBtn.onclick = function () {
+        modal.classList.remove("hidden");
+      };
+
+      // window.onclick = function (event) {
+      //   if (event.target == modal) {
+      //     modal.classList.add("hidden");
+      //   }
+      // };
+
+      let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
+      const init_zoom = 9;
+      const init_center = [50.6, 4.4];
+      const min_building_zoom = 14;
+      //const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
+      const colors_scheme = ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"];
+
+      // start language options
+      i18n.start(['nl', 'fr', 'en']);
+
+      /* Create the base map */
+
+      const map = L.map("map", {
+        renderer: L.canvas(),
+        minZoom: 7,
+      }).setView(init_center, init_zoom);
+      /*map.createPane('labels');
+      map.getPane('labels').style.zIndex = 650;
+      map.getPane('labels').style.pointerEvents = 'none';*/
+
+      var CartoDB_Positron = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        maxZoom: 20,
+      }).addTo(map);
+
+      /*var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+        pane: 'labels'
+			}).addTo(map);
+*/
+      /* Force user inside of bounds */
+      const southWest = L.latLng(49.4, 2.3),
+        northEast = L.latLng(51.7, 6.6);
+      const bounds = L.latLngBounds(southWest, northEast);
+
+      map.setMaxBounds(bounds);
+      map.on("drag", function () {
+        map.panInsideBounds(bounds, { animate: false });
+      });
+
+      /* Add the search bar */
+      const search = new GeoSearch.GeoSearchControl({
+        provider: new GeoSearch.OpenStreetMapProvider({
+          params: {
+            countrycodes: "be",
+          },
+        }),
+        style: "bar",
+        autoComplete: true, // fail when I set it to false -> I increased the delay instaid
+        autoCompleteDelay: 2000,
+      });
+
+      map.addControl(search);
+
+      /* Add the legend */
+
+      let legend = L.control({ position: "bottomright" });
+
+      legend.onAdd = function () {
+        this._div = L.DomUtil.create("div", "bg-white/90 border rounded py-2 px-3 border-black");
+        this.update();
+        return this._div;
+      };
+
+      legend.update = function (mode = scoring_mode) {
+        let zoom = map.getZoom();
+
+        let grades = [];
+
+        if (mode == "overall") {
+          grades = [0, 1, 2, 3];
+          this._div.innerHTML = `<p>${i18n.span({fr: 'Nombre de règles respectées', en: 'Number of rules satisfied', nl: 'Number of rules satisfied'})}</p>`;
+          let legend = '<div class="flex gap-2">'
+          for (let i = 0; i < grades.length; i++) {
+            legend +=
+              `<div class="text-center">${grades[i]}<br><span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, grades[i] / 3)}"></span></div>`;
+          }
+          legend += '</div>'
+          this._div.innerHTML += legend;
+        } else {
+          let rule_number = mode.replace("rule", "");
+          let title_dict = {
+            fr: "Règle " + rule_number + " respectée ?",
+            en: "Is Rule " + rule_number + " satisfied ?",
+            nl: "Is Rule " + rule_number + " satisfied ?",
+          };
+          this._div.innerHTML = `
+				<p>${i18n.span(title_dict)}</p>
+				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> ${i18n.span({fr: 'Non', en: 'No', nl: 'Nee'})}<br>
+				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> ${i18n.span({fr: 'Oui', en: 'Yes', nl: 'Ja'})}<br>
+			`;
+        }
+
+        return this._div;
+      };
+
+      legend.addTo(map);
+
+      function rule3(f) {
+        const p = f.properties;
+        if (p.rule3_perc_buildings || p.rule3_perc_buildings === 0) {
+          return p.rule3_perc_buildings;
+        } else if (p.rule3) {
+          return p.rule3 == 1 || p.rule3 == "True" ? 1 : 0;
+        } else if (p.r3) {
+          return p.r3 == 1 || p.r3 == "True" ? 1 : 0;
+        } else {
+          return 0;
+        }
+      }
+      function rule30(f) {
+        const p = f.properties;
+        if (p.rule30_perc_buildings || p.rule30_perc_buildings === 0) {
+          return p.rule30_perc_buildings;
+        } else if (p.rule30) {
+          return p.rule30 == 1 || p.rule30 == "True" ? 1 : 0;
+        } else if (p.r30) {
+          return p.r30 == 1 || p.r30 == "True" ? 1 : 0;
+        } else {
+          return 0;
+        }
+      }
+      function rule300(f) {
+        const p = f.properties;
+        if (p.rule300_perc_buildings || p.rule300_perc_buildings === 0) {
+          return p.rule300_perc_buildings;
+        } else if (p.rule300) {
+          return p.rule300 == 1 || p.rule300 == "True" ? 1 : 0;
+        } else if (p.r300) {
+          return p.r300 == 1 || p.r300 == "True" ? 1 : 0;
+        } else {
+          return 0;
+        }
+      }
+
+      function score(f) {
+        switch (scoring_mode) {
+          case "rule3":
+            return rule3(f);
+          case "rule30":
+            return rule30(f);
+          case "rule300":
+            return rule300(f);
+          default:
+            // Turns out this is equivalent to computing the average score of all buildings in the area
+            return (rule3(f) + rule30(f) + rule300(f)) / 3;
+        }
+      }
+
+      function makeCircleAndLegend(map,radius) {
+
+        let marker = {};
+
+
+        marker.circle = L.circle([0,0], { radius: radius, weight: 2 }).addTo(map).bringToBack();
+        marker.legendText = L.divIcon({ className: "legend-text", html: "" });
+        marker.legendMarker = L.marker([0,0], { icon: marker.legendText }).addTo(map);
+
+        marker.setLatLng = function(LatLng) {
+          this.circle.setLatLng(LatLng);
+          let bottomEdge = L.latLng(
+              LatLng.lat - (radius / 111319) - 0.0001, // approximate conversion from meters to degrees
+              LatLng.lng
+          );
+          this.legendMarker.setLatLng(bottomEdge);
+        }
+
+        marker.setColor = function(color) {
+          this.circle.setStyle({ color: color, fillColor: color });
+        }
+
+        marker.setText = function(text) {
+          this.legendText.options.html = `<div class="w-[250px] -ml-[125px] text-center text-sm"><span class="backdrop-blur-sm bg-white/75 px-2 py-1">${text}</span></div>`;
+          this.legendMarker.setIcon(this.legendText);
+        }
+
+        marker.getBounds = function() {
+          return this.circle.getBounds();
+        }
+
+        return marker;
+      }
+
+      
+
+      let highlightBuilding = function() {
+
+        let l3 = makeCircleAndLegend(map, 60);
+        let l300 = makeCircleAndLegend(map, 300);
+        let l30 = makeCircleAndLegend(map, 500);
+
+        return function(e) {
+          var layer = e.target;
+          console.log('event triggered');
+          console.log(layer.feature.properties);
+
+          
+          let center = layer.getCenter();
+          l300.setLatLng(center);
+          l30.setLatLng(center);
+          l3.setLatLng(center);
+
+          l3.setColor(get_color(colors_scheme, rule3(layer.feature)));
+          l30.setColor(get_color(colors_scheme, rule30(layer.feature)));
+          l300.setColor(get_color(colors_scheme, rule300(layer.feature)));
+
+          let legend3 = `3 trees visible: ${rule3(layer.feature) ? 'Yes': 'No'}`;
+          l3.setText(legend3);
+
+          let legend30 = `Over 30% canopy cover: ${rule30(layer.feature) ? 'Yes': 'No'}<br>
+          (In a 500m radius)`;
+          l30.setText(legend30);
+
+          let legend300 = `Less than 300m from public park: ${rule300(layer.feature) ? 'Yes': 'No'}`;
+          l300.setText(legend300);
+
+          map.fitBounds(l30.getBounds(), {padding: [20, 20]});
+
+        }
+      }();
+
+      /* Layers' description */
+
+      const layers = [
+        {
+          name: "buildings",
+          min_zoom: min_building_zoom,
+          tiling: true,
+          extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
+          grid_size: 100,
+          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, // datalab account
+          //url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, // robin's account
+          score: score,
+          on: {'click': highlightBuilding},
+          data_id: 'id',
+        },
+        /*{
+          name: "centroids",
+          min_zoom: min_building_zoom-2,
+          tiling: true,
+          extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
+          grid_size: 100,
+          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`, // datalab account
+          score: score,
+        },*/
+      ];
+
+      // Create the layers
+      initialize_layers(layers);
+
+      // Initialise the map
+      update_map();
+
+      /* Event listeners: control when map is updated */
+      // 1. When we move thourgh the map
+      map.on("moveend", update_map);
+      // 2. When we zoom in or out
+      map.on("zoomend", () => {
+        update_map();
+        toggle_zoom_message();
+      });
+
+      function repaint() {
+        for (let layer of layers) {
+          layer.layer.resetStyle();
+        }
+      }
+
+      function toggle_zoom_message() {
+        const min_zoom = layers[layers.length-1].min_zoom;
+        if (map.getZoom() >= min_zoom) {
+          document.getElementById("zoom-message").classList.add("hidden");
+        } else {
+          document.getElementById("zoom-message").classList.remove("hidden");
+        }
+      }
+
+
+      // 3. When we change the scoring mode
+      document.querySelectorAll('input[name="scoring"]').forEach((radio) => {
+        radio.addEventListener("change", () => {
+          scoring_mode = radio.value;
+          repaint();
+          legend.update();
+        });
+      });
+
+      // show/hide the loading message
+      queue.addListener(q => {
+        if (q.current.length > 0) {
+          document.getElementById("loading-message").classList.remove("hidden");
+        } else {
+          document.getElementById("loading-message").classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
