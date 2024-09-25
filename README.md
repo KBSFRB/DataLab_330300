@@ -12,24 +12,24 @@ relies on the following libraries:
 
 TODO
 - [x] Make places names more visible
-- [ ] add loading indicator
+- [x] add loading indicator
 - [ ] add error handling for failed fetches
-- [ ] allow users to correct data
+- [x] allow users to correct data
 - [x] increase the bounds
 - [x] allow deeper zoom
 - [x] less transparency for the legend overlay
 - [x] Visual 300m and 500m radius
-- [ ] investigate wrong tile fetching
+- [x] investigate wrong tile fetching
 - [x] multi-language support
 	- [ ] translate everything
 - [x] remove aggregate layers
-- [ ] add centroid layer ?
+- [ ] add centroid layer ? -> done but must test if it's better with or without
 - [ ] improve/stress-test search bar
   - [x] set autocomplete false if using nominatim
   - [ ] see if we can use other providers. need to proxy ?
-- [ ] move to new cloudflare account
+- [x] move to new cloudflare account
 
 colors:
-water: #2ABAAC
-dark: #022041
-orange: #FA970B
+- water: #2ABAAC
+- dark: #022041
+- orange: #FA970B
