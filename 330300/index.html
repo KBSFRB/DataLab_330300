@@ -28,6 +28,7 @@
     <script src="scripts/queue.js"></script>
     <script src="scripts/layers_handling.js"></script>
     <script src="scripts/i18n.js"></script>
+    <script src="scripts/corrections.js"></script>
 
     <style>
       html,
@@ -161,6 +162,41 @@
       <span lang="fr">Téléchargement des données...</span>
       <span lang="nl">Loading data..</span>
     </div>
+
+    <div id="correction-module" class="hidden absolute bottom-4 left-1/2 w-[400px] -ml-[200px] z-[600] text-center items-center bg-white py-2 px-3 border-black border rounded">
+      <div id="correction-invite">
+        <span lang="en">That doesn't seem right ? You can 
+          <a href="#" class="underline text-blue-700" 
+          onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
+          >Suggest a correction</a>.</span>
+        <span lang="fr">Ça n'a pas l'air correct ? Vous pouvez  
+          <a href="#" class="underline text-blue-700" 
+          onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
+          >Proposer une correction</a>.</span>
+        <span lang="nl">That doesn't seem right ? You can 
+          <a href="#" class="underline text-blue-700" 
+          onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
+          >Suggest a correction</a>.</span>
+      </div>
+      <form id="correction-form" class="hidden text-left mt-4">
+        <ul>
+          <li class="mb-3">
+            <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
+            <label for="rule3-correction">At least 3 trees are visible from this building</label><br>
+            <span class="text-sm text-gray-500">(Less than Xm away)</span>
+          </li>
+          <li class="mb-3">
+            <input type="checkbox" name="rule300" id="rule300-correction" class="mr-1" />
+            <label for="rule300-correction">There is a public park less than 300m away</label><br>
+            <span class="text-sm text-gray-500">(At least 0.5 hectare, with trees)</span>
+          </li>
+
+          <button type="submit" id="correction-submit" class="p-2 border-black rounded text-white bg-blue-700">Send corrections</button>
+          <p class="text-sm text-gray-500">
+            You cannot correct the canopy cover (rule 30) as it is very hard to estimate
+          </p>
+        </ul>
+      </form>
 
     <script>
       // Modal
@@ -380,9 +416,6 @@
 
         return function(e) {
           var layer = e.target;
-          console.log('event triggered');
-          console.log(layer.feature.properties);
-
           
           let center = layer.getCenter();
           l300.setLatLng(center);
@@ -404,6 +437,8 @@
           l300.setText(legend300);
 
           map.fitBounds(l30.getBounds(), {padding: [20, 20]});
+
+          correction_module.show(layer.feature.properties, center);
 
         }
       }();
