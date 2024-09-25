@@ -28,3 +28,8 @@ TODO
   - [x] set autocomplete false if using nominatim
   - [ ] see if we can use other providers. need to proxy ?
 - [ ] move to new cloudflare account
+
+colors:
+water: #2ABAAC
+dark: #022041
+orange: #FA970B
