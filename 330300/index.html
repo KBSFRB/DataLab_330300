@@ -403,6 +403,11 @@
           return this.circle.getBounds();
         }
 
+        marker.hide = function() {
+          this.circle.setLatLng([0,0]);
+          this.legendMarker.setLatLng([0,0]);
+        }
+
         return marker;
       }
 
@@ -414,10 +419,28 @@
         let l300 = makeCircleAndLegend(map, 300);
         let l30 = makeCircleAndLegend(map, 500);
 
+        let current_center = null;
+
+        // hide highlight when building is no longer visible
+        map.on('moveend', function() {
+          let bounds = map.getBounds();
+          let zoom = map.getZoom();
+
+          if (current_center !== null && (zoom < min_building_zoom || !bounds.contains(current_center))) {
+            correction_module.hide();
+            l300.hide();
+            l30.hide();
+            l3.hide();
+            current_center = null;
+          }
+        })
+
         return function(e) {
           var layer = e.target;
           
           let center = layer.getCenter();
+          current_center = center;
+
           l300.setLatLng(center);
           l30.setLatLng(center);
           l3.setLatLng(center);

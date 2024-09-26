@@ -141,7 +141,11 @@ const correction_module = function() {
     console.log(`Starting correction for ${building_properties}`);
   }
 
+  function hide() {
+    document.getElementById('correction-module').classList.add('hidden');
+  }
+
   return {
-    show
+    show, hide
   }
 }();
