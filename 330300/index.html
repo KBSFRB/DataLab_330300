@@ -280,6 +280,22 @@
         map.panInsideBounds(bounds, { animate: false });
       });
 
+      /* Move to user's location */
+      fetch("https://ip2loc.vandendriesche-c.workers.dev/")
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+            console.log('failed to find location');
+            console.log(data);
+            return;
+          } else {
+            console.log('found location');
+            console.log(data);
+            map.setView([data.lat, data.lng], 15);
+          }
+        });
+
+
       /* Add the search bar */
       const search = new GeoSearch.GeoSearchControl({
         provider: new GeoSearch.OpenStreetMapProvider({

@@ -10,6 +10,8 @@ relies on the following libraries:
 - [leaflet geosearch](https://github.com/smeijer/leaflet-geosearch) (for geocoding. The css has been added to styles/ and slightly modified)
 - tailwindcss (for styling)
 
+Uses data from [ip-location-db/geolite2-city](https://github.com/sapics/ip-location-db/tree/main/geolite2-city/) for IP geolocation.
+
 TODO
 - [x] Make places names more visible
 - [x] add loading indicator
