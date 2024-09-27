@@ -35,3 +35,13 @@ function make_color_scale_legend(color_scale, min, max, text_format) {
 
     return legend_html;
 }
+
+function color_is_light(hex) {
+  const bigint = parseInt(hex.substring(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 128 ? true : false;
+}
