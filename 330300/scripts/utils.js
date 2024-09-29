@@ -45,3 +45,19 @@ function color_is_light(hex) {
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
   return brightness > 128 ? true : false;
 }
+
+function ip2loc() {
+    fetch("https://ip2loc.vandendriesche-c.workers.dev/")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        console.log('failed to find location');
+        console.log(data);
+        return;
+      } else {
+        console.log('found location');
+        console.log(data);
+        map.setView([data.lat, data.lng], 15);
+      }
+    });
+}
