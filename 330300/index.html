@@ -87,8 +87,14 @@
             
             <p>By clicking ‘Go to the map’ you acknowledge that you have read this disclaimer </p>
           </div>
-          <div class="flex justify-center align-center">
-            <button class="p-2 border-black rounded text-white mt-4 bg-emerald-900" id="closeModalBtn">Go to the map</button>
+          <div class="text-center mt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <form id="modalSearch">
+              <input type="text" class="p-2 border border-black rounded-l w-48 sm:w-64" name="modalSearch" placeholder="Search for an address"><button type="submit" class="p-2 border-black border rounded-r text-white bg-emerald-900">Search</button>
+            </form>
+            <div class="">
+              Or
+            </div>
+            <button class="p-2 border-black inline-block rounded text-white bg-emerald-900" id="closeModalBtn">Go to the map</button>
           </div>
         </div>
       </div>
@@ -287,7 +293,7 @@
 
 
       /* Add the search bar */
-      const search = new GeoSearch.GeoSearchControl({
+      const search_options = {
         provider: new GeoSearch.OpenStreetMapProvider({
           params: {
             countrycodes: "be",
@@ -296,9 +302,20 @@
         style: "bar",
         autoComplete: true, // fail when I set it to false -> I increased the delay instaid
         autoCompleteDelay: 2000,
-      });
+      }
+      const search = new GeoSearch.GeoSearchControl(search_options);
 
       map.addControl(search);
+
+      document.getElementById('modalSearch').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const query = e.target.modalSearch.value;
+        search.container.querySelector('input').value = query;
+        search.onSubmit({query});
+        modal.classList.add("hidden");
+      });
+
+
 
       /* Add the legend */
 
