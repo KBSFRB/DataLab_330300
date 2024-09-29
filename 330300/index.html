@@ -76,19 +76,19 @@
             </p>
             
             <p>
-            To be able to calculate this, we, DataLab, used available open data which was different for each region, which make it difficult to compare regions between them. We also had to make a lot of assumptions to be able to get to a score per building, doing the same exercise with different sources and different assumptions will result in different results. Find out the complete description of our methodology and the known limitations <a href="methodology.html" style="color: #01665E">here</a>. 
+            To be able to calculate this, we, DataLab, used available open data which was different for each region, which make it difficult to compare regions between them. We also had to make a lot of assumptions to be able to get to a score per building, doing the same exercise with different sources and different assumptions will result in different results. Find out the complete description of our methodology and the known limitations <a href="methodology.html">here</a>. 
             </p>
             
-            <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracy or have any question don’t hesitate to contact us: <a href="info@thedatalab.be" style="color: #01665E;">info@thedatalab.be</a> </p>
+            <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracy or have any question don’t hesitate to contact us: <a href="info@thedatalab.be">info@thedatalab.be</a> </p>
             
             <p>The data in the map is subject to change at any time without notice. The user assumes all responsibility and risks for the use of the data on this website. </p>
             
-            <p>Do you want to know more about DataLab? <a href="../index.html" style="color: #01665E;">Click here</a>. Stay tuned for version 2 ! Follow us on <a href="/" style="color: #01665E;">Social media</a>.</p>
+            <p>Do you want to know more about DataLab? <a href="../index.html">Click here</a>. Stay tuned for version 2 ! Follow us on <a href="/">Social media</a>.</p>
             
             <p>By clicking ‘Go to the map’ you acknowledge that you have read this disclaimer </p>
           </div>
           <div class="flex justify-center align-center">
-            <button class="p-2 border-black rounded text-white mt-4" style="background-color: #01665E;" id="closeModalBtn">Go to the map</button>
+            <button class="p-2 border-black rounded text-white mt-4 bg-emerald-900" id="closeModalBtn">Go to the map</button>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
 
     <div id="map" class="w-full h-full"></div>
 
-    <div class="absolute bottom-4 left-4 z-[600]">
+    <div class="absolute bottom-4 left-4 z-[1500]">
       <form class="bg-white/90 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
         <fieldset>
           <legend>
@@ -108,7 +108,7 @@
             <input type="radio" name="scoring" value="overall" checked id="scoring_overall" />
             <label for="scoring_overall">
               <span lang="en">Overall</span>
-              <span lang="fr">Combiné</span>
+              <span lang="fr">Général</span>
               <span lang="nl">Overall</span>
             </label>
           </div>
@@ -124,7 +124,7 @@
             <input type="radio" name="scoring" value="rule30" id="scoring_rule30" />
             <label for="scoring_rule30">
               <span lang="en">Rule 30: canopy cover</span>
-              <span lang="fr">Règle 30: Canopée</span>
+              <span lang="fr">Règle 30: Couverture forestière</span>
               <span lang="nl">Rule 30: canopy cover</span>
             </label>
           </div>
@@ -132,7 +132,7 @@
             <input type="radio" name="scoring" value="rule300" id="scoring_rule300" />
             <label for="scoring_rule300">
               <span lang="en">Rule 300: access to parks</span>
-              <span lang="fr">Règle 300: accès aux parcs</span>
+              <span lang="fr">Règle 300: Accès aux parcs</span>
               <span lang="nl">Rule 300: access to parks</span>
             </label>
           </div>
@@ -140,7 +140,7 @@
       </form>
       <div
         class="sm:hidden bg-white/75 border rounded py-2 px-3 border-black inline-block mt-2 cursor-pointer"
-        onclick="document.getElementById('mode_menu').classList.toggle('hidden')"
+        onclick="document.getElementById('mode_menu').classList.toggle('hidden'); highlightBuilding.unfocus();"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline-block" viewBox="0 0 16 16">
           <path
@@ -461,7 +461,15 @@
           }
         })
 
-        return function(e) {
+        function unfocus() {
+          correction_module.hide();
+          l300.hide();
+          l30.hide();
+          l3.hide();
+          current_center = null;
+        }
+
+        function focus(e) {
           var layer = e.target;
           
           let center = layer.getCenter();
@@ -490,6 +498,9 @@
           correction_module.show(layer.feature.properties, center);
 
         }
+
+        focus.unfocus = unfocus;
+        return focus;
       }();
 
       /* Layers' description */
