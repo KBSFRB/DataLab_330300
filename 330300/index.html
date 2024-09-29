@@ -102,6 +102,8 @@
 
     <div id="map" class="w-full h-full"></div>
 
+      
+
     <div class="absolute bottom-4 left-4 z-[1500]">
       <form class="bg-white/90 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
         <fieldset>
@@ -159,9 +161,12 @@
       </div>
     </div>
 
-    <div class="absolute top-4 right-4 flex flex-col">
+    <div class="absolute top-4 right-4 flex flex-col gap-2">
+      <div class="border-black border rounded h-9 w-9 z-[600] p-1 bg-white">
+        <a href="https://www.thedataLab.be"><img src="../assets/images/logo_small.jpg"></a>
+      </div>
       <button id="openModalBtn" class="z-[600] bg-white py-1 px-2 border-black border rounded hover:bg-gray-100">?</button>
-      <div id="lang-picker" class="flex flex-col mt-2 z-[3000]">
+      <div id="lang-picker" class="flex flex-col z-[3000]">
         <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">nl</button>
         <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">fr</button>
         <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">en</button>
