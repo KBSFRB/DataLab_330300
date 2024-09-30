@@ -4,6 +4,18 @@ const i18n = function () {
 
 	const i18n = {};
 
+  const placeholders = {
+      en: {
+          search_address: 'Enter address',
+      },
+      fr: {
+          search_address: "Entrez l'addresse",
+      },
+      nl: {
+          search_address:'Geef een adres in',
+      }
+  };
+
   i18n.lang = navigator.language;
 
   /**
@@ -35,6 +47,12 @@ const i18n = function () {
 
     document.querySelectorAll(`body *[lang]`).forEach(el => {el.style.display = 'none'});
     document.querySelectorAll(`[lang='${lang}']`).forEach(el => el.style.display = '');
+
+    // Update placeholders based on language
+    document.querySelectorAll("input[data-i18n-placeholder]").forEach(el => {
+      const placeholderKey = el.getAttribute("data-i18n-placeholder");
+      el.placeholder = placeholders[lang][placeholderKey];
+    });
   }
 
 	/**
