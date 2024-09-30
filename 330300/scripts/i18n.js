@@ -19,6 +19,18 @@ const i18n = function () {
   i18n.lang = navigator.language;
 
   /**
+   * Check if the url contains a lang=xx parameter
+   * if it does, return the language
+   */
+  function get_url_lang() {
+    const url_params = new URLSearchParams(window.location.search);
+    if (url_params.has('lang')) {
+      return url_params.get('lang');
+    }
+    return null;
+  }
+
+  /**
    * given a language string, returns the closest option from the options list
    * eg: match_lang('fr-BE', ['en', 'fr', 'nl']) -> 'fr'
    * if no match is found, return the first option
@@ -70,8 +82,13 @@ const i18n = function () {
     // set lang based on navigator preferences
     i18n.options = languages;
 
-    set_lang(match_lang(navigator.language, languages));
-
+    // The lang is initialised using the url in priority, then the navigator language
+    let url_lang = get_url_lang();
+    if (url_lang && languages.includes(url_lang)) {
+      set_lang(url_lang);
+    } else {
+      set_lang(match_lang(navigator.language, languages));
+    }
     // add event listeners
     for (let lang of languages) {
       document.getElementById(`i18n-picker-${lang}`).addEventListener('click', () => {

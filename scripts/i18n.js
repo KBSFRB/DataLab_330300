@@ -2,9 +2,21 @@
 
 const i18n = function () {
 
-	const i18n = {};
+  const i18n = {};
 
   i18n.lang = navigator.language;
+
+  /**
+   * Check if the url contains a lang=xx parameter
+   * if it does, return the language
+   */
+  function get_url_lang() {
+    const url_params = new URLSearchParams(window.location.search);
+    if (url_params.has('lang')) {
+      return url_params.get('lang');
+    }
+    return null;
+  }
 
   /**
    * given a language string, returns the closest option from the options list
@@ -37,8 +49,8 @@ const i18n = function () {
     document.querySelectorAll(`[lang='${lang}']`).forEach(el => el.style.display = '');
   }
 
-	/**
-	 * initialise the language picking options
+  /**
+   * initialise the language picking options
    * 
    * it expects to find for each language an element with the id "i18n-picker-[lang]"
    * the currently active language is given the class "i18n-picker-active"
@@ -46,14 +58,19 @@ const i18n = function () {
    * elements with the class "i18n-[lang]" will only be shown when lang is the selected language
    * 
    * it will add event listener to detect when language is changed.
-	 * it will also set the current language the the browser lang
-	 */ 
-	i18n.start = function(languages) {
+   * it will also set the current language the the browser lang
+   */ 
+  i18n.start = function(languages) {
     // set lang based on navigator preferences
     i18n.options = languages;
 
-    set_lang(match_lang(navigator.language, languages));
-
+    // The lang is initialised using the url in priority, then the navigator language
+    let url_lang = get_url_lang();
+    if (url_lang && languages.includes(url_lang)) {
+      set_lang(url_lang);
+    } else {
+      set_lang(match_lang(navigator.language, languages));
+    }
     // add event listeners
     for (let lang of languages) {
       document.getElementById(`i18n-picker-${lang}`).addEventListener('click', () => {
@@ -61,7 +78,7 @@ const i18n = function () {
       })
     }
 
-	}
+  }
 
   /**
    * Gets a dict of {lang: text}, 
@@ -80,6 +97,6 @@ const i18n = function () {
   }
 
 
-	return i18n;
+  return i18n;
 
 }()
