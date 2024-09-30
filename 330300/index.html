@@ -260,7 +260,7 @@
       </svg>
       <div class="grow text-center">
         <span lang="en">Search or zoom to see buildings</span>
-        <span lang="fr">Utilisez la barre de recherche ou zoomer pour voir les bâtiments</span>
+        <span lang="fr">Utilisez la barre de recherche ou zoomez pour voir les bâtiments</span>
         <span lang="nl">Zoek op een adres of zoom in om gebouwen te zien</span>
       </div>
     </div>
@@ -523,7 +523,7 @@
         }
 
         marker.setText = function(text) {
-          this.legendText.options.html = `<div class="w-[250px] -ml-[125px] text-center text-sm"><span class="backdrop-blur-sm bg-white/75 px-2 py-1">${text}</span></div>`;
+          this.legendText.options.html = `<div class="w-[250px] -ml-[125px] text-center text-sm"><span class="bg-white/75 px-2 py-1">${text}</span></div>`;
           this.legendMarker.setIcon(this.legendText);
         }
 
@@ -621,8 +621,16 @@
             l300.setText(legend300);
           }
 
-          map.fitBounds(l30.getBounds(), {padding: [20, 20]});
+          // Get the current bounds of the layer
+          const bounds = l30.getBounds();
 
+          // Modify the bounds by shifting the south-west and north-east latitude
+          const newBounds = L.latLngBounds(
+            L.latLng(bounds.getSouthWest().lat - 0.0012, bounds.getSouthWest().lng), // Shift south-west latitude down
+            L.latLng(bounds.getNorthEast().lat - 0.0012, bounds.getNorthEast().lng)  // Shift north-east latitude down
+          );
+
+          map.fitBounds(newBounds, {padding: [20, 20]});
           correction_module.show(layer.feature.properties, center);
 
         }
