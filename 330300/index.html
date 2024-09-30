@@ -344,17 +344,10 @@
         modal.classList.remove("hidden");
       };
 
-      // window.onclick = function (event) {
-      //   if (event.target == modal) {
-      //     modal.classList.add("hidden");
-      //   }
-      // };
-
       let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
       const init_zoom = 9;
       const init_center = [50.6, 4.4];
       const min_building_zoom = 16;
-      //const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
       const colors_scheme = ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"];
 
       // start language options
@@ -365,9 +358,6 @@
         renderer: L.canvas(),
         minZoom: 7,
       }).setView(init_center, init_zoom);
-      /*map.createPane('labels');
-      map.getPane('labels').style.zIndex = 650;
-      map.getPane('labels').style.pointerEvents = 'none';*/
 
       var CartoDB_Positron = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
         attribution:
@@ -375,10 +365,6 @@
         maxZoom: 20,
       }).addTo(map);
 
-      /*var positronLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
-        pane: 'labels'
-			}).addTo(map);
-*/
       /* Force user inside of bounds */
       const southWest = L.latLng(49.4, 2.3),
         northEast = L.latLng(51.7, 6.6);
@@ -573,13 +559,10 @@
           let zoom = map.getZoom();
 
           if (current_center !== null && (zoom < min_building_zoom || !bounds.contains(current_center))) {
-            correction_module.hide();
-            l300.hide();
-            l30.hide();
-            l3.hide();
-            current_center = null;
+            unfocus();
           }
         })
+
 
         function unfocus() {
           correction_module.hide();
@@ -654,8 +637,7 @@
           tiling: true,
           extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
           grid_size: 100,
-          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, // datalab account
-          //url: (i, j) => `https://pub-4b0dc5689db344d8b9ea341d605c0bff.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, // robin's account
+          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, 
           score: score,
           on: {'click': highlightBuilding},
           data_id: 'id',
@@ -666,7 +648,7 @@
           tiling: true,
           extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
           grid_size: 100,
-          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`, // datalab account
+          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`,
           score: score,
         },
       ];
