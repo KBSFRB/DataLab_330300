@@ -132,9 +132,9 @@
             <p class="text-md">Deze kaart toont de score van elk gebouw in België op de 3-30-300 regel. Deze regel van Dr. Cecil Konijnendijk stelt dat:</p>
             
             <ul>
-              <li class="ml-8"><span class="font-bold">3</span> : elke burger vanuit zijn raam 3 bomen moet kunnen zien</li>
-              <li class="ml-8"><span class="font-bold">30</span> : de buurt rond elk gebouw voor 30% bedekt moet zijn met bomenkruinen</li>
-              <li class="ml-8"><span class="font-bold">300</span> : elke burger toegang moet hebben tot een publiek toegankelijke groene ruimte op maximaal 300 meter</li>
+              <li class="ml-8"><span class="font-bold">3</span>: elke burger vanuit zijn raam 3 bomen moet kunnen zien</li>
+              <li class="ml-8"><span class="font-bold">30</span>: de buurt rond elk gebouw voor 30% bedekt moet zijn met boomkruinen</li>
+              <li class="ml-8"><span class="font-bold">300</span>: elke burger toegang moet hebben tot een publiek toegankelijke groene ruimte op maximaal 300 meter</li>
             </ul>
             
             <p>
@@ -172,8 +172,8 @@
             <div lang="nl">Of</div>
             <button class="p-2 border-black inline-block rounded text-white bg-emerald-900" id="closeModalBtn">
               <span lang="en">Go to the map</span>
-              <span lang="fr">Voir la carte</span>
-              <span lang="nl">Zie de map</span>
+              <span lang="fr">Accéder à la carte</span>
+              <span lang="nl">Ga naar de kaart</span>
             </button>
           </div>
         </div>
@@ -205,14 +205,14 @@
             <input type="radio" name="scoring" value="rule3" id="scoring_rule3" />
             <label for="scoring_rule3">
               <span lang="en">Rule 3: Trees</span>
-              <span lang="fr">Règle 3: Arbres</span>
+              <span lang="fr">Règle 3 : Arbres</span>
               <span lang="nl">Regel 3: Bomen</span>
             </label>
           </div>
           <div>
             <input type="radio" name="scoring" value="rule30" id="scoring_rule30" />
             <label for="scoring_rule30">
-              <span lang="en">Rule 30: Canopy cover</span>
+              <span lang="en">Rule 30: Tree canopy cover</span>
               <span lang="fr">Règle 30 : Couverture arborée</span>
               <span lang="nl">Regel 30: Boomkruinbedekking</span>
             </label>
@@ -221,7 +221,7 @@
             <input type="radio" name="scoring" value="rule300" id="scoring_rule300" />
             <label for="scoring_rule300">
               <span lang="en">Rule 300: Access to parks</span>
-              <span lang="fr">Règle 300: Accès aux parcs</span>
+              <span lang="fr">Règle 300 : Accès aux parcs</span>
               <span lang="nl">Regel 300: Toegang tot parken</span>
             </label>
           </div>
@@ -248,9 +248,9 @@
       </div>
       <button id="openModalBtn" class="z-[600] bg-white py-1 px-2 border-black border rounded hover:bg-gray-100">?</button>
       <div id="lang-picker" class="flex flex-col z-[3000]">
-        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">nl</button>
-        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">fr</button>
-        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">en</button>
+        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">NL</button>
+        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">FR</button>
+        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">EN</button>
       </div>
     </div>
 
@@ -274,7 +274,7 @@
 
     <div id="correction-module" class="hidden absolute bottom-20 left-0 w-full sm:bottom-4 sm:left-1/2 sm:w-[400px] sm:-ml-[200px] z-[1000] text-center items-center bg-white py-2 px-3 border-black border rounded">
       <div id="correction-invite">
-        <span lang="en">That doesn't seem right ? You can 
+        <span lang="en">That doesn't seem right? You can 
           <a href="#" class="underline text-blue-700" 
           onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
           >Suggest a correction</a>.</span>
@@ -282,7 +282,7 @@
           <a href="#" class="underline text-blue-700" 
           onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
           >Proposer une correction</a>.</span>
-        <span lang="nl">That doesn't seem right ? You can 
+        <span lang="nl">That doesn't seem right? You can 
           <a href="#" class="underline text-blue-700" 
           onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
           >Suggest a correction</a>.</span>
@@ -419,7 +419,7 @@
 
         if (mode == "overall") {
           grades = [0, 1, 2, 3];
-          this._div.innerHTML = `<p>${i18n.span({fr: 'Nombre de règles respectées', en: 'Number of rules satisfied', nl: 'Number of rules satisfied'})}</p>`;
+          this._div.innerHTML = `<p>${i18n.span({fr: 'Nombre de règles respectées', en: 'Number of rules satisfied', nl: 'Aantal regels voldaan'})}</p>`;
           let legend = '<div class="flex gap-1 sm:gap-2">'
           for (let i = 0; i < grades.length; i++) {
             const color = get_color(colors_scheme, grades[i] / 3);
