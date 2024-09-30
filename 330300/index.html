@@ -351,7 +351,7 @@
       let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
       const init_zoom = 9;
       const init_center = [50.6, 4.4];
-      const min_building_zoom = 14;
+      const min_building_zoom = 16;
       //const colors_scheme = ['#a6611a','#dfc27d','#80cdc1','#018571'];
       const colors_scheme = ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"];
 
@@ -670,15 +670,15 @@
           on: {'click': highlightBuilding},
           data_id: 'id',
         },
-        /*{
+        {
           name: "centroids",
-          min_zoom: min_building_zoom-2,
+          min_zoom: min_building_zoom-3,
           tiling: true,
           extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
           grid_size: 100,
           url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`, // datalab account
           score: score,
-        },*/
+        },
       ];
 
       // Create the layers
