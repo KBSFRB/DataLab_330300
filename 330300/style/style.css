@@ -2,7 +2,7 @@
 	background-color: silver;
 }
 
-#myModal p, #myModal ul {
+#myModal p:not(:last-child), #myModal ul {
 	margin-bottom: 1em;
 }
 
