@@ -277,37 +277,46 @@
         <span lang="en">That doesn't seem right? You can 
           <a href="#" class="underline text-blue-700" 
           onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
-          >Suggest a correction</a>.</span>
-        <span lang="fr">Ça n'a pas l'air correct ? Vous pouvez  
+          >suggest a correction</a>.</span>
+        <span lang="fr">Ça n'a pas l'air correct ? Vous pouvez 
           <a href="#" class="underline text-blue-700" 
           onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
-          >Proposer une correction</a>.</span>
-        <span lang="nl">That doesn't seem right? You can 
+          >proposer une correction</a>.</span>
+        <span lang="nl">Lijkt dat niet correct? U kunt 
           <a href="#" class="underline text-blue-700" 
           onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
-          >Suggest a correction</a>.</span>
+          >een verbetering voorstellen</a>.</span>
       </div>
       <form id="correction-form" class="hidden text-left mt-4">
         <ul>
           <li lang="en" class="mb-3">
             <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
             <label for="rule3-correction">At least 3 trees are visible from this building</label><br>
-            <span class="text-sm text-gray-500">(Less than 60m away, higher than 3m)</span>
+            <span class="text-sm text-gray-500">(less than 60m away, higher than 3m)</span>
           </li>
           <li lang="fr" class="mb-3"></li>
             <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
             <label for="rule3-correction">Au moins 3 arbres sont visibles de ce bâtiment</label><br>
             <span class="text-sm text-gray-500">(à moins de 60m, plus haut que 3m)</span>
           </li>
+          <li lang="nl" class="mb-3"></li>
+            <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
+            <label for="rule3-correction">Er zijn minstens 3 bomen zichtbaar vanaf dit gebouw</label><br>
+            <span class="text-sm text-gray-500">(op minder dan 60m afstand, hoger dan 3m)</span>
+          </li>
 
 
-          <li class="mb-3">
+          <li lang="en" class="mb-3">
             <input type="checkbox" name="rule300" id="rule300-correction" class="mr-1" />
             <label for="rule300-correction">There is a public park less than 300m away</label><br>
             <span class="text-sm text-gray-500">(At least 0.5 hectare, with trees)</span>
           </li>
 
-          <button type="submit" id="correction-submit" class="p-2 border-black rounded text-white bg-blue-700">Send corrections</button>
+          <button type="submit" id="correction-submit" class="p-2 border-black rounded text-white bg-blue-700">
+            <span lang="en">Send corrections</span>
+            <span lang="fr">Envoyer les corrections</span>
+            <span lang="nl">Verbeteringen opsturen</span>
+          </button>
           <p class="text-sm text-gray-500">
             You cannot correct the canopy cover (rule 30) as it is very hard to estimate
           </p>
