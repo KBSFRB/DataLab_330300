@@ -601,41 +601,29 @@
           l30.setColor(get_color(colors_scheme, rule30(layer.feature)));
           l300.setColor(get_color(colors_scheme, rule300(layer.feature)));
 
-          if (i18n.lang === 'en'){
-            let legend3 = `At least 3 trees visible: ${rule3(layer.feature) ? 'Yes': 'No'}`;
-            l3.setText(legend3);
-  
-            let legend30 = `Over 30% canopy cover: ${rule30(layer.feature) ? 'Yes': 'No'}<br>
-            (In a 500m radius)`;
-            l30.setText(legend30);
-  
-            let legend300 = `Less than 300m from public park: ${rule300(layer.feature) ? 'Yes': 'No'}`;
-            l300.setText(legend300);
-          }
+          let legend3 = i18n.span({
+            'fr': `Au moins 3 arbres visibles : ${rule3(layer.feature) ? 'Oui': 'Non'}`,
+            'en': `At least 3 trees visible: ${rule3(layer.feature) ? 'Yes': 'No'}`,
+            'nl': `Minstens 3 bomen zichtbaar: ${rule3(layer.feature) ? 'Ja': 'Nee'}`
+          })
 
-          if (i18n.lang === 'fr'){
-            let legend3 = `Au moins 3 arbres visibles : ${rule3(layer.feature) ? 'Oui': 'Non'}`;
-            l3.setText(legend3);
-  
-            let legend30 = `Plus de 30% de coverture arborée : ${rule30(layer.feature) ? 'Oui': 'Non'}<br>
-            (dans un rayon de 500m)`;
-            l30.setText(legend30);
-  
-            let legend300 = `À moins de 300m d'un parc public : ${rule300(layer.feature) ? 'Oui': 'Non'}`;
-            l300.setText(legend300);
-          }
+          l3.setText(legend3);
 
-          if (i18n.lang === 'nl'){
-            let legend3 = `Minstens 3 bomen zichtbaar: ${rule3(layer.feature) ? 'Ja': 'Nee'}`;
-            l3.setText(legend3);
-  
-            let legend30 = `Meer dan 30% boomkruinbedekking: ${rule30(layer.feature) ? 'Ja': 'Nee'}<br>
-            (in een straal van 500m)`;
-            l30.setText(legend30);
-  
-            let legend300 = `Op minder dan 300m van een publiek park: ${rule300(layer.feature) ? 'Ja': 'Nee'}`;
-            l300.setText(legend300);
-          }
+          let legend30 = i18n.span({
+            'fr': `Plus de 30% de coverture arborée : ${rule30(layer.feature) ? 'Oui': 'Non'}<br>(dans un rayon de 500m)`,
+            'en': `Over 30% canopy cover: ${rule30(layer.feature) ? 'Yes': 'No'}<br>(In a 500m radius)`,
+            'nl': `Meer dan 30% boomkruinbedekking: ${rule30(layer.feature) ? 'Ja': 'Nee'}<br>(in een straal van 500m)`
+          })
+
+          l30.setText(legend30);
+
+          let legend300 = i18n.span({
+            'fr': `À moins de 300m d'un parc public : ${rule300(layer.feature) ? 'Oui': 'Non'}`,
+            'en': `Less than 300m from public park: ${rule300(layer.feature) ? 'Yes': 'No'}`,
+            'nl': `Op minder dan 300m van een publiek park: ${rule300(layer.feature) ? 'Ja': 'Nee'}`
+          })
+
+          l300.setText(legend300);
 
           // Get the current bounds of the layer
           const bounds = l30.getBounds();
