@@ -470,6 +470,8 @@
 
       legend.addTo(map);
 
+      fetch(`https://backend-330300.vandendriesche-c.workers.dev/log?page=map&session_id=${correction_module.session_id}`)
+
       function rule3(f) {
         const p = f.properties;
         if (p.rule3_perc_buildings || p.rule3_perc_buildings === 0) {

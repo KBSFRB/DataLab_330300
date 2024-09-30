@@ -158,6 +158,6 @@ const correction_module = function() {
   }
 
   return {
-    show, hide
+    show, hide, session_id
   }
 }();
