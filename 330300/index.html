@@ -301,14 +301,19 @@
             <span lang="nl" class="text-sm text-gray-500">(op minder dan 60m afstand, hoger dan 3m)</span>
           </li>
 
-
           <li class="mb-3">
             <input type="checkbox" name="rule300" id="rule300-correction" class="mr-1" />
-            <label for="rule300-correction">There is a public park less than 300m away</label><br>
-            <span class="text-sm text-gray-500">(At least 0.5 hectare, with trees)</span>
+            <label for="rule300-correction">
+              <span lang="en">There is a public park less than 300m away</span>
+              <span lang="fr">Il y a un espace vert public à moins de 300m</span>
+              <span lang="nl">Er is een publiek toegankelijke groene ruimte op minder dan 300m afstand</span>
+            </label><br>
+            <span lang="en" class="text-sm text-gray-500">(at least 0.2 hectare)</span>
+            <span lang="fr" class="text-sm text-gray-500">(d'au moins 0,2 hectare)</span>
+            <span lang="nl" class="text-sm text-gray-500">(van ten minste 0,2 hectare)</span>
           </li>
 
-          <button type="submit" id="correction-submit" class="p-2 border-black inline-block rounded text-white bg-emerald-900">
+          <button type="submit" id="correction-submit" class="p-2 border-black inline-block rounded text-white bg-emerald-900" style="background-color: #01665E; width: max-content;">
             <span lang="en">Send corrections</span>
             <span lang="fr">Envoyer les corrections</span>
             <span lang="nl">Verbeteringen opsturen</span>
@@ -316,8 +321,8 @@
 
           <p class="text-sm text-gray-500">
             <span lang="en">You cannot correct the canopy cover (rule 30) as it is very hard to estimate.</span>
-            <span lang="fr">FR test.</span>
-            <span lang="nl">NL test.</span>
+            <span lang="fr">Il n'est pas possible de corriger la couverture arborée (règle 30) car elle est très difficile à estimer.</span>
+            <span lang="nl">Het is niet mogelijk om te corrigeren voor boomkruinbedekking (regel 30), omdat deze zeer moeilijk in te schatten is.</span>
           </p>
         </ul>
       </form>
