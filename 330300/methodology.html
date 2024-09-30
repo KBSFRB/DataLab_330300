@@ -23,10 +23,15 @@
   </head>
   <body>
     <menu>
-    <div id="lang-picker" class="absolute top-4 right-4 z-[100000] flex flex-col">
-      <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">NL</button>
-      <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">FR</button>
-      <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">EN</button>
+    <div class="absolute top-4 right-4 flex flex-col gap-2">
+      <div class="border-black border rounded h-9 w-9 z-[600] p-1 bg-white">
+        <a href="https://www.thedataLab.be"><img src="../assets/images/logo_small.jpg"></a>
+      </div>
+      <div id="lang-picker" class="flex flex-col z-[3000]">
+        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">NL</button>
+        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">FR</button>
+        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">EN</button>
+      </div>
     </div>
     </menu>
     <main class="container max-w-3xl mx-auto px-4 py-8">
@@ -44,7 +49,7 @@
             <p><span class="font-bold">300 meters to public green space</span>: public green space is here defined as publicly accessible green space of at least 0.2 hectares. A 300-meter buffer was drawn around the park boundaries, and all buildings within that buffer meet the rule. To do this, we used publicly available data of public parks and neighbourhood green space in <a href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml">Brussels</a>, <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html">Wallonia</a> and <a href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019">Flanders</a>.</p>
             <p>The 2019 Flemish “neighbourhood green space” map includes all clusters of publicly accessible green space with an area from 0.2 hectares, with a resolution of 10x10 m2. From this map, the categories of neighbourhood green, neighbourhood green, district green, urban green and urban forest were included. The Walloon Projet Informatique de Cartographie Continue (PICC) contains landscape elements such as buildings, infrastructure, relief, as well as natural landscape elements. From this map, the categories Bosquet, Parc récréatif, Terrain de Sport and Forêt were used to describe publicly accessible green space together. The Brussels land use map GEMET INSPIRE includes categories park and forest, which were used to identify public green space. Because each of these maps applies different categories to identify public green space, there will be slight variations that make comparisons between regions difficult.</p>
             <p>The mapping of the 300 rule is an overestimation of the reality of access to public green space, as a result of the limitations of the available data. Professor Konijnendijk imposes a park size of 1 hectare with a lower limit of 0.5 hectare in densely populated urbanised areas. The pragmatic choice here was made for 0.2 hectares because the Flemish dataset uses this as the lower limit for green space. This lower limit could not be raised to 0.5 hectares, because the parks in the Flemish dataset are divided by footpaths crossing the parks and these areas are not clustered on the map. By increasing the minimum area, we would lose many parks that are split on the map by hiking trails. This would greatly undermine the accuracy of the map. To apply the same methodology as much as possible across the three regions, it was opted to then set the minimum area of green space for the entire map at 0.2 hectares. An additional overestimation lies in the fact that the 300 meter distance from a park is calculated as a bird's eye view, without taking into account the effective walking distance to that green space. This choice overestimates the proportion of homes that effectively meet the 300 rule.</p>
-            <p class="mt-7"><span class="font-bold">Survey data</span>: in May 2024, Greenpeace distributed an online survey via social media and by email to its own database about the 3-30-300 rule. People were asked to count the trees they can see from their homes and measure the distance to the nearest public green space. In this way, Greenpeace collected 4432 responses. We then used this data to fact-check the automated analysis to improve its methodology. In this way, citizens helped map urban nature in Belgium.</p>    
+            <p><span class="font-bold">Survey data</span>: in May 2024, Greenpeace distributed an online survey via social media and by email to its own database about the 3-30-300 rule. People were asked to count the trees they can see from their homes and measure the distance to the nearest public green space. In this way, Greenpeace collected 4432 responses. We then used this data to fact-check the automated analysis to improve its methodology. In this way, citizens helped map urban nature in Belgium.</p>    
         </div>
         <div lang="fr" class="flex flex-col gap-4">
             <h1>Méthodologie</h1>
