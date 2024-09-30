@@ -289,24 +289,20 @@
       </div>
       <form id="correction-form" class="hidden text-left mt-4">
         <ul>
-          <li lang="en" class="mb-3">
+          <li class="mb-3">
             <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
-            <label for="rule3-correction">At least 3 trees are visible from this building</label><br>
-            <span class="text-sm text-gray-500">(less than 60m away, higher than 3m)</span>
-          </li>
-          <li lang="fr" class="mb-3"></li>
-            <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
-            <label for="rule3-correction">Au moins 3 arbres sont visibles de ce bâtiment</label><br>
-            <span class="text-sm text-gray-500">(à moins de 60m, plus haut que 3m)</span>
-          </li>
-          <li lang="nl" class="mb-3"></li>
-            <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
-            <label for="rule3-correction">Er zijn minstens 3 bomen zichtbaar vanaf dit gebouw</label><br>
-            <span class="text-sm text-gray-500">(op minder dan 60m afstand, hoger dan 3m)</span>
+            <label for="rule3-correction">
+              <span lang="en">At least 3 trees are visible from this building</span>
+              <span lang="fr">Au moins 3 arbres sont visibles de ce bâtiment</span>
+              <span lang="nl">Er zijn minstens 3 bomen zichtbaar vanaf dit gebouw</span>
+            </label><br>
+            <span lang="en" class="text-sm text-gray-500">(less than 60m away, higher than 3m)</span>
+            <span lang="fr" class="text-sm text-gray-500">(à moins de 60m, plus haut que 3m)</span>
+            <span lang="nl" class="text-sm text-gray-500">(op minder dan 60m afstand, hoger dan 3m)</span>
           </li>
 
 
-          <li lang="en" class="mb-3">
+          <li class="mb-3">
             <input type="checkbox" name="rule300" id="rule300-correction" class="mr-1" />
             <label for="rule300-correction">There is a public park less than 300m away</label><br>
             <span class="text-sm text-gray-500">(At least 0.5 hectare, with trees)</span>
@@ -319,7 +315,9 @@
           </button>
 
           <p class="text-sm text-gray-500">
-            You cannot correct the canopy cover (rule 30) as it is very hard to estimate
+            <span lang="en">You cannot correct the canopy cover (rule 30) as it is very hard to estimate.</span>
+            <span lang="fr">FR test.</span>
+            <span lang="nl">NL test.</span>
           </p>
         </ul>
       </form>
