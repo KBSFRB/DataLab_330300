@@ -57,11 +57,8 @@
   </head>
   <body>
     <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden z-[2000]">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-11/12 sm:w-8/12 h-5/6 relative">
-        <!-- <button class="absolute top-1 right-3 text-black text-2xl font-bold" id="closeModalBtn">&times;</button> -->
-        
-        <div class="flex flex-col h-full">
-          <div lang="en" class="overflow-auto h-full w-full p-2">
+      <div class="bg-white rounded-lg shadow-lg m-2 p-6 max-w-11/12 sm:max-w-8/12 max-h-full flex flex-col">
+          <div lang="en" class="overflow-auto h-full max-w-prose p-2">
             <h1 class="font-bold text-center mb-3">Find out your 3-30-300 score!</h1>
           
             <p class="text-md">This map displays the score for each building in Belgium on the 3-30-300 rule. This rule from Dr. Cecil Konijnendijk states that:</p>
@@ -90,7 +87,7 @@
             </p>
           </div>
           
-          <div lang="fr" class="overflow-auto h-full w-full p-2">
+          <div lang="fr" class="overflow-auto h-full w-full p-2 max-w-prose">
             <h1 class="font-bold text-center mb-3">Découvrez votre score 3-30-300 !</h1>
           
             <p class="text-md">Cette carte présente le score de chaque bâtiment en Belgique selon la règle des 3-30-300. Cette règle du Dr. Cecil Konijnendijk stipule que :</p>
@@ -126,7 +123,7 @@
             </p>
           </div>
 
-          <div lang="nl"  class="overflow-auto h-full w-full p-2">
+          <div lang="nl"  class="overflow-auto h-full w-full p-2 max-w-prose">
             <h1 class="font-bold text-center mb-3">Ontdek je 3-30-300 score!</h1>
           
             <p class="text-md">Deze kaart toont de score van elk gebouw in België op de 3-30-300 regel. Deze regel van Dr. Cecil Konijnendijk stelt dat:</p>
@@ -164,7 +161,7 @@
           <div class="text-center mt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
             <form id="modalSearch">
               <input type="text" class="p-2 border border-black rounded-l w-48 sm:w-64" name="modalSearch" placeholder="Search for an address" data-i18n-placeholder="search_address"><button type="submit" class="p-2 border-black border rounded-r text-white bg-emerald-900">
-                <span lang="en" cla>Search</span><span lang="fr">Rechercher</span> <span lang="nl">Zoeken</span>
+                <span lang="en">Search</span><span lang="fr">Rechercher</span> <span lang="nl">Zoeken</span>
               </button>
             </form>
             <div lang="en">Or</div>
@@ -176,8 +173,6 @@
               <span lang="nl">Ga naar de kaart</span>
             </button>
           </div>
-        </div>
-
       </div>
     </div>
 
