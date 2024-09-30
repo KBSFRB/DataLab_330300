@@ -25,7 +25,11 @@ const correction_module = function() {
     const button = document.getElementById('correction-submit');
     if (state == 'ready') {
       button.disabled = false;
-      button.innerHTML = 'Send corrections';
+      button.innerHTML = i18n.span({
+        'fr': 'Envoyer les corrections',
+        'en': 'Send corrections',
+        'nl': 'Verbeteringen opsturen'
+      });
       button.classList.remove('bg-green-600');
       button.classList.remove('bg-red-600');
       button.classList.remove('bg-slate-500');
@@ -36,14 +40,22 @@ const correction_module = function() {
       <style>.spinner_qM83{animation:spinner_8HQG 1.05s infinite}.spinner_oXPr{animation-delay:.1s}.spinner_ZTLf{animation-delay:.2s}@keyframes spinner_8HQG{0%,57.14%{animation-timing-function:cubic-bezier(0.33,.66,.66,1);transform:translate(0)}28.57%{animation-timing-function:cubic-bezier(0.33,0,.66,.33);transform:translateY(-6px)}100%{transform:translate(0)}}
       </style><circle class="spinner_qM83" cx="4" cy="12" r="3"/><circle class="spinner_qM83 spinner_oXPr" cx="12" cy="12" r="3"/>
       <circle class="spinner_qM83 spinner_ZTLf" cx="20" cy="12" r="3"/></svg>
-      Sending...`;
+      ${i18n.span({
+        'fr': 'Envoi en cours...',
+        'en': 'Sending...',
+        'nl': 'Verzenden...'
+      })}`;
       button.classList.remove('bg-green-600');
       button.classList.remove('bg-red-600');
       button.classList.add('bg-slate-500');
       button.classList.remove('bg-blue-700');
     } else if (state == 'success') {
       button.disabled = true;
-      button.innerHTML = 'Sent!';
+      button.innerHTML = i18n.span({
+        'fr': 'Envoyé!',
+        'en': 'Sent!',
+        'nl': 'Success!'
+      });
       button.classList.add('bg-green-600');
       button.classList.remove('bg-red-600');
       button.classList.remove('bg-slate-500');
