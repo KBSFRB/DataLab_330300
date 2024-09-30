@@ -80,7 +80,7 @@
               Find out our complete methodology and the known limitations <a href="methodology.html">here</a>. 
             </p>
             
-            <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracies or have any questions, don’t hesitate to contact us: <a href="info@thedatalab.be">info@thedatalab.be</a>. </p>
+            <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracies or have any questions, don’t hesitate to contact us: <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>. </p>
             
             <p>
               Do you want to know more about DataLab? <a href="../index.html">Click here</a>. Stay tuned for version 2! Follow us on social media: <a href="https://www.linkedin.com/company/datalab-be/">LinkedIn</a> - <a href="https://www.facebook.com/profile.php?id=61559706710432">Facebook</a>.
@@ -109,7 +109,7 @@
             </p>
             
             <p>
-              Il s'agit d'un projet en cours et nous continuons à améliorer la qualité des données. Si vous trouvez des inexactitudes ou si vous avez des questions, n'hésitez pas à nous contacter : <a href="info@thedatalab.be">info@thedatalab.be</a>. 
+              Il s'agit d'un projet en cours et nous continuons à améliorer la qualité des données. Si vous trouvez des inexactitudes ou si vous avez des questions, n'hésitez pas à nous contacter : <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>. 
             </p>
             
             <p>
@@ -145,7 +145,7 @@
             </p>
             
             <p>
-              Dit is een doorlopend project en we zijn nog steeds bezig met het verbeteren van de kwaliteit van de gegevens. Als u onnauwkeurigheden vindt of vragen hebt, aarzel dan niet om contact met ons op te nemen: <a href="info@thedatalab.be">info@thedatalab.be</a>. 
+              Dit is een doorlopend project en we zijn nog steeds bezig met het verbeteren van de kwaliteit van de gegevens. Als u onnauwkeurigheden vindt of vragen hebt, aarzel dan niet om contact met ons op te nemen: <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>. 
             </p>
             
             <p>
@@ -289,11 +289,18 @@
       </div>
       <form id="correction-form" class="hidden text-left mt-4">
         <ul>
-          <li class="mb-3">
+          <li lang="en" class="mb-3">
             <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
             <label for="rule3-correction">At least 3 trees are visible from this building</label><br>
-            <span class="text-sm text-gray-500">(Less than Xm away)</span>
+            <span class="text-sm text-gray-500">(Less than 60m away, higher than 3m)</span>
           </li>
+          <li lang="fr" class="mb-3"></li>
+            <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
+            <label for="rule3-correction">Au moins 3 arbres sont visibles de ce bâtiment</label><br>
+            <span class="text-sm text-gray-500">(à moins de 60m, plus haut que 3m)</span>
+          </li>
+
+
           <li class="mb-3">
             <input type="checkbox" name="rule300" id="rule300-correction" class="mr-1" />
             <label for="rule300-correction">There is a public park less than 300m away</label><br>
@@ -598,14 +605,14 @@
           }
 
           if (i18n.lang === 'fr'){
-            let legend3 = `Au moins 3 arbres visibles: ${rule3(layer.feature) ? 'Oui': 'Non'}`;
+            let legend3 = `Au moins 3 arbres visibles : ${rule3(layer.feature) ? 'Oui': 'Non'}`;
             l3.setText(legend3);
   
-            let legend30 = `Plus de 30% de coverture arborée: ${rule30(layer.feature) ? 'Oui': 'Non'}<br>
+            let legend30 = `Plus de 30% de coverture arborée : ${rule30(layer.feature) ? 'Oui': 'Non'}<br>
             (dans un rayon de 500m)`;
             l30.setText(legend30);
   
-            let legend300 = `À moins de 300m d'un parc publique: ${rule300(layer.feature) ? 'Oui': 'Non'}`;
+            let legend300 = `À moins de 300m d'un parc public : ${rule300(layer.feature) ? 'Oui': 'Non'}`;
             l300.setText(legend300);
           }
 
