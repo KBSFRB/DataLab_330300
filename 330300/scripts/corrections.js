@@ -1,6 +1,11 @@
 const correction_module = function() {
   let initialised = false;
-  const session_id = self.crypto.randomUUID();
+  let session_id = '';
+  try {
+    session_id = self.crypto.randomUUID();
+  catch (e) {
+    session_id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
   let selected_building_id = null;
   
   // Put building in view when working on the form
