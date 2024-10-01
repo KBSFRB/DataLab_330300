@@ -393,7 +393,7 @@
       });
 
       /* Move to user's location */
-      map.locate({ setView: true, maxZoom: 16 });
+      map.locate({ setView: true, maxZoom: min_building_zoom+1 });
       
       
 
@@ -577,7 +577,7 @@
           let bounds = map.getBounds();
           let zoom = map.getZoom();
 
-          if (current_center !== null && (zoom < min_building_zoom || !bounds.contains(current_center))) {
+          if (current_center !== null && (zoom < layers[layers.length-1].min_zoom || !bounds.contains(current_center))) {
             unfocus();
           }
         })
