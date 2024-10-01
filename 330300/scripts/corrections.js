@@ -3,7 +3,7 @@ const correction_module = function() {
   let session_id = '';
   try {
     session_id = self.crypto.randomUUID();
-  catch (e) {
+  } catch (e) {
     session_id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
   }
   let selected_building_id = null;
