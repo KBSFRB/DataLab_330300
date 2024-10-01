@@ -4,7 +4,14 @@ const correction_module = function() {
   try {
     session_id = self.crypto.randomUUID();
   } catch (e) {
-    session_id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+    session_id = generateUUID();
   }
   let selected_building_id = null;
   
