@@ -1,725 +1,1206 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-  <head>
-    <base target="_top" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head>
+        <base target="_top" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- Primary Meta Tags -->
-<title>The Datalab: 3-30-300 map</title>
-<meta name="title" content="The Datalab: 3-30-300 map" />
-<meta name="description" content="Explore access to trees and park in Belgium" />
+        <!-- Primary Meta Tags -->
+        <title>The Datalab: 3-30-300 map</title>
+        <meta name="title" content="The Datalab: 3-30-300 map" />
+        <meta
+            name="description"
+            content="Explore access to trees and park in Belgium"
+        />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://thedatalab.be/330300/" />
-<meta property="og:title" content="The Datalab: 3-30-300 map" />
-<meta property="og:description" content="Explore access to trees and parks in Belgium" />
-<meta property="og:image" content="https://thedatalab.be/330300/thumbnail.png" />
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://thedatalab.be/330300/" />
+        <meta property="og:title" content="The Datalab: 3-30-300 map" />
+        <meta
+            property="og:description"
+            content="Explore access to trees and parks in Belgium"
+        />
+        <meta
+            property="og:image"
+            content="https://thedatalab.be/330300/thumbnail.png"
+        />
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content="https://thedatalab.be/330300/" />
-<meta property="twitter:title" content="The Datalab: 3-30-300 map" />
-<meta property="twitter:description" content="Explore access to trees and parks in Belgium" />
-<meta property="twitter:image" content="https://thedatalab.be/330300/thumbnail.png" />
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://thedatalab.be/330300/" />
+        <meta property="twitter:title" content="The Datalab: 3-30-300 map" />
+        <meta
+            property="twitter:description"
+            content="Explore access to trees and parks in Belgium"
+        />
+        <meta
+            property="twitter:image"
+            content="https://thedatalab.be/330300/thumbnail.png"
+        />
 
-<!-- Meta Tags Generated with https://metatags.io -->
+        <!-- Meta Tags Generated with https://metatags.io -->
 
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
-    <link rel="stylesheet" href="style/geosearch.css" />
-    <link rel="stylesheet" href="style/style.css" />
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
-    <script src="scripts/utils.js"></script>
-    <script src="scripts/queue.js"></script>
-    <script src="scripts/layers_handling.js"></script>
-    <script src="scripts/i18n.js"></script>
-    <script src="scripts/corrections.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""
+        />
+        <link rel="stylesheet" href="style/geosearch.css" />
+        <link rel="stylesheet" href="style/style.css" />
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""
+        ></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+        <script src="scripts/utils.js"></script>
+        <script src="scripts/queue.js"></script>
+        <script src="scripts/layers_handling.js"></script>
+        <script src="scripts/i18n.js"></script>
+        <script src="scripts/corrections.js"></script>
 
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="myModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden z-[2000]">
-      <div class="bg-white rounded-lg shadow-lg m-2 p-6 max-w-11/12 sm:max-w-8/12 max-h-full flex flex-col">
-          <div lang="en" class="overflow-auto h-full max-w-prose p-2">
-            <h1 class="font-bold text-center mb-3">Find out your 3-30-300 score!</h1>
-          
-            <p class="text-md">This map displays the score for each building in Belgium on the 3-30-300 rule. This rule from Dr. Cecil Konijnendijk states that:</p>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+            }
+        </style>
 
-            
-            
-            <ul class="list-disc">
-              <li class="ml-8"><span class="font-bold">3</span>: every citizen should be able to see 3 trees from their windows </li>
-              <li class="ml-8"><span class="font-bold">30</span>: the neighbourhood around each building should have 30% tree canopy </li>
-              <li class="ml-8"><span class="font-bold">300</span>:  every citizen should have access to a public green space at maximum 300 metres </li>
-            </ul>
-            
-            <ul class="flex flex-row gap-2 list-none">
-              <li><img src="images/rule3.png"><div class="text-center">See 3 trees</div></li>
-              <li><img src="images/rule30.png"><div class="text-center">30% canopy cover</div></li>
-              <li><img src="images/rule300.png"><div class="text-center">300m to a park</div></li>
-            </ul>
+        <script
+            defer
+            data-domain="thedatalab.be"
+            src="https://plausible.io/js/script.js"
+        ></script>
+    </head>
+    <body>
+        <div
+            id="myModal"
+            class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden z-[2000]"
+        >
+            <div
+                class="bg-white rounded-lg shadow-lg m-2 p-6 max-w-11/12 sm:max-w-8/12 max-h-full flex flex-col"
+            >
+                <div lang="en" class="overflow-auto h-full max-w-prose p-2">
+                    <h1 class="font-bold text-center mb-3">
+                        Find out your 3-30-300 score!
+                    </h1>
 
-            <p>
-              Studies show that complying with this rule improves health and well-being of people, while creating cleaner and greener neighbourhoods.
-            </p>
-            
-            <p>
-              Find out our complete <a href="methodology.html?lang=en">methodology and the known limitations</a>. 
-            </p>
+                    <p class="text-md">
+                        This map displays the score for each building in Belgium
+                        on the 3-30-300 rule. This rule from Dr. Cecil
+                        Konijnendijk states that:
+                    </p>
 
-            <div class="bg-amber-50 px-3 py-1 border rounded border-amber-100">
-              <p>This is an ongoing project and we are still improving the data quality, if you find any inaccuracies or have any questions, don’t hesitate to contact us: <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>. </p>
+                    <ul class="list-disc">
+                        <li class="ml-8">
+                            <span class="font-bold">3</span>: every citizen
+                            should be able to see 3 trees from their windows
+                        </li>
+                        <li class="ml-8">
+                            <span class="font-bold">30</span>: the neighbourhood
+                            around each building should have 30% tree canopy
+                        </li>
+                        <li class="ml-8">
+                            <span class="font-bold">300</span>: every citizen
+                            should have access to a public green space at
+                            maximum 300 metres
+                        </li>
+                    </ul>
 
-              <p>
-                The data in this map is subject to change at any time without notice.
-              </p>
+                    <ul class="flex flex-row gap-2 list-none">
+                        <li>
+                            <img src="images/rule3.png" />
+                            <div class="text-center">See 3 trees</div>
+                        </li>
+                        <li>
+                            <img src="images/rule30.png" />
+                            <div class="text-center">30% canopy cover</div>
+                        </li>
+                        <li>
+                            <img src="images/rule300.png" />
+                            <div class="text-center">300m to a park</div>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Studies show that complying with this rule improves
+                        health and well-being of people, while creating cleaner
+                        and greener neighbourhoods.
+                    </p>
+
+                    <p>
+                        Find out our complete
+                        <a href="methodology.html?lang=en"
+                            >methodology and the known limitations</a
+                        >.
+                    </p>
+
+                    <div
+                        class="bg-amber-50 px-3 py-1 border rounded border-amber-100"
+                    >
+                        <p>
+                            This is an ongoing project and we are still
+                            improving the data quality, if you find any
+                            inaccuracies or have any questions, don’t hesitate
+                            to contact us:
+                            <a href="mailto:info@thedatalab.be"
+                                >info@thedatalab.be</a
+                            >.
+                        </p>
+
+                        <p>
+                            The data in this map is subject to change at any
+                            time without notice.
+                        </p>
+                    </div>
+
+                    <p class="mt-2 text-center">
+                        <a href="../index.html?lang=en">About us</a> - Stay
+                        tuned for version 2:
+                        <a href="https://www.linkedin.com/company/datalab-be/"
+                            ><img
+                                class="inline-block h-6 align-bottom"
+                                src="images/linkedin.png"
+                                alt="LinkedIn"
+                        /></a>
+                        <a
+                            href="https://www.facebook.com/profile.php?id=61559706710432"
+                            ><img
+                                class="inline-block h-6 align-bottom"
+                                src="images/facebook.png"
+                                alt="Facebook"
+                        /></a>
+                    </p>
+                </div>
+
+                <div
+                    lang="fr"
+                    class="overflow-auto h-full w-full p-2 max-w-prose"
+                >
+                    <h1 class="font-bold text-center mb-3">
+                        Découvrez votre score 3-30-300 !
+                    </h1>
+
+                    <p class="text-md">
+                        Cette carte présente le score de chaque bâtiment en
+                        Belgique selon la règle des 3-30-300. Cette règle du Dr.
+                        Cecil Konijnendijk stipule que :
+                    </p>
+
+                    <ul class="list-disc">
+                        <li class="ml-8">
+                            <span class="font-bold">3</span> : chaque citoyen
+                            doit pouvoir voir 3 arbres depuis sa fenêtre
+                        </li>
+                        <li class="ml-8">
+                            <span class="font-bold">30</span> : le quartier
+                            autour de chaque bâtiment doit avoir une couverture
+                            arborée de 30 %
+                        </li>
+                        <li class="ml-8">
+                            <span class="font-bold">300</span> : chaque citoyen
+                            doit avoir accès à un espace vert public à 300
+                            mètres maximum
+                        </li>
+                    </ul>
+
+                    <ul class="flex flex-row gap-2 list-none">
+                        <li>
+                            <img src="images/rule3.png" />
+                            <div class="text-center">Voir 3 arbres</div>
+                        </li>
+                        <li>
+                            <img src="images/rule30.png" />
+                            <div class="text-center">
+                                30% de couverture arborée
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/rule300.png" />
+                            <div class="text-center">Parc à 300m</div>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Les études montrent que le respect de cette règle
+                        améliore la santé et le bien-être des personnes, tout en
+                        créant des quartiers plus propres et plus verts.
+                    </p>
+                    <p>
+                        Découvrez notre
+                        <a href="methodology.html?lang=fr"
+                            >méthodologie complète et les limites connues</a
+                        >.
+                    </p>
+
+                    <div
+                        class="bg-amber-50 px-3 py-1 border rounded border-amber-100"
+                    >
+                        <p>
+                            Il s'agit d'un projet en cours et nous continuons à
+                            améliorer la qualité des données. Si vous trouvez
+                            des inexactitudes ou si vous avez des questions,
+                            n'hésitez pas à nous contacter :
+                            <a href="mailto:info@thedatalab.be"
+                                >info@thedatalab.be</a
+                            >.
+                        </p>
+
+                        <p>
+                            Cette carte peut être modifiée à tout moment sans
+                            préavis.
+                        </p>
+                    </div>
+
+                    <p class="mt-2 text-center">
+                        <a href="../index.html?lang=fr">A propos</a> - Une
+                        version 2 est en cours, suivez-nous:
+                        <a href="https://www.linkedin.com/company/datalab-be/"
+                            ><img
+                                class="inline-block h-6 align-bottom"
+                                src="images/linkedin.png"
+                                alt="LinkedIn"
+                        /></a>
+                        <a
+                            href="https://www.facebook.com/profile.php?id=61559706710432"
+                            ><img
+                                class="inline-block h-6 align-bottom"
+                                src="images/facebook.png"
+                                alt="Facebook"
+                        /></a>
+                    </p>
+                </div>
+
+                <div
+                    lang="nl"
+                    class="overflow-auto h-full w-full p-2 max-w-prose"
+                >
+                    <h1 class="font-bold text-center mb-3">
+                        Ontdek je 3-30-300 score!
+                    </h1>
+
+                    <p class="text-md">
+                        Deze kaart toont de score van elk gebouw in België op de
+                        3-30-300 regel. Deze regel van Dr. Cecil Konijnendijk
+                        stelt dat:
+                    </p>
+
+                    <ul class="list-disc">
+                        <li class="ml-8">
+                            <span class="font-bold">3</span>: elke burger vanuit
+                            zijn raam 3 bomen moet kunnen zien
+                        </li>
+                        <li class="ml-8">
+                            <span class="font-bold">30</span>: de buurt rond elk
+                            gebouw voor 30% bedekt moet zijn met boomkruinen
+                        </li>
+                        <li class="ml-8">
+                            <span class="font-bold">300</span>: elke burger
+                            toegang moet hebben tot een publiek toegankelijke
+                            groene ruimte op maximaal 300 meter
+                        </li>
+                    </ul>
+
+                    <ul class="flex flex-row gap-2 list-none">
+                        <li>
+                            <img src="images/rule3.png" />
+                            <div class="text-center">3 bomen zichtbaar</div>
+                        </li>
+                        <li>
+                            <img src="images/rule30.png" />
+                            <div class="text-center">
+                                30% boomkruinbedekking
+                            </div>
+                        </li>
+                        <li>
+                            <img src="images/rule300.png" />
+                            <div class="text-center">300m van een park</div>
+                        </li>
+                    </ul>
+
+                    <p>
+                        Studies tonen aan dat het naleven van deze regel de
+                        gezondheid en het welzijn van mensen verbetert en
+                        tegelijkertijd schonere en groenere buurten creëert.
+                    </p>
+                    <p>
+                        Lees onze volledige
+                        <a href="methodology.html?lang=nl"
+                            >methodologie en de gekende beperkingen</a
+                        >.
+                    </p>
+
+                    <div
+                        class="bg-amber-50 px-3 py-1 border rounded border-amber-100"
+                    >
+                        <p>
+                            Dit is een doorlopend project en we zijn nog steeds
+                            bezig met het verbeteren van de kwaliteit van de
+                            gegevens. Als u onnauwkeurigheden vindt of vragen
+                            hebt, aarzel dan niet om contact met ons op te
+                            nemen:
+                            <a href="mailto:info@thedatalab.be"
+                                >info@thedatalab.be</a
+                            >.
+                        </p>
+
+                        <p>
+                            De gegevens op deze kaart kunnen op elk moment
+                            zonder voorafgaande kennisgeving worden gewijzigd.
+                        </p>
+                    </div>
+
+                    <p class="mt-2 text-center">
+                        <a href="../index.html?lang=nl">Over ons</a> - Blijf op
+                        de hoogte voor versie 2:
+                        <a href="https://www.linkedin.com/company/datalab-be/"
+                            ><img
+                                class="inline-block h-6 align-bottom"
+                                src="images/linkedin.png"
+                                alt="LinkedIn"
+                        /></a>
+                        <a
+                            href="https://www.facebook.com/profile.php?id=61559706710432"
+                            ><img
+                                class="inline-block h-6 align-bottom"
+                                src="images/facebook.png"
+                                alt="Facebook"
+                        /></a>
+                    </p>
+                </div>
+                <div
+                    class="text-center mt-4 flex flex-col sm:flex-row gap-3 justify-center items-center"
+                >
+                    <form id="modalSearch">
+                        <input
+                            type="text"
+                            class="p-2 border border-black rounded-l w-48 sm:w-64"
+                            name="modalSearch"
+                            placeholder="Search for an address"
+                            data-i18n-placeholder="search_address"
+                        /><button
+                            type="submit"
+                            class="p-2 border-black border rounded-r text-white bg-emerald-900"
+                        >
+                            <span lang="en">Search</span
+                            ><span lang="fr">Rechercher</span>
+                            <span lang="nl">Zoeken</span>
+                        </button>
+                    </form>
+                    <div lang="en">Or</div>
+                    <div lang="fr">Ou</div>
+                    <div lang="nl">Of</div>
+                    <button
+                        class="p-2 border-black inline-block rounded text-white bg-emerald-900"
+                        id="closeModalBtn"
+                    >
+                        <span lang="en">Go to the map</span>
+                        <span lang="fr">Accéder à la carte</span>
+                        <span lang="nl">Ga naar de kaart</span>
+                    </button>
+                </div>
             </div>
+        </div>
 
-            <p class="mt-2 text-center">
-              <a href="../index.html?lang=en">About us</a> - Stay tuned for version 2: <a href="https://www.linkedin.com/company/datalab-be/"><img class="inline-block h-6 align-bottom" src="images/linkedin.png" alt="LinkedIn"></a> <a href="https://www.facebook.com/profile.php?id=61559706710432"><img class="inline-block h-6 align-bottom" src="images/facebook.png" alt="Facebook"></a>
-            </p>
+        <div id="map" class="w-full h-full"></div>
 
-          </div>
-          
-          <div lang="fr" class="overflow-auto h-full w-full p-2 max-w-prose">
-            <h1 class="font-bold text-center mb-3">Découvrez votre score 3-30-300 !</h1>
-          
-            <p class="text-md">Cette carte présente le score de chaque bâtiment en Belgique selon la règle des 3-30-300. Cette règle du Dr. Cecil Konijnendijk stipule que :</p>
-            
-            <ul class="list-disc">
-              <li class="ml-8"><span class="font-bold">3</span> : chaque citoyen doit pouvoir voir 3 arbres depuis sa fenêtre </li>
-              <li class="ml-8"><span class="font-bold">30</span> : le quartier autour de chaque bâtiment doit avoir une couverture arborée de 30 %</li>
-              <li class="ml-8"><span class="font-bold">300</span> : chaque citoyen doit avoir accès à un espace vert public à 300 mètres maximum</li>
-            </ul>
-
-            <ul class="flex flex-row gap-2 list-none">
-              <li><img src="images/rule3.png"><div class="text-center">Voir 3 arbres</div></li>
-              <li><img src="images/rule30.png"><div class="text-center">30% de couverture arborée</div></li>
-              <li><img src="images/rule300.png"><div class="text-center">Parc à 300m</div></li>
-            </ul>
-            
-            <p>
-              Les études montrent que le respect de cette règle améliore la santé et le bien-être des personnes, tout en créant des quartiers plus propres et plus verts.            
-            </p>
-            <p>
-              Découvrez notre <a href="methodology.html?lang=fr">méthodologie complète et les limites connues</a>. 
-            </p>
-
-            <div class="bg-amber-50 px-3 py-1 border rounded border-amber-100">
-              <p>Il s'agit d'un projet en cours et nous continuons à améliorer la qualité des données. Si vous trouvez des inexactitudes ou si vous avez des questions, n'hésitez pas à nous contacter : <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>. </p>
-
-              <p>
-                Cette carte peut être modifiée à tout moment sans préavis.
-              </p>
-            </div>
-
-            <p class="mt-2 text-center">
-              <a href="../index.html?lang=fr">A propos</a> - Une version 2 est en cours, suivez-nous: <a href="https://www.linkedin.com/company/datalab-be/"><img class="inline-block h-6 align-bottom" src="images/linkedin.png" alt="LinkedIn"></a> <a href="https://www.facebook.com/profile.php?id=61559706710432"><img class="inline-block h-6 align-bottom" src="images/facebook.png" alt="Facebook"></a>
-            </p>
-          </div>
-
-          <div lang="nl"  class="overflow-auto h-full w-full p-2 max-w-prose">
-            <h1 class="font-bold text-center mb-3">Ontdek je 3-30-300 score!</h1>
-          
-            <p class="text-md">Deze kaart toont de score van elk gebouw in België op de 3-30-300 regel. Deze regel van Dr. Cecil Konijnendijk stelt dat:</p>
-            
-            <ul class="list-disc">
-              <li class="ml-8"><span class="font-bold">3</span>: elke burger vanuit zijn raam 3 bomen moet kunnen zien</li>
-              <li class="ml-8"><span class="font-bold">30</span>: de buurt rond elk gebouw voor 30% bedekt moet zijn met boomkruinen</li>
-              <li class="ml-8"><span class="font-bold">300</span>: elke burger toegang moet hebben tot een publiek toegankelijke groene ruimte op maximaal 300 meter</li>
-            </ul>
-
-            <ul class="flex flex-row gap-2 list-none">
-              <li><img src="images/rule3.png"><div class="text-center">3 bomen zichtbaar</div></li>
-              <li><img src="images/rule30.png"><div class="text-center">30% boomkruinbedekking</div></li>
-              <li><img src="images/rule300.png"><div class="text-center">300m van een park</div></li>
-            </ul>
-            
-            <p>
-              Studies tonen aan dat het naleven van deze regel de gezondheid en het welzijn van mensen verbetert en tegelijkertijd schonere en groenere buurten creëert.
-            </p>
-            <p>
-              Lees onze volledige <a href="methodology.html?lang=nl">methodologie en de gekende beperkingen</a>.
-            </p>
-
-            <div class="bg-amber-50 px-3 py-1 border rounded border-amber-100">
-            
-              <p>
-                Dit is een doorlopend project en we zijn nog steeds bezig met het verbeteren van de kwaliteit van de gegevens. Als u onnauwkeurigheden vindt of vragen hebt, aarzel dan niet om contact met ons op te nemen: <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>. 
-              </p>
-
-              <p>
-                De gegevens op deze kaart kunnen op elk moment zonder voorafgaande kennisgeving worden gewijzigd.
-              </p>
-            </div>
-
-            <p class="mt-2 text-center">
-              <a href="../index.html?lang=nl">Over ons</a> - Blijf op de hoogte voor versie 2: <a href="https://www.linkedin.com/company/datalab-be/"><img class="inline-block h-6 align-bottom" src="images/linkedin.png" alt="LinkedIn"></a> <a href="https://www.facebook.com/profile.php?id=61559706710432"><img class="inline-block h-6 align-bottom" src="images/facebook.png" alt="Facebook"></a>
-            </p>
-          </div>
-          <div class="text-center mt-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <form id="modalSearch">
-              <input type="text" class="p-2 border border-black rounded-l w-48 sm:w-64" name="modalSearch" placeholder="Search for an address" data-i18n-placeholder="search_address"><button type="submit" class="p-2 border-black border rounded-r text-white bg-emerald-900">
-                <span lang="en">Search</span><span lang="fr">Rechercher</span> <span lang="nl">Zoeken</span>
-              </button>
+        <div class="absolute bottom-4 left-4 z-[1500]">
+            <form
+                class="bg-white/90 border rounded py-2 px-3 border-black hidden sm:block"
+                id="mode_menu"
+            >
+                <fieldset>
+                    <legend>
+                        <span lang="en">Scoring</span>
+                        <span lang="fr">Score</span>
+                        <span lang="nl">Score</span>
+                    </legend>
+                    <div>
+                        <input
+                            type="radio"
+                            name="scoring"
+                            value="overall"
+                            checked
+                            id="scoring_overall"
+                        />
+                        <label for="scoring_overall">
+                            <span lang="en">Overall</span>
+                            <span lang="fr">Général</span>
+                            <span lang="nl">Algemeen</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input
+                            type="radio"
+                            name="scoring"
+                            value="rule3"
+                            id="scoring_rule3"
+                        />
+                        <label for="scoring_rule3">
+                            <span lang="en">Rule 3: Trees</span>
+                            <span lang="fr">Règle 3 : Arbres</span>
+                            <span lang="nl">Regel 3: Bomen</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input
+                            type="radio"
+                            name="scoring"
+                            value="rule30"
+                            id="scoring_rule30"
+                        />
+                        <label for="scoring_rule30">
+                            <span lang="en">Rule 30: Tree canopy cover</span>
+                            <span lang="fr">Règle 30 : Couverture arborée</span>
+                            <span lang="nl">Regel 30: Boomkruinbedekking</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input
+                            type="radio"
+                            name="scoring"
+                            value="rule300"
+                            id="scoring_rule300"
+                        />
+                        <label for="scoring_rule300">
+                            <span lang="en">Rule 300: Access to parks</span>
+                            <span lang="fr">Règle 300 : Accès aux parcs</span>
+                            <span lang="nl">Regel 300: Toegang tot parken</span>
+                        </label>
+                    </div>
+                </fieldset>
             </form>
-            <div lang="en">Or</div>
-            <div lang="fr">Ou</div>
-            <div lang="nl">Of</div>
-            <button class="p-2 border-black inline-block rounded text-white bg-emerald-900" id="closeModalBtn">
-              <span lang="en">Go to the map</span>
-              <span lang="fr">Accéder à la carte</span>
-              <span lang="nl">Ga naar de kaart</span>
+            <div
+                class="sm:hidden bg-white/75 border rounded py-2 px-3 border-black inline-block mt-2 cursor-pointer"
+                onclick="document.getElementById('mode_menu').classList.toggle('hidden'); highlightBuilding.unfocus();"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="inline-block"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.6.6 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.6.6 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.6.6 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535z"
+                    />
+                    <path
+                        d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.6.6 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0z"
+                    />
+                </svg>
+            </div>
+        </div>
+
+        <div class="absolute top-4 right-4 flex flex-col gap-2">
+            <div
+                class="border-black border rounded h-9 w-9 z-[600] p-1 bg-white"
+            >
+                <span lang="en"
+                    ><a href="https://www.thedataLab.be?lang=en"
+                        ><img src="../assets/images/logo_small.jpg" /></a
+                ></span>
+                <span lang="fr"
+                    ><a href="https://www.thedataLab.be?lang=fr"
+                        ><img src="../assets/images/logo_small.jpg" /></a
+                ></span>
+                <span lang="nl"
+                    ><a href="https://www.thedataLab.be?lang=nl"
+                        ><img src="../assets/images/logo_small.jpg" /></a
+                ></span>
+            </div>
+            <button
+                id="openModalBtn"
+                class="z-[600] bg-white py-1 px-2 border-black border rounded hover:bg-gray-100"
+            >
+                ?
             </button>
-          </div>
-      </div>
-    </div>
+            <div id="lang-picker" class="flex flex-col z-[3000]">
+                <button
+                    id="i18n-picker-nl"
+                    class="bg-white py-1 px-2 border-black border rounded-t"
+                >
+                    NL
+                </button>
+                <button
+                    id="i18n-picker-fr"
+                    class="bg-white py-1 px-2 border-black border-x"
+                >
+                    FR
+                </button>
+                <button
+                    id="i18n-picker-en"
+                    class="bg-white py-1 px-2 border-black border rounded-b"
+                >
+                    EN
+                </button>
+            </div>
+        </div>
 
-    <div id="map" class="w-full h-full"></div>
+        <div
+            id="zoom-message"
+            class="absolute top-[100px] right-1/2 w-[250px] -mr-[125px] sm:w-[400px] sm:-mr-[200px] z-[500] bg-[#f6e8c3] shadow-lg text-lg py-2 px-3 border-black text-center flex items-center gap-3"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                fill="currentColor"
+                class="bi bi-lightbulb"
+                viewBox="0 0 16 16"
+            >
+                <path
+                    d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"
+                />
+            </svg>
+            <div class="grow text-center">
+                <span lang="en">Search or zoom to see buildings</span>
+                <span lang="fr"
+                    >Utilisez la barre de recherche ou zoomez pour voir les
+                    bâtiments</span
+                >
+                <span lang="nl"
+                    >Zoek op een adres of zoom in om gebouwen te zien</span
+                >
+            </div>
+        </div>
 
-      
+        <div
+            id="loading-message"
+            class="hidden absolute bottom-0 right-1/2 w-[300px] -mr-[150px] z-[500] text-center items-center bg-white/75 text-sm rounded-t pt-1 text-gray-500"
+        >
+            <svg
+                fill="#6b7280"
+                class="inline-block"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <style>
+                    .spinner_qM83 {
+                        animation: spinner_8HQG 1.05s infinite;
+                    }
+                    .spinner_oXPr {
+                        animation-delay: 0.1s;
+                    }
+                    .spinner_ZTLf {
+                        animation-delay: 0.2s;
+                    }
+                    @keyframes spinner_8HQG {
+                        0%,
+                        57.14% {
+                            animation-timing-function: cubic-bezier(
+                                0.33,
+                                0.66,
+                                0.66,
+                                1
+                            );
+                            transform: translate(0);
+                        }
+                        28.57% {
+                            animation-timing-function: cubic-bezier(
+                                0.33,
+                                0,
+                                0.66,
+                                0.33
+                            );
+                            transform: translateY(-6px);
+                        }
+                        100% {
+                            transform: translate(0);
+                        }
+                    }
+                </style>
+                <circle class="spinner_qM83" cx="4" cy="12" r="3" />
+                <circle
+                    class="spinner_qM83 spinner_oXPr"
+                    cx="12"
+                    cy="12"
+                    r="3"
+                />
+                <circle
+                    class="spinner_qM83 spinner_ZTLf"
+                    cx="20"
+                    cy="12"
+                    r="3"
+                />
+            </svg>
+            <span lang="en">Loading data...</span>
+            <span lang="fr">Téléchargement des données...</span>
+            <span lang="nl">Gegevens worden geladen...</span>
+        </div>
 
-    <div class="absolute bottom-4 left-4 z-[1500]">
-      <form class="bg-white/90 border rounded py-2 px-3 border-black hidden sm:block" id="mode_menu">
-        <fieldset>
-          <legend>
-            <span lang="en">Scoring</span>
-            <span lang="fr">Score</span>
-            <span lang="nl">Score</span>
-          </legend>
-          <div>
-            <input type="radio" name="scoring" value="overall" checked id="scoring_overall" />
-            <label for="scoring_overall">
-              <span lang="en">Overall</span>
-              <span lang="fr">Général</span>
-              <span lang="nl">Algemeen</span>
-            </label>
-          </div>
-          <div>
-            <input type="radio" name="scoring" value="rule3" id="scoring_rule3" />
-            <label for="scoring_rule3">
-              <span lang="en">Rule 3: Trees</span>
-              <span lang="fr">Règle 3 : Arbres</span>
-              <span lang="nl">Regel 3: Bomen</span>
-            </label>
-          </div>
-          <div>
-            <input type="radio" name="scoring" value="rule30" id="scoring_rule30" />
-            <label for="scoring_rule30">
-              <span lang="en">Rule 30: Tree canopy cover</span>
-              <span lang="fr">Règle 30 : Couverture arborée</span>
-              <span lang="nl">Regel 30: Boomkruinbedekking</span>
-            </label>
-          </div>
-          <div>
-            <input type="radio" name="scoring" value="rule300" id="scoring_rule300" />
-            <label for="scoring_rule300">
-              <span lang="en">Rule 300: Access to parks</span>
-              <span lang="fr">Règle 300 : Accès aux parcs</span>
-              <span lang="nl">Regel 300: Toegang tot parken</span>
-            </label>
-          </div>
-        </fieldset>
-      </form>
-      <div
-        class="sm:hidden bg-white/75 border rounded py-2 px-3 border-black inline-block mt-2 cursor-pointer"
-        onclick="document.getElementById('mode_menu').classList.toggle('hidden'); highlightBuilding.unfocus();"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline-block" viewBox="0 0 16 16">
-          <path
-            d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.6.6 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.6.6 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.6.6 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535z"
-          />
-          <path
-            d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.6.6 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0z"
-          />
-        </svg>
-      </div>
-    </div>
+        <div
+            id="correction-module"
+            class="hidden absolute bottom-20 left-0 w-full sm:bottom-4 sm:left-1/2 sm:w-[400px] sm:-ml-[200px] z-[1000] text-center items-center bg-white py-2 px-3 border-black border rounded"
+        >
+            <div id="correction-invite">
+                <span lang="en"
+                    >That doesn't seem right? You can
+                    <a
+                        href="#"
+                        class="underline text-blue-700"
+                        onclick="document.getElementById('correction-form').classList.toggle('hidden')"
+                        >suggest a correction</a
+                    >.</span
+                >
+                <span lang="fr"
+                    >Ça n'a pas l'air correct ? Vous pouvez
+                    <a
+                        href="#"
+                        class="underline text-blue-700"
+                        onclick="document.getElementById('correction-form').classList.toggle('hidden')"
+                        >proposer une correction</a
+                    >.</span
+                >
+                <span lang="nl"
+                    >Lijkt dat niet correct? U kunt
+                    <a
+                        href="#"
+                        class="underline text-blue-700"
+                        onclick="document.getElementById('correction-form').classList.toggle('hidden')"
+                        >een verbetering voorstellen</a
+                    >.</span
+                >
+            </div>
+            <form id="correction-form" class="hidden text-left mt-4">
+                <ul>
+                    <li class="mb-3">
+                        <input
+                            type="checkbox"
+                            name="rule3"
+                            id="rule3-correction"
+                            class="mr-1"
+                        />
+                        <label for="rule3-correction">
+                            <span lang="en"
+                                >At least 3 trees are visible from this
+                                building</span
+                            >
+                            <span lang="fr"
+                                >Au moins 3 arbres sont visibles de ce
+                                bâtiment</span
+                            >
+                            <span lang="nl"
+                                >Er zijn minstens 3 bomen zichtbaar vanaf dit
+                                gebouw</span
+                            > </label
+                        ><br />
+                        <span lang="en" class="text-sm text-gray-500"
+                            >(less than 60m away, higher than 3m)</span
+                        >
+                        <span lang="fr" class="text-sm text-gray-500"
+                            >(à moins de 60m, plus haut que 3m)</span
+                        >
+                        <span lang="nl" class="text-sm text-gray-500"
+                            >(op minder dan 60m afstand, hoger dan 3m)</span
+                        >
+                    </li>
 
-    <div class="absolute top-4 right-4 flex flex-col gap-2">
-      <div class="border-black border rounded h-9 w-9 z-[600] p-1 bg-white">
-        <span lang="en"><a href="https://www.thedataLab.be?lang=en"><img src="../assets/images/logo_small.jpg"></a></span>
-        <span lang="fr"><a href="https://www.thedataLab.be?lang=fr"><img src="../assets/images/logo_small.jpg"></a></span>
-        <span lang="nl"><a href="https://www.thedataLab.be?lang=nl"><img src="../assets/images/logo_small.jpg"></a></span>
-      </div>
-      <button id="openModalBtn" class="z-[600] bg-white py-1 px-2 border-black border rounded hover:bg-gray-100">?</button>
-      <div id="lang-picker" class="flex flex-col z-[3000]">
-        <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">NL</button>
-        <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">FR</button>
-        <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">EN</button>
-      </div>
-    </div>
+                    <li class="mb-3">
+                        <input
+                            type="checkbox"
+                            name="rule300"
+                            id="rule300-correction"
+                            class="mr-1"
+                        />
+                        <label for="rule300-correction">
+                            <span lang="en"
+                                >There is a public park less than 300m
+                                away</span
+                            >
+                            <span lang="fr"
+                                >Il y a un espace vert public à moins de
+                                300m</span
+                            >
+                            <span lang="nl"
+                                >Er is een publiek toegankelijke groene ruimte
+                                op minder dan 300m afstand</span
+                            > </label
+                        ><br />
+                        <span lang="en" class="text-sm text-gray-500"
+                            >(at least 0.2 hectare)</span
+                        >
+                        <span lang="fr" class="text-sm text-gray-500"
+                            >(d'au moins 0,2 hectare)</span
+                        >
+                        <span lang="nl" class="text-sm text-gray-500"
+                            >(van ten minste 0,2 hectare)</span
+                        >
+                    </li>
 
-    <div id="zoom-message" class="absolute top-[100px] right-1/2 w-[250px] -mr-[125px] sm:w-[400px] sm:-mr-[200px] z-[500] bg-[#f6e8c3] shadow-lg text-lg py-2 px-3 border-black text-center flex items-center gap-3">
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-lightbulb" viewBox="0 0 16 16">
-        <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1"/>
-      </svg>
-      <div class="grow text-center">
-        <span lang="en">Search or zoom to see buildings</span>
-        <span lang="fr">Utilisez la barre de recherche ou zoomez pour voir les bâtiments</span>
-        <span lang="nl">Zoek op een adres of zoom in om gebouwen te zien</span>
-      </div>
-    </div>
+                    <button
+                        type="submit"
+                        id="correction-submit"
+                        class="p-2 border-black inline-block rounded text-white bg-emerald-900"
+                    >
+                        <span lang="en">Send corrections</span>
+                        <span lang="fr">Envoyer les corrections</span>
+                        <span lang="nl">Verbeteringen opsturen</span>
+                    </button>
 
-    <div id="loading-message" class="hidden absolute bottom-0 right-1/2 w-[300px] -mr-[150px] z-[500] text-center items-center bg-white/75 text-sm rounded-t pt-1 text-gray-500">
-      <svg fill="#6b7280" class="inline-block" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><style>.spinner_qM83{animation:spinner_8HQG 1.05s infinite}.spinner_oXPr{animation-delay:.1s}.spinner_ZTLf{animation-delay:.2s}@keyframes spinner_8HQG{0%,57.14%{animation-timing-function:cubic-bezier(0.33,.66,.66,1);transform:translate(0)}28.57%{animation-timing-function:cubic-bezier(0.33,0,.66,.33);transform:translateY(-6px)}100%{transform:translate(0)}}</style><circle class="spinner_qM83" cx="4" cy="12" r="3"/><circle class="spinner_qM83 spinner_oXPr" cx="12" cy="12" r="3"/><circle class="spinner_qM83 spinner_ZTLf" cx="20" cy="12" r="3"/></svg>
-      <span lang="en">Loading data...</span>
-      <span lang="fr">Téléchargement des données...</span>
-      <span lang="nl">Gegevens worden geladen...</span>
-    </div>
+                    <p class="text-sm text-gray-500">
+                        <span lang="en"
+                            >You cannot correct the canopy cover (rule 30) as it
+                            is very hard to estimate.</span
+                        >
+                        <span lang="fr"
+                            >Il n'est pas possible de corriger la couverture
+                            arborée (règle 30) car elle est très difficile à
+                            estimer.</span
+                        >
+                        <span lang="nl"
+                            >Het is niet mogelijk om te corrigeren voor
+                            boomkruinbedekking (regel 30), omdat deze zeer
+                            moeilijk in te schatten is.</span
+                        >
+                    </p>
+                </ul>
+            </form>
+        </div>
 
-    <div id="correction-module" class="hidden absolute bottom-20 left-0 w-full sm:bottom-4 sm:left-1/2 sm:w-[400px] sm:-ml-[200px] z-[1000] text-center items-center bg-white py-2 px-3 border-black border rounded">
-      <div id="correction-invite">
-        <span lang="en">That doesn't seem right? You can 
-          <a href="#" class="underline text-blue-700" 
-          onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
-          >suggest a correction</a>.</span>
-        <span lang="fr">Ça n'a pas l'air correct ? Vous pouvez 
-          <a href="#" class="underline text-blue-700" 
-          onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
-          >proposer une correction</a>.</span>
-        <span lang="nl">Lijkt dat niet correct? U kunt 
-          <a href="#" class="underline text-blue-700" 
-          onclick="document.getElementById('correction-form').classList.toggle('hidden')" 
-          >een verbetering voorstellen</a>.</span>
-      </div>
-      <form id="correction-form" class="hidden text-left mt-4">
-        <ul>
-          <li class="mb-3">
-            <input type="checkbox" name="rule3" id="rule3-correction" class="mr-1" />
-            <label for="rule3-correction">
-              <span lang="en">At least 3 trees are visible from this building</span>
-              <span lang="fr">Au moins 3 arbres sont visibles de ce bâtiment</span>
-              <span lang="nl">Er zijn minstens 3 bomen zichtbaar vanaf dit gebouw</span>
-            </label><br>
-            <span lang="en" class="text-sm text-gray-500">(less than 60m away, higher than 3m)</span>
-            <span lang="fr" class="text-sm text-gray-500">(à moins de 60m, plus haut que 3m)</span>
-            <span lang="nl" class="text-sm text-gray-500">(op minder dan 60m afstand, hoger dan 3m)</span>
-          </li>
+        <script>
+            // Modal
 
-          <li class="mb-3">
-            <input type="checkbox" name="rule300" id="rule300-correction" class="mr-1" />
-            <label for="rule300-correction">
-              <span lang="en">There is a public park less than 300m away</span>
-              <span lang="fr">Il y a un espace vert public à moins de 300m</span>
-              <span lang="nl">Er is een publiek toegankelijke groene ruimte op minder dan 300m afstand</span>
-            </label><br>
-            <span lang="en" class="text-sm text-gray-500">(at least 0.2 hectare)</span>
-            <span lang="fr" class="text-sm text-gray-500">(d'au moins 0,2 hectare)</span>
-            <span lang="nl" class="text-sm text-gray-500">(van ten minste 0,2 hectare)</span>
-          </li>
+            var modal = document.getElementById("myModal");
+            var closeModalBtn = document.getElementById("closeModalBtn");
+            var openModalBtn = document.getElementById("openModalBtn");
 
-          <button type="submit" id="correction-submit" class="p-2 border-black inline-block rounded text-white bg-emerald-900">
-            <span lang="en">Send corrections</span>
-            <span lang="fr">Envoyer les corrections</span>
-            <span lang="nl">Verbeteringen opsturen</span>
-          </button>
+            window.onload = function () {
+                modal.classList.remove("hidden");
+            };
 
-          <p class="text-sm text-gray-500">
-            <span lang="en">You cannot correct the canopy cover (rule 30) as it is very hard to estimate.</span>
-            <span lang="fr">Il n'est pas possible de corriger la couverture arborée (règle 30) car elle est très difficile à estimer.</span>
-            <span lang="nl">Het is niet mogelijk om te corrigeren voor boomkruinbedekking (regel 30), omdat deze zeer moeilijk in te schatten is.</span>
-          </p>
-        </ul>
-      </form>
-    </div>
+            closeModalBtn.onclick = function () {
+                modal.classList.add("hidden");
+            };
 
-    <script>
-      // Modal
+            openModalBtn.onclick = function () {
+                modal.classList.remove("hidden");
+            };
 
-      var modal = document.getElementById("myModal");
-      var closeModalBtn = document.getElementById("closeModalBtn");
-      var openModalBtn = document.getElementById("openModalBtn");
+            let scoring_mode = document.querySelector(
+                'input[name="scoring"]:checked',
+            ).value;
+            const init_zoom = 9;
+            const init_center = [50.6, 4.4];
+            const min_building_zoom = 16;
+            const colors_scheme = [
+                "#8c510a",
+                "#d8b365",
+                "#f6e8c3",
+                "#c7eae5",
+                "#5ab4ac",
+                "#01665e",
+            ];
 
-      window.onload = function () {
-        modal.classList.remove("hidden");
-      };
+            // start language options
+            i18n.start(["nl", "fr", "en"]);
+            /* Create the base map */
 
-      closeModalBtn.onclick = function () {
-        modal.classList.add("hidden");
-      };
+            const map = L.map("map", {
+                renderer: L.canvas(),
+                minZoom: 7,
+            }).setView(init_center, init_zoom);
 
-      openModalBtn.onclick = function () {
-        modal.classList.remove("hidden");
-      };
+            var CartoDB_Positron = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    maxZoom: 20,
+                },
+            ).addTo(map);
 
-      let scoring_mode = document.querySelector('input[name="scoring"]:checked').value;
-      const init_zoom = 9;
-      const init_center = [50.6, 4.4];
-      const min_building_zoom = 16;
-      const colors_scheme = ["#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e"];
+            /* Force user inside of bounds */
+            const southWest = L.latLng(49.4, 2.3),
+                northEast = L.latLng(51.7, 6.6);
+            const bounds = L.latLngBounds(southWest, northEast);
 
-      // start language options
-      i18n.start(['nl', 'fr', 'en']);
-      /* Create the base map */
+            map.setMaxBounds(bounds);
+            map.on("drag", function () {
+                map.panInsideBounds(bounds, { animate: false });
+            });
 
-      const map = L.map("map", {
-        renderer: L.canvas(),
-        minZoom: 7,
-      }).setView(init_center, init_zoom);
+            /* Move to user's location */
+            map.locate({ setView: true, maxZoom: min_building_zoom + 1 });
 
-      var CartoDB_Positron = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom: 20,
-      }).addTo(map);
+            /* Add the search bar */
+            const search_options = {
+                provider: new GeoSearch.OpenStreetMapProvider({
+                    params: {
+                        countrycodes: "be",
+                    },
+                }),
+                style: "bar",
+                autoComplete: true, // fail when I set it to false -> I increased the delay instaid
+                autoCompleteDelay: 2000,
+            };
+            const search = new GeoSearch.GeoSearchControl(search_options);
 
-      /* Force user inside of bounds */
-      const southWest = L.latLng(49.4, 2.3),
-        northEast = L.latLng(51.7, 6.6);
-      const bounds = L.latLngBounds(southWest, northEast);
+            map.addControl(search);
 
-      map.setMaxBounds(bounds);
-      map.on("drag", function () {
-        map.panInsideBounds(bounds, { animate: false });
-      });
+            document
+                .getElementById("modalSearch")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const query = e.target.modalSearch.value;
+                    search.container.querySelector("input").value = query;
+                    search.onSubmit({ query });
+                    modal.classList.add("hidden");
+                });
 
-      /* Move to user's location */
-      map.locate({ setView: true, maxZoom: min_building_zoom+1 });
-      
-      
+            /* Add the legend */
 
+            let legend = L.control({ position: "bottomright" });
 
-      /* Add the search bar */
-      const search_options = {
-        provider: new GeoSearch.OpenStreetMapProvider({
-          params: {
-            countrycodes: "be",
-          },
-        }),
-        style: "bar",
-        autoComplete: true, // fail when I set it to false -> I increased the delay instaid
-        autoCompleteDelay: 2000,
-      }
-      const search = new GeoSearch.GeoSearchControl(search_options);
+            legend.onAdd = function () {
+                this._div = L.DomUtil.create(
+                    "div",
+                    "bg-white/90 border rounded py-1 px-2 sm:py-2 sm:px-3 border-black",
+                );
+                this.update();
+                return this._div;
+            };
 
-      map.addControl(search);
+            legend.update = function (mode = scoring_mode) {
+                let zoom = map.getZoom();
 
-      document.getElementById('modalSearch').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const query = e.target.modalSearch.value;
-        search.container.querySelector('input').value = query;
-        search.onSubmit({query});
-        modal.classList.add("hidden");
-      });
+                let grades = [];
 
-
-
-      /* Add the legend */
-
-      let legend = L.control({ position: "bottomright" });
-
-      legend.onAdd = function () {
-        this._div = L.DomUtil.create("div", "bg-white/90 border rounded py-1 px-2 sm:py-2 sm:px-3 border-black");
-        this.update();
-        return this._div;
-      };
-
-      legend.update = function (mode = scoring_mode) {
-        let zoom = map.getZoom();
-
-        let grades = [];
-
-        if (mode == "overall") {
-          grades = [0, 1, 2, 3];
-          this._div.innerHTML = `<p>${i18n.span({fr: 'Nombre de règles respectées', en: 'Number of rules satisfied', nl: 'Aantal regels voldaan'})}</p>`;
-          let legend = '<div class="flex gap-1 sm:gap-2">'
-          for (let i = 0; i < grades.length; i++) {
-            const color = get_color(colors_scheme, grades[i] / 3);
-            const text_color = color_is_light(color) ? 'black' : 'white';
-            legend +=
-              `<div style="background:${color}" class="sm:hidden text-center w-4 h-4 text-${text_color}">${grades[i]}</div>
+                if (mode == "overall") {
+                    grades = [0, 1, 2, 3];
+                    this._div.innerHTML = `<p>${i18n.span({ fr: "Nombre de règles respectées", en: "Number of rules satisfied", nl: "Aantal regels voldaan" })}</p>`;
+                    let legend = '<div class="flex gap-1 sm:gap-2">';
+                    for (let i = 0; i < grades.length; i++) {
+                        const color = get_color(colors_scheme, grades[i] / 3);
+                        const text_color = color_is_light(color)
+                            ? "black"
+                            : "white";
+                        legend += `<div style="background:${color}" class="sm:hidden text-center w-4 h-4 text-${text_color}">${grades[i]}</div>
               <div class="hidden sm:block text-center">${grades[i]}<br><span class="inline-block w-3 h-3 text-center" style="background:${color}"></span></div>`;
-          }
-          legend += '</div>'
-          this._div.innerHTML += legend;
-        } else {
-          let rule_number = mode.replace("rule", "");
-          let title_dict = {
-            fr: "La règle des " + rule_number + " est-elle respectée ?",
-            en: "Is Rule " + rule_number + " satisfied ?",
-            nl: "Wordt de  " + rule_number + "-regel gerespecteerd ?",
-          };
-          this._div.innerHTML = `
+                    }
+                    legend += "</div>";
+                    this._div.innerHTML += legend;
+                } else {
+                    let rule_number = mode.replace("rule", "");
+                    let title_dict = {
+                        fr:
+                            "La règle des " +
+                            rule_number +
+                            " est-elle respectée ?",
+                        en: "Is Rule " + rule_number + " satisfied ?",
+                        nl:
+                            "Wordt de  " +
+                            rule_number +
+                            "-regel gerespecteerd ?",
+                    };
+                    this._div.innerHTML = `
 				<p>${i18n.span(title_dict)}</p>
-				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> ${i18n.span({fr: 'Non', en: 'No', nl: 'Nee'})}<br>
-				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> ${i18n.span({fr: 'Oui', en: 'Yes', nl: 'Ja'})}<br>
+				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> ${i18n.span({ fr: "Non", en: "No", nl: "Nee" })}<br>
+				<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> ${i18n.span({ fr: "Oui", en: "Yes", nl: "Ja" })}<br>
 			`;
-        }
+                }
 
-        return this._div;
-      };
+                return this._div;
+            };
 
-      legend.addTo(map);
+            legend.addTo(map);
 
-      fetch(`https://backend-330300.vandendriesche-c.workers.dev/log?page=map&session_id=${correction_module.session_id}`)
+            fetch(
+                `https://backend-330300.vandendriesche-c.workers.dev/log?page=map&session_id=${correction_module.session_id}`,
+            );
 
-      function rule3(f) {
-        const p = f.properties;
-        if (p.rule3_perc_buildings || p.rule3_perc_buildings === 0) {
-          return p.rule3_perc_buildings;
-        } else if (p.rule3) {
-          return p.rule3 == 1 || p.rule3 == "True" ? 1 : 0;
-        } else if (p.r3) {
-          return p.r3 == 1 || p.r3 == "True" ? 1 : 0;
-        } else {
-          return 0;
-        }
-      }
-      function rule30(f) {
-        const p = f.properties;
-        if (p.rule30_perc_buildings || p.rule30_perc_buildings === 0) {
-          return p.rule30_perc_buildings;
-        } else if (p.rule30) {
-          return p.rule30 == 1 || p.rule30 == "True" ? 1 : 0;
-        } else if (p.r30) {
-          return p.r30 == 1 || p.r30 == "True" ? 1 : 0;
-        } else {
-          return 0;
-        }
-      }
-      function rule300(f) {
-        const p = f.properties;
-        if (p.rule300_perc_buildings || p.rule300_perc_buildings === 0) {
-          return p.rule300_perc_buildings;
-        } else if (p.rule300) {
-          return p.rule300 == 1 || p.rule300 == "True" ? 1 : 0;
-        } else if (p.r300) {
-          return p.r300 == 1 || p.r300 == "True" ? 1 : 0;
-        } else {
-          return 0;
-        }
-      }
+            function rule3(f) {
+                const p = f.properties;
+                if (p.rule3_perc_buildings || p.rule3_perc_buildings === 0) {
+                    return p.rule3_perc_buildings;
+                } else if (p.rule3) {
+                    return p.rule3 == 1 || p.rule3 == "True" ? 1 : 0;
+                } else if (p.r3) {
+                    return p.r3 == 1 || p.r3 == "True" ? 1 : 0;
+                } else {
+                    return 0;
+                }
+            }
+            function rule30(f) {
+                const p = f.properties;
+                if (p.rule30_perc_buildings || p.rule30_perc_buildings === 0) {
+                    return p.rule30_perc_buildings;
+                } else if (p.rule30) {
+                    return p.rule30 == 1 || p.rule30 == "True" ? 1 : 0;
+                } else if (p.r30) {
+                    return p.r30 == 1 || p.r30 == "True" ? 1 : 0;
+                } else {
+                    return 0;
+                }
+            }
+            function rule300(f) {
+                const p = f.properties;
+                if (
+                    p.rule300_perc_buildings ||
+                    p.rule300_perc_buildings === 0
+                ) {
+                    return p.rule300_perc_buildings;
+                } else if (p.rule300) {
+                    return p.rule300 == 1 || p.rule300 == "True" ? 1 : 0;
+                } else if (p.r300) {
+                    return p.r300 == 1 || p.r300 == "True" ? 1 : 0;
+                } else {
+                    return 0;
+                }
+            }
 
-      function score(f) {
-        switch (scoring_mode) {
-          case "rule3":
-            return rule3(f);
-          case "rule30":
-            return rule30(f);
-          case "rule300":
-            return rule300(f);
-          default:
-            // Turns out this is equivalent to computing the average score of all buildings in the area
-            return (rule3(f) + rule30(f) + rule300(f)) / 3;
-        }
-      }
+            function score(f) {
+                switch (scoring_mode) {
+                    case "rule3":
+                        return rule3(f);
+                    case "rule30":
+                        return rule30(f);
+                    case "rule300":
+                        return rule300(f);
+                    default:
+                        // Turns out this is equivalent to computing the average score of all buildings in the area
+                        return (rule3(f) + rule30(f) + rule300(f)) / 3;
+                }
+            }
 
-      function makeCircleAndLegend(map,radius) {
+            function makeCircleAndLegend(map, radius) {
+                let marker = {};
 
-        let marker = {};
+                marker.circle = L.circle([0, 0], { radius: radius, weight: 2 })
+                    .addTo(map)
+                    .bringToBack();
+                marker.legendText = L.divIcon({
+                    className: "legend-text",
+                    html: "",
+                });
+                marker.legendMarker = L.marker([0, 0], {
+                    icon: marker.legendText,
+                }).addTo(map);
 
+                marker.setLatLng = function (LatLng) {
+                    this.circle.setLatLng(LatLng);
+                    let bottomEdge = L.latLng(
+                        LatLng.lat - radius / 111319 - 0.0001, // approximate conversion from meters to degrees
+                        LatLng.lng,
+                    );
+                    this.legendMarker.setLatLng(bottomEdge);
+                };
 
-        marker.circle = L.circle([0,0], { radius: radius, weight: 2 }).addTo(map).bringToBack();
-        marker.legendText = L.divIcon({ className: "legend-text", html: "" });
-        marker.legendMarker = L.marker([0,0], { icon: marker.legendText }).addTo(map);
+                marker.setColor = function (color) {
+                    this.circle.setStyle({ color: color, fillColor: color });
+                };
 
-        marker.setLatLng = function(LatLng) {
-          this.circle.setLatLng(LatLng);
-          let bottomEdge = L.latLng(
-              LatLng.lat - (radius / 111319) - 0.0001, // approximate conversion from meters to degrees
-              LatLng.lng
-          );
-          this.legendMarker.setLatLng(bottomEdge);
-        }
+                marker.setText = function (text) {
+                    this.legendText.options.html = `<div class="w-[250px] -ml-[125px] text-center text-sm"><span class="bg-white/75 px-2 py-1">${text}</span></div>`;
+                    this.legendMarker.setIcon(this.legendText);
+                };
 
-        marker.setColor = function(color) {
-          this.circle.setStyle({ color: color, fillColor: color });
-        }
+                marker.getBounds = function () {
+                    return this.circle.getBounds();
+                };
 
-        marker.setText = function(text) {
-          this.legendText.options.html = `<div class="w-[250px] -ml-[125px] text-center text-sm"><span class="bg-white/75 px-2 py-1">${text}</span></div>`;
-          this.legendMarker.setIcon(this.legendText);
-        }
+                marker.hide = function () {
+                    this.circle.setLatLng([0, 0]);
+                    this.legendMarker.setLatLng([0, 0]);
+                };
 
-        marker.getBounds = function() {
-          return this.circle.getBounds();
-        }
+                return marker;
+            }
 
-        marker.hide = function() {
-          this.circle.setLatLng([0,0]);
-          this.legendMarker.setLatLng([0,0]);
-        }
+            let highlightBuilding = (function () {
+                let l3 = makeCircleAndLegend(map, 60);
+                let l300 = makeCircleAndLegend(map, 300);
+                let l30 = makeCircleAndLegend(map, 500);
 
-        return marker;
-      }
+                let current_center = null;
 
-      
+                // hide highlight when building is no longer visible
+                map.on("moveend", function () {
+                    let bounds = map.getBounds();
+                    let zoom = map.getZoom();
 
-      let highlightBuilding = function() {
+                    if (
+                        current_center !== null &&
+                        (zoom < layers[layers.length - 1].min_zoom ||
+                            !bounds.contains(current_center))
+                    ) {
+                        unfocus();
+                    }
+                });
 
-        let l3 = makeCircleAndLegend(map, 60);
-        let l300 = makeCircleAndLegend(map, 300);
-        let l30 = makeCircleAndLegend(map, 500);
+                function unfocus() {
+                    correction_module.hide();
+                    l300.hide();
+                    l30.hide();
+                    l3.hide();
+                    current_center = null;
+                }
 
-        let current_center = null;
+                function focus(e) {
+                    var layer = e.target;
 
-        // hide highlight when building is no longer visible
-        map.on('moveend', function() {
-          let bounds = map.getBounds();
-          let zoom = map.getZoom();
+                    let center = layer.getCenter();
+                    current_center = center;
 
-          if (current_center !== null && (zoom < layers[layers.length-1].min_zoom || !bounds.contains(current_center))) {
-            unfocus();
-          }
-        })
+                    l300.setLatLng(center);
+                    l30.setLatLng(center);
+                    l3.setLatLng(center);
 
+                    l3.setColor(get_color(colors_scheme, rule3(layer.feature)));
+                    l30.setColor(
+                        get_color(colors_scheme, rule30(layer.feature)),
+                    );
+                    l300.setColor(
+                        get_color(colors_scheme, rule300(layer.feature)),
+                    );
 
-        function unfocus() {
-          correction_module.hide();
-          l300.hide();
-          l30.hide();
-          l3.hide();
-          current_center = null;
-        }
+                    let legend3 = i18n.span({
+                        fr: `Au moins 3 arbres visibles : ${rule3(layer.feature) ? "Oui" : "Non"}`,
+                        en: `At least 3 trees visible: ${rule3(layer.feature) ? "Yes" : "No"}`,
+                        nl: `Minstens 3 bomen zichtbaar: ${rule3(layer.feature) ? "Ja" : "Nee"}`,
+                    });
 
-        function focus(e) {
-          var layer = e.target;
-          
-          let center = layer.getCenter();
-          current_center = center;
+                    l3.setText(legend3);
 
-          l300.setLatLng(center);
-          l30.setLatLng(center);
-          l3.setLatLng(center);
+                    let legend30 = i18n.span({
+                        fr: `Plus de 30% de couverture arborée : ${rule30(layer.feature) ? "Oui" : "Non"}<br>(dans un rayon de 500m)`,
+                        en: `Over 30% canopy cover: ${rule30(layer.feature) ? "Yes" : "No"}<br>(In a 500m radius)`,
+                        nl: `Meer dan 30% boomkruinbedekking: ${rule30(layer.feature) ? "Ja" : "Nee"}<br>(in een straal van 500m)`,
+                    });
 
-          l3.setColor(get_color(colors_scheme, rule3(layer.feature)));
-          l30.setColor(get_color(colors_scheme, rule30(layer.feature)));
-          l300.setColor(get_color(colors_scheme, rule300(layer.feature)));
+                    l30.setText(legend30);
 
-          let legend3 = i18n.span({
-            'fr': `Au moins 3 arbres visibles : ${rule3(layer.feature) ? 'Oui': 'Non'}`,
-            'en': `At least 3 trees visible: ${rule3(layer.feature) ? 'Yes': 'No'}`,
-            'nl': `Minstens 3 bomen zichtbaar: ${rule3(layer.feature) ? 'Ja': 'Nee'}`
-          })
+                    let legend300 = i18n.span({
+                        fr: `À moins de 300m d'un parc public : ${rule300(layer.feature) ? "Oui" : "Non"}`,
+                        en: `Less than 300m from public park: ${rule300(layer.feature) ? "Yes" : "No"}`,
+                        nl: `Op minder dan 300m van een publiek park: ${rule300(layer.feature) ? "Ja" : "Nee"}`,
+                    });
 
-          l3.setText(legend3);
+                    l300.setText(legend300);
 
-          let legend30 = i18n.span({
-            'fr': `Plus de 30% de couverture arborée : ${rule30(layer.feature) ? 'Oui': 'Non'}<br>(dans un rayon de 500m)`,
-            'en': `Over 30% canopy cover: ${rule30(layer.feature) ? 'Yes': 'No'}<br>(In a 500m radius)`,
-            'nl': `Meer dan 30% boomkruinbedekking: ${rule30(layer.feature) ? 'Ja': 'Nee'}<br>(in een straal van 500m)`
-          })
+                    // Get the current bounds of the layer
+                    const bounds = l30.getBounds();
 
-          l30.setText(legend30);
+                    // Modify the bounds by shifting the south-west and north-east latitude
+                    const newBounds = L.latLngBounds(
+                        L.latLng(
+                            bounds.getSouthWest().lat - 0.0012,
+                            bounds.getSouthWest().lng,
+                        ), // Shift south-west latitude down
+                        L.latLng(
+                            bounds.getNorthEast().lat - 0.0012,
+                            bounds.getNorthEast().lng,
+                        ), // Shift north-east latitude down
+                    );
 
-          let legend300 = i18n.span({
-            'fr': `À moins de 300m d'un parc public : ${rule300(layer.feature) ? 'Oui': 'Non'}`,
-            'en': `Less than 300m from public park: ${rule300(layer.feature) ? 'Yes': 'No'}`,
-            'nl': `Op minder dan 300m van een publiek park: ${rule300(layer.feature) ? 'Ja': 'Nee'}`
-          })
+                    map.fitBounds(newBounds, { padding: [20, 20] });
+                    correction_module.show(layer.feature.properties, center);
+                }
 
-          l300.setText(legend300);
+                focus.unfocus = unfocus;
+                return focus;
+            })();
 
-          // Get the current bounds of the layer
-          const bounds = l30.getBounds();
+            /* Layers' description */
 
-          // Modify the bounds by shifting the south-west and north-east latitude
-          const newBounds = L.latLngBounds(
-            L.latLng(bounds.getSouthWest().lat - 0.0012, bounds.getSouthWest().lng), // Shift south-west latitude down
-            L.latLng(bounds.getNorthEast().lat - 0.0012, bounds.getNorthEast().lng)  // Shift north-east latitude down
-          );
+            const layers = [
+                {
+                    name: "buildings",
+                    min_zoom: min_building_zoom,
+                    tiling: true,
+                    extent: {
+                        min_y: 49.499671,
+                        min_x: 2.554748,
+                        max_y: 51.505145,
+                        max_x: 6.407739,
+                    },
+                    grid_size: 100,
+                    url: (i, j) =>
+                        `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`,
+                    score: score,
+                    on: { click: highlightBuilding },
+                    data_id: "id",
+                },
+                {
+                    name: "centroids",
+                    min_zoom: min_building_zoom - 3,
+                    tiling: true,
+                    extent: {
+                        min_y: 49.499671,
+                        min_x: 2.554748,
+                        max_y: 51.505145,
+                        max_x: 6.407739,
+                    },
+                    grid_size: 100,
+                    url: (i, j) =>
+                        `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`,
+                    score: score,
+                },
+            ];
 
-          map.fitBounds(newBounds, {padding: [20, 20]});
-          correction_module.show(layer.feature.properties, center);
+            // Create the layers
+            initialize_layers(layers);
 
-        }
+            // Initialise the map
+            update_map();
 
-        focus.unfocus = unfocus;
-        return focus;
-      }();
+            /* Event listeners: control when map is updated */
+            // 1. When we move thourgh the map
+            map.on("moveend", update_map);
+            // 2. When we zoom in or out
+            map.on("zoomend", () => {
+                update_map();
+                toggle_zoom_message();
+            });
 
-      /* Layers' description */
+            function repaint() {
+                for (let layer of layers) {
+                    layer.layer.resetStyle();
+                }
+            }
 
-      const layers = [
-        {
-          name: "buildings",
-          min_zoom: min_building_zoom,
-          tiling: true,
-          extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
-          grid_size: 100,
-          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings/buildings_${i}_${j}.geojson`, 
-          score: score,
-          on: {'click': highlightBuilding},
-          data_id: 'id',
-        },
-        {
-          name: "centroids",
-          min_zoom: min_building_zoom-3,
-          tiling: true,
-          extent: { min_y: 49.499671, min_x: 2.554748, max_y: 51.505145, max_x: 6.407739 },
-          grid_size: 100,
-          url: (i, j) => `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`,
-          score: score,
-        },
-      ];
+            function toggle_zoom_message() {
+                const min_zoom = layers[layers.length - 1].min_zoom;
+                if (map.getZoom() >= min_zoom) {
+                    document
+                        .getElementById("zoom-message")
+                        .classList.add("hidden");
+                } else {
+                    document
+                        .getElementById("zoom-message")
+                        .classList.remove("hidden");
+                }
+            }
 
-      // Create the layers
-      initialize_layers(layers);
+            // 3. When we change the scoring mode
+            document
+                .querySelectorAll('input[name="scoring"]')
+                .forEach((radio) => {
+                    radio.addEventListener("change", () => {
+                        scoring_mode = radio.value;
+                        repaint();
+                        legend.update();
+                    });
+                });
 
-      // Initialise the map
-      update_map();
-
-      /* Event listeners: control when map is updated */
-      // 1. When we move thourgh the map
-      map.on("moveend", update_map);
-      // 2. When we zoom in or out
-      map.on("zoomend", () => {
-        update_map();
-        toggle_zoom_message();
-      });
-
-      function repaint() {
-        for (let layer of layers) {
-          layer.layer.resetStyle();
-        }
-      }
-
-      function toggle_zoom_message() {
-        const min_zoom = layers[layers.length-1].min_zoom;
-        if (map.getZoom() >= min_zoom) {
-          document.getElementById("zoom-message").classList.add("hidden");
-        } else {
-          document.getElementById("zoom-message").classList.remove("hidden");
-        }
-      }
-
-
-      // 3. When we change the scoring mode
-      document.querySelectorAll('input[name="scoring"]').forEach((radio) => {
-        radio.addEventListener("change", () => {
-          scoring_mode = radio.value;
-          repaint();
-          legend.update();
-        });
-      });
-
-      // show/hide the loading message
-      queue.addListener(q => {
-        if (q.current.length > 0) {
-          document.getElementById("loading-message").classList.remove("hidden");
-        } else {
-          document.getElementById("loading-message").classList.add("hidden");
-        }
-      });
-    </script>
-  </body>
+            // show/hide the loading message
+            queue.addListener((q) => {
+                if (q.current.length > 0) {
+                    document
+                        .getElementById("loading-message")
+                        .classList.remove("hidden");
+                } else {
+                    document
+                        .getElementById("loading-message")
+                        .classList.add("hidden");
+                }
+            });
+        </script>
+    </body>
 </html>
