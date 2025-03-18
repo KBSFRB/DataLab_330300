@@ -1,234 +1,463 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <base target="_top" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/Logo.jpg" />
+    <head>
+        <base target="_top" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="assets/images/Logo.jpg"
+        />
 
-    <title>The DataLab</title>
+        <title>The DataLab</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+        <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="docs/images/favicon.ico"
+        />
 
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="scripts/i18n.js"></script>
-    <link rel="stylesheet" href="style/style.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="scripts/i18n.js"></script>
+        <link rel="stylesheet" href="style/style.css" />
 
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <menu>
-    <div id="lang-picker" class="absolute top-4 right-4 z-[100000] flex flex-col">
-      <button id="i18n-picker-nl" class="bg-white py-1 px-2 border-black border rounded-t">NL</button>
-      <button id="i18n-picker-fr" class="bg-white py-1 px-2 border-black border-x">FR</button>
-      <button id="i18n-picker-en" class="bg-white py-1 px-2 border-black border rounded-b">EN</button>
-    </div>
-    </menu>
-    <main class="container max-w-3xl mx-auto px-4 py-8">
-      <div class="flex flex-col items-center">
-        <img src="assets/images/logo.jpg" class="w-1/4">
-      </div>
-      <div lang="en" class="flex flex-col gap-4">
-        <h1>What is DataLab?</h1>
-        <p>
-          The DataLab is a group of young voluntary data experts working together to
-          empower positive change in society through data insights.
-        </p>
-          <p>
-            
-          <span class="font-bold">Our vision</span> is to harness the power of data to support informed decisions and inspire
-          action and innovation for the common good. We are dedicated to apply our data expertise to
-          drive lasting positive change and improve our environment and societal well-being
-          for the benefit of all.
-        </p>
-        <p>
-          <span class="font-bold">Our values</span>: collaboration, transparency, accessibility, open-mindedness, impact-
-          driven.
-        </p>
-          <p>
-          We are working together in our free time and are supported by the King Baudouin Foundation.
-        </p>
-          <p>
-          Meet some of our team members:
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4">
-          <div class="flex flex-col items-center">
-            <img src="assets/images/arnon.jpg" class="rounded-full max-w-32 md:max-w-full">
-            <p>Arnon</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/chloe.jfif"class="rounded-full max-w-32 md:max-w-full" >
-            <p>Chloé</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/febe.png" class="rounded-full max-w-32 md:max-w-full">
-            <p>Febe</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/quentin.jfif" class="rounded-full max-w-32 md:max-w-full"> 
-            <p>Quentin</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/robin.jpeg"class="aspect-square rounded-full max-w-32 md:max-w-full" >
-            <p>Robin</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/toon.jfif" class="rounded-full max-w-32 md:max-w-full">   
-            <p>Toon</p>
-          </div>
-        </div>
-        <p>
-          Do you want to join the DataLab? Do you want to volunteer for a purposeful project?
-          Do you have a suggestion for a data for good project or want to brainstorm? Contact us at <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>
-        </p>
-        <p>
-          In 2024, the DataLab was created and we decided to start with a sustainability project. Amongst a series of exciting topics, the group voted to work on the 3-30-300 rule because we wanted to bring more knowledge to people about the places they live in. You can find the first version of the map <a href="330300/index.html?lang=en">here</a>. 
-        </p>
-        <p>
-          Stay tuned for other projects of the DataLab in the future ! Follow us on social media: <a href="https://www.linkedin.com/company/datalab-be/">LinkedIn</a> - <a href="https://www.facebook.com/profile.php?id=61559706710432">Facebook</a>.
-        </p>
-      </div>
-      <div lang="fr" class="flex flex-col gap-4">
-        <h1 class="text-center text-4xl font-extrabold tracking-tight">Qu'est-ce que le DataLab ?</h1>
-        <p>
-          Le DataLab est un groupe de jeunes data experts bénévoles qui travaillent ensemble
-          pour favoriser un changement positif dans la société grâce à la connaissance des
-          données.
-        </p>
-        <p>
-          <span class="font-bold">Notre vision</span> est d'exploiter le pouvoir des données pour soutenir des décisions
-          éclairées et inspirer l'action et l'innovation pour le bien commun. Nous sommes déterminés à
-          appliquer notre expertise en matière de données pour susciter des changements
-          positifs durables et améliorer notre environnement et le bien-être de la société pour
-          le bénéfice de tous.
-        </p>
-        <p>
-          <span class="font-bold">Nos valeurs</span> : collaboration, transparence, accessibilité, ouverture d'esprit, impact-
-          driven. 
-        </p>
-        <p>
-          Nous travaillons ensemble pendant notre temps libre et nous sommes
-          soutenus par la Fondation Roi Baudouin.
-        </p>
-        <p>
-          Rencontrez quelques membres de notre équipe :
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4">
-          <div class="flex flex-col items-center">
-            <img src="assets/images/arnon.jpg" class="rounded-full max-w-32 md:max-w-full">
-            <p>Arnon</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/chloe.jfif"class="rounded-full max-w-32 md:max-w-full" >
-            <p>Chloé</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/febe.png" class="rounded-full max-w-32 md:max-w-full">
-            <p>Febe</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/quentin.jfif" class="rounded-full max-w-32 md:max-w-full"> 
-            <p>Quentin</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/robin.jpeg"class="aspect-square rounded-full max-w-32 md:max-w-full" >
-            <p>Robin</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/toon.jfif" class="rounded-full max-w-32 md:max-w-full">   
-            <p>Toon</p>
-          </div>
-        </div>
-        <p>
-          Vous souhaitez rejoindre le DataLab ? Vous porter volontaire pour un projet utile ? Vous avez une suggestion pour un projet « data for good » ou vous voulez faire un brainstorming ? Contactez-nous à l'adresse <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>
-        </p>
-        <p>
-          En 2024, le DataLab a été créé et nous avons décidé de commencer par un projet pour l’environnement. Parmi une série de sujets passionnants, le groupe a voté pour travailler sur la règle des 3-30-300 parce que nous voulions apporter plus de connaissances aux gens sur les endroits où ils vivent. Vous pouvez trouver la première version de la carte <a href="330300/index.html?lang=fr">ici</a>. 
-        </p>
-        <p>
-          Suivez-nous pour rester informer des autres projets du DataLab à l'avenir: <a href="https://www.linkedin.com/company/datalab-be/">LinkedIn</a> - <a href="https://www.facebook.com/profile.php?id=61559706710432">Facebook</a>.
-        </p>
-        
-      </div>
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <menu>
+            <div
+                id="lang-picker"
+                class="absolute top-4 right-4 z-[100000] flex flex-col"
+            >
+                <button
+                    id="i18n-picker-nl"
+                    class="bg-white py-1 px-2 border-black border rounded-t"
+                >
+                    NL
+                </button>
+                <button
+                    id="i18n-picker-fr"
+                    class="bg-white py-1 px-2 border-black border-x"
+                >
+                    FR
+                </button>
+                <button
+                    id="i18n-picker-en"
+                    class="bg-white py-1 px-2 border-black border rounded-b"
+                >
+                    EN
+                </button>
+            </div>
+        </menu>
+        <main class="container max-w-3xl mx-auto px-4 py-8">
+            <div class="flex flex-col items-center">
+                <img src="assets/images/logo.jpg" class="w-1/4" />
+            </div>
+            <div lang="en" class="flex flex-col gap-4">
+                <h1>What is DataLab?</h1>
+                <p>
+                    The DataLab is a group of young voluntary data experts
+                    working together to empower positive change in society
+                    through data insights.
+                </p>
+                <p>
+                    <span class="font-bold">Our vision</span> is to harness the
+                    power of data to support informed decisions and inspire
+                    action and innovation for the common good. We are dedicated
+                    to apply our data expertise to drive lasting positive change
+                    and improve our environment and societal well-being for the
+                    benefit of all.
+                </p>
+                <p>
+                    <span class="font-bold">Our values</span>: collaboration,
+                    transparency, accessibility, open-mindedness, impact-
+                    driven.
+                </p>
+                <p>
+                    We are working together in our free time and are supported
+                    by the King Baudouin Foundation.
+                </p>
+                <p>Meet some of our team members:</p>
+                <div
+                    class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4"
+                >
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/arnon-vandenberghe/"
+                            title="See LinkedIn profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/arnon.jpg"
+                                class="rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Arnon</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/"
+                            title="see linkedin profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/chloe.jfif"
+                                class="rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Chloé</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/febe.png"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Febe</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/quentin.jfif"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Quentin</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/robin-devooght/"
+                            title="see LinkedIn profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/robin.jpeg"
+                                class="aspect-square rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Robin</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/toon.jfif"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Toon</p>
+                    </div>
+                </div>
+                <p>
+                    Do you want to join the DataLab? Do you want to volunteer
+                    for a purposeful project? Do you have a suggestion for a
+                    data for good project or want to brainstorm? Contact us at
+                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>
+                </p>
+                <p>
+                    In 2024, the DataLab was created and we decided to start
+                    with a sustainability project. Amongst a series of exciting
+                    topics, the group voted to work on the 3-30-300 rule because
+                    we wanted to bring more knowledge to people about the places
+                    they live in. You can find the first version of the map
+                    <a href="330300/index.html?lang=en">here</a>.
+                </p>
+                <p>
+                    Stay tuned for other projects of the DataLab in the future !
+                    Follow us on social media:
+                    <a href="https://www.linkedin.com/company/datalab-be/"
+                        >LinkedIn</a
+                    >
+                    -
+                    <a
+                        href="https://www.facebook.com/profile.php?id=61559706710432"
+                        >Facebook</a
+                    >.
+                </p>
+            </div>
+            <div lang="fr" class="flex flex-col gap-4">
+                <h1 class="text-center text-4xl font-extrabold tracking-tight">
+                    Qu'est-ce que le DataLab ?
+                </h1>
+                <p>
+                    Le DataLab est un groupe de jeunes data experts bénévoles
+                    qui travaillent ensemble pour favoriser un changement
+                    positif dans la société grâce à la connaissance des données.
+                </p>
+                <p>
+                    <span class="font-bold">Notre vision</span> est d'exploiter
+                    le pouvoir des données pour soutenir des décisions éclairées
+                    et inspirer l'action et l'innovation pour le bien commun.
+                    Nous sommes déterminés à appliquer notre expertise en
+                    matière de données pour susciter des changements positifs
+                    durables et améliorer notre environnement et le bien-être de
+                    la société pour le bénéfice de tous.
+                </p>
+                <p>
+                    <span class="font-bold">Nos valeurs</span> : collaboration,
+                    transparence, accessibilité, ouverture d'esprit, impact-
+                    driven.
+                </p>
+                <p>
+                    Nous travaillons ensemble pendant notre temps libre et nous
+                    sommes soutenus par la Fondation Roi Baudouin.
+                </p>
+                <p>Rencontrez quelques membres de notre équipe :</p>
+                <div
+                    class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4"
+                >
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/arnon-vandenberghe/"
+                            title="See LinkedIn profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/arnon.jpg"
+                                class="rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Arnon</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/"
+                            title="see linkedin profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/chloe.jfif"
+                                class="rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Chloé</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/febe.png"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Febe</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/quentin.jfif"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Quentin</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/robin-devooght/"
+                            title="see LinkedIn profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/robin.jpeg"
+                                class="aspect-square rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Robin</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/toon.jfif"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Toon</p>
+                    </div>
+                </div>
+                <p>
+                    Vous souhaitez rejoindre le DataLab ? Vous porter volontaire
+                    pour un projet utile ? Vous avez une suggestion pour un
+                    projet « data for good » ou vous voulez faire un
+                    brainstorming ? Contactez-nous à l'adresse
+                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>
+                </p>
+                <p>
+                    En 2024, le DataLab a été créé et nous avons décidé de
+                    commencer par un projet pour l’environnement. Parmi une
+                    série de sujets passionnants, le groupe a voté pour
+                    travailler sur la règle des 3-30-300 parce que nous voulions
+                    apporter plus de connaissances aux gens sur les endroits où
+                    ils vivent. Vous pouvez trouver la première version de la
+                    carte <a href="330300/index.html?lang=fr">ici</a>.
+                </p>
+                <p>
+                    Suivez-nous pour rester informer des autres projets du
+                    DataLab à l'avenir:
+                    <a href="https://www.linkedin.com/company/datalab-be/"
+                        >LinkedIn</a
+                    >
+                    -
+                    <a
+                        href="https://www.facebook.com/profile.php?id=61559706710432"
+                        >Facebook</a
+                    >.
+                </p>
+            </div>
 
-      <div lang="nl" class="flex flex-col gap-4">
-        <h1>Wat is DataLab?</h1>
-        <p>
-          DataLab is een groep van jonge vrijwillige data-experts die samenwerken om positieve verandering in de samenleving te stimuleren door middel van data-inzichten.
-        </p>
-        <p>
-        <span class="font-bold">Onze visie</span> is om de kracht van data in te zetten om weloverwogen beslissingen te ondersteunennemen en actie en innovatie te inspireren voor het algemeen belang. We zetten ons in om onze data-expertise toe te passen om blijvende positieve veranderingen teweeg te brengen en ons milieu en het welzijn van de samenleving te verbeteren ten gunste van iedereen.
-        </p>
-        <p>
-        <span class="font-bold">Onze waarden</span> samenwerking, transparantie, toegankelijkheid, ruimdenkendheid, impactgericht.
-        </p>
-        <p>
-          We werken samen in onze vrije tijd en worden ondersteund door de Koning Boudewijnstichting.  
-        </p>
-        <p>
-          Maak kennis met enkele leden van ons team:
-        </p>
-        <div class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4">
-          <div class="flex flex-col items-center">
-            <img src="assets/images/arnon.jpg" class="rounded-full max-w-32 md:max-w-full">
-            <p>Arnon</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/chloe.jfif"class="rounded-full max-w-32 md:max-w-full" >
-            <p>Chloé</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/febe.png" class="rounded-full max-w-32 md:max-w-full">
-            <p>Febe</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/quentin.jfif" class="rounded-full max-w-32 md:max-w-full"> 
-            <p>Quentin</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/robin.jpeg"class="aspect-square rounded-full max-w-32 md:max-w-full" >
-            <p>Robin</p>
-          </div>
-          <div class="flex flex-col items-center">
-            <img src="assets/images/toon.jfif" class="rounded-full max-w-32 md:max-w-full">   
-            <p>Toon</p>
-          </div>
-        </div>
-        <p>
-          Wil je je aansluiten bij DataLab? Wil je vrijwilliger worden voor een nuttig project? Heb je een suggestie voor een "data for good" project of wil je brainstormen? Neem contact met ons op via <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>
-        </p>
-        <p>
-          In 2024 werd DataLab opgericht en besloten we te beginnen met een project voor milieuduurzaamheid. Uit een reeks interessante onderwerpen stemde de groep om te werken aan de 3-30-300 regel omdat we mensen meer kennis wilden geven over de plekken die hen dierbaar zijn. U kan de eerste versie van de kaart <a href="330300/index.html?lang=nl">hier</a> vinden.         
-        </p>
-        <p>
-          Volg ons om op de hoogte te blijven van andere DataLab projecten in de toekomst: <a href="https://www.linkedin.com/company/datalab-be/">LinkedIn</a> - <a href="https://www.facebook.com/profile.php?id=61559706710432">Facebook</a>.
-        </p>
-      </div>
-      <a lang="en" href="330300/index.html?lang=en" class="p-2 border-black rounded text-white mt-8 block mx-auto text-center" style="background-color: #01665E; width: max-content;">Go to the map</a>
-      <a lang="fr" href="330300/index.html?lang=fr" class="p-2 border-black rounded text-white mt-8 block mx-auto text-center" style="background-color: #01665E; width: max-content;">Voir la carte</a>
-      <a lang="nl" href="330300/index.html?lang=nl" class="p-2 border-black rounded text-white mt-8 block mx-auto text-center" style="background-color: #01665E; width: max-content;">Zie de map</a>
-     </main>
-    
-      <script type="text/javascript">
-        // start language options
-        i18n.start(['nl', 'fr', 'en']);
-        function generateUUID() {
-          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = Math.random() * 16 | 0,
-                v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-          });
-        }
-        
-        const session_id = generateUUID();
-        fetch(`https://backend-330300.vandendriesche-c.workers.dev/log?page=main&session_id=${session_id}`);
-      </script>
-  </body>
+            <div lang="nl" class="flex flex-col gap-4">
+                <h1>Wat is DataLab?</h1>
+                <p>
+                    DataLab is een groep van jonge vrijwillige data-experts die
+                    samenwerken om positieve verandering in de samenleving te
+                    stimuleren door middel van data-inzichten.
+                </p>
+                <p>
+                    <span class="font-bold">Onze visie</span> is om de kracht
+                    van data in te zetten om weloverwogen beslissingen te
+                    ondersteunennemen en actie en innovatie te inspireren voor
+                    het algemeen belang. We zetten ons in om onze data-expertise
+                    toe te passen om blijvende positieve veranderingen teweeg te
+                    brengen en ons milieu en het welzijn van de samenleving te
+                    verbeteren ten gunste van iedereen.
+                </p>
+                <p>
+                    <span class="font-bold">Onze waarden</span> samenwerking,
+                    transparantie, toegankelijkheid, ruimdenkendheid,
+                    impactgericht.
+                </p>
+                <p>
+                    We werken samen in onze vrije tijd en worden ondersteund
+                    door de Koning Boudewijnstichting.
+                </p>
+                <p>Maak kennis met enkele leden van ons team:</p>
+                <div
+                    class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4"
+                >
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/arnon-vandenberghe/"
+                            title="See LinkedIn profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/arnon.jpg"
+                                class="rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Arnon</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/"
+                            title="see linkedin profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/chloe.jfif"
+                                class="rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Chloé</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/febe.png"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Febe</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/quentin.jfif"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Quentin</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <a
+                            href="https://www.linkedin.com/in/robin-devooght/"
+                            title="see LinkedIn profile"
+                            class="text-center"
+                        >
+                            <img
+                                src="assets/images/robin.jpeg"
+                                class="aspect-square rounded-full max-w-32 md:max-w-full"
+                            />
+                            <p>Robin</p></a
+                        >
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <img
+                            src="assets/images/toon.jfif"
+                            class="rounded-full max-w-32 md:max-w-full"
+                        />
+                        <p>Toon</p>
+                    </div>
+                </div>
+                <p>
+                    Wil je je aansluiten bij DataLab? Wil je vrijwilliger worden
+                    voor een nuttig project? Heb je een suggestie voor een "data
+                    for good" project of wil je brainstormen? Neem contact met
+                    ons op via
+                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>
+                </p>
+                <p>
+                    In 2024 werd DataLab opgericht en besloten we te beginnen
+                    met een project voor milieuduurzaamheid. Uit een reeks
+                    interessante onderwerpen stemde de groep om te werken aan de
+                    3-30-300 regel omdat we mensen meer kennis wilden geven over
+                    de plekken die hen dierbaar zijn. U kan de eerste versie van
+                    de kaart
+                    <a href="330300/index.html?lang=nl">hier</a> vinden.
+                </p>
+                <p>
+                    Volg ons om op de hoogte te blijven van andere DataLab
+                    projecten in de toekomst:
+                    <a href="https://www.linkedin.com/company/datalab-be/"
+                        >LinkedIn</a
+                    >
+                    -
+                    <a
+                        href="https://www.facebook.com/profile.php?id=61559706710432"
+                        >Facebook</a
+                    >.
+                </p>
+            </div>
+            <a
+                lang="en"
+                href="330300/index.html?lang=en"
+                class="p-2 border-black rounded text-white mt-8 block mx-auto text-center"
+                style="background-color: #01665e; width: max-content"
+                >Go to the map</a
+            >
+            <a
+                lang="fr"
+                href="330300/index.html?lang=fr"
+                class="p-2 border-black rounded text-white mt-8 block mx-auto text-center"
+                style="background-color: #01665e; width: max-content"
+                >Voir la carte</a
+            >
+            <a
+                lang="nl"
+                href="330300/index.html?lang=nl"
+                class="p-2 border-black rounded text-white mt-8 block mx-auto text-center"
+                style="background-color: #01665e; width: max-content"
+                >Zie de map</a
+            >
+        </main>
+
+        <script type="text/javascript">
+            // start language options
+            i18n.start(["nl", "fr", "en"]);
+            function generateUUID() {
+                return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                    /[xy]/g,
+                    function (c) {
+                        var r = (Math.random() * 16) | 0,
+                            v = c == "x" ? r : (r & 0x3) | 0x8;
+                        return v.toString(16);
+                    },
+                );
+            }
+
+            const session_id = generateUUID();
+            fetch(
+                `https://backend-330300.vandendriesche-c.workers.dev/log?page=main&session_id=${session_id}`,
+            );
+        </script>
+    </body>
 </html>
