@@ -192,6 +192,50 @@ function draw_bounds() {
   let rect = L.rectangle(bounds, { color: "#ff7800", weight: 1 }).addTo(map);
 }
 
+/**
+ * Calculates original and corrected scores for a feature based on the current scoring mode
+ * and checks if there is a differing correction.
+ * Assumes rule3, rule30, and rule300 functions are available in scope.
+ * @param {Object} feature - The GeoJSON feature object.
+ * @param {Object} layer - The layer object containing the score function and other properties.
+ * @returns {Object} An object containing originalScore, correctedScore, and hasDifferingCorrection.
+ */
+function getCorrectionInfo(feature, layer) {
+  const buildingId = feature.properties.id;
+  const corrections =
+    window.buildingCorrections && window.buildingCorrections[buildingId];
+  const originalScore = layer.score(feature); // Use the layer's score function
+
+  let correctedScore = -1;
+  // Determine corrected score based on current scoring_mode
+  if (corrections) {
+    if (scoring_mode == "rule3") {
+      correctedScore = corrections.r3;
+    } else if (scoring_mode == "rule30") {
+      correctedScore = corrections.r30;
+    } else if (scoring_mode == "rule300") {
+      correctedScore = corrections.r300;
+    } else if (scoring_mode == "overall") {
+      // Use rule functions if correction is -1
+      const r3 = corrections.r3 !== -1 ? corrections.r3 : rule3(feature);
+      const r30 = corrections.r30 !== -1 ? corrections.r30 : rule30(feature);
+      const r300 =
+        corrections.r300 !== -1 ? corrections.r300 : rule300(feature);
+      correctedScore = (r3 + r30 + r300) / 3;
+    }
+  }
+
+  // Check if a valid correction for the *current rule* exists and differs from the original score for that rule
+  const hasDifferingCorrection =
+    correctedScore !== -1 && correctedScore !== originalScore;
+
+  return {
+    originalScore,
+    correctedScore,
+    hasDifferingCorrection,
+  };
+}
+
 function initialize_layers(layers) {
   for (let layer of layers) {
     // map to store the tiles data
@@ -202,6 +246,7 @@ function initialize_layers(layers) {
     layer.layer = L.geoJSON(
       { type: "FeatureCollection", features: [] },
       {
+        renderer: L.canvas(),
         onEachFeature: function (f, l) {
           if (f.properties && layer.popup_text !== undefined) {
             l.bindPopup(layer.popup_text(f));
@@ -211,12 +256,25 @@ function initialize_layers(layers) {
           }
         },
         style: function (f) {
-          return {
-            fillColor: get_color(colors_scheme, layer.score(f)),
-            color: "black",
-            weight: 1,
-            fillOpacity: 0.5,
-          };
+          const { originalScore, correctedScore, hasDifferingCorrection } =
+            getCorrectionInfo(f, layer);
+
+          if (hasDifferingCorrection) {
+            return {
+              fillColor: get_color(colors_scheme, originalScore),
+              fillOpacity: 0.5, // Maybe slightly higher opacity for pattern
+              color: get_color(colors_scheme, correctedScore), // Default border color
+              weight: 5, // Default border weight
+            };
+          } else {
+            // Default styling based on original score
+            return {
+              fillColor: get_color(colors_scheme, originalScore),
+              color: "black",
+              weight: 1,
+              fillOpacity: 0.5,
+            };
+          }
         },
         pointToLayer: function (f, latlng) {
           return L.circleMarker(latlng, {
@@ -224,6 +282,7 @@ function initialize_layers(layers) {
             fillColor: get_color(colors_scheme, layer.score(f)),
             stroke: false,
             fillOpacity: 0.9,
+            renderer: L.canvas(),
           });
         },
       },

@@ -56,6 +56,7 @@
         ></script>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
+        <script src="scripts/leaflet.pattern.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/queue.js"></script>
         <script src="scripts/layers_handling.js"></script>
@@ -803,7 +804,7 @@
             /* Create the base map */
 
             const map = L.map("map", {
-                renderer: L.canvas(),
+                // renderer: L.canvas(),
                 minZoom: 7,
             }).setView(init_center, init_zoom);
 
@@ -993,7 +994,21 @@
                 };
 
                 marker.setColor = function (color) {
-                    this.circle.setStyle({ color: color, fillColor: color });
+                    this.circle.setStyle({
+                        color: color,
+                        fillColor: color,
+                        fillPattern: null,
+                        dashArray: null,
+                    });
+                };
+
+                marker.setPattern = function (pattern) {
+                    console.log(pattern);
+                    this.circle.setStyle({
+                        fillPattern: pattern,
+                        color: "black",
+                        dashArray: 4,
+                    });
                 };
 
                 marker.setText = function (text) {
@@ -1020,6 +1035,21 @@
 
                 let current_center = null;
 
+                // Striped pattern for disputed cases
+                const yesColor = get_color(colors_scheme, true);
+                const noColor = get_color(colors_scheme, false);
+                console.log({ yesColor, noColor });
+                const stripedPattern = new L.StripePattern({
+                    patternUnits: "objectBoundingBox",
+                    patternContentUnits: "objectBoundingBox",
+                    weight: 0.1,
+                    spaceWeight: 0.1,
+                    height: 0.2,
+                    angle: 45,
+                    color: noColor,
+                    spaceColor: yesColor,
+                }).addTo(map);
+
                 // hide highlight when building is no longer visible
                 map.on("moveend", function () {
                     let bounds = map.getBounds();
@@ -1044,6 +1074,10 @@
 
                 function focus(e) {
                     var layer = e.target;
+                    const buildingId = layer.feature.properties.id;
+                    const corrections =
+                        window.buildingCorrections &&
+                        window.buildingCorrections[buildingId];
 
                     let center = layer.getCenter();
                     current_center = center;
@@ -1052,34 +1086,91 @@
                     l30.setLatLng(center);
                     l3.setLatLng(center);
 
-                    l3.setColor(get_color(colors_scheme, rule3(layer.feature)));
-                    l30.setColor(
-                        get_color(colors_scheme, rule30(layer.feature)),
+                    // Helper function to apply style based on correction
+                    const applyCircleStyle = (
+                        circleLayer,
+                        originalScore,
+                        correction,
+                    ) => {
+                        if (correction !== -1 && correction !== originalScore) {
+                            circleLayer.setPattern(stripedPattern);
+                        } else {
+                            const originalColor = get_color(
+                                colors_scheme,
+                                originalScore,
+                            );
+                            circleLayer.setColor(originalColor);
+                        }
+                    };
+
+                    // Apply styles to circles based on rules and corrections
+                    applyCircleStyle(
+                        l3,
+                        rule3(layer.feature),
+                        corrections ? corrections.r3 : -1,
                     );
-                    l300.setColor(
-                        get_color(colors_scheme, rule300(layer.feature)),
+                    applyCircleStyle(
+                        l30,
+                        rule30(layer.feature),
+                        corrections ? corrections.r30 : -1,
+                    );
+                    applyCircleStyle(
+                        l300,
+                        rule300(layer.feature),
+                        corrections ? corrections.r300 : -1,
                     );
 
+                    // Helper to format original/corrected value text
+                    const formatValue = (
+                        originalValue,
+                        correctedValue,
+                        lang,
+                    ) => {
+                        const yesText = { fr: "Oui", en: "Yes", nl: "Ja" }[
+                            lang
+                        ];
+                        const noText = { fr: "Non", en: "No", nl: "Nee" }[lang];
+                        const originalText = originalValue ? yesText : noText;
+                        let correctedDisplay = "";
+                        // Only show corrected if a clear majority correction exists and it's different from original for this rule
+                        if (
+                            correctedValue !== -1 &&
+                            correctedValue !== originalValue
+                        ) {
+                            const correctedYesNo = {
+                                fr: correctedValue ? "Oui" : "Non",
+                                en: correctedValue ? "Yes" : "No",
+                                nl: correctedValue ? "Ja" : "Nee",
+                            }[lang];
+                            correctedDisplay = {
+                                fr: `<br>(${correctedYesNo} d'après un utilisateur)`,
+                                en: `<br>(${correctedYesNo} according to a user)`,
+                                nl: `<br>(${correctedYesNo} volgens een gebruiker)`,
+                            }[lang];
+                        }
+                        return `${originalText}${correctedDisplay}`;
+                    };
+
                     let legend3 = i18n.span({
-                        fr: `Au moins 3 arbres visibles : ${rule3(layer.feature) ? "Oui" : "Non"}`,
-                        en: `At least 3 trees visible: ${rule3(layer.feature) ? "Yes" : "No"}`,
-                        nl: `Minstens 3 bomen zichtbaar: ${rule3(layer.feature) ? "Ja" : "Nee"}`,
+                        fr: `Au moins 3 arbres visibles : ${formatValue(rule3(layer.feature), corrections ? corrections.r3 : -1, "fr")}`,
+                        en: `At least 3 trees visible: ${formatValue(rule3(layer.feature), corrections ? corrections.r3 : -1, "en")}`,
+                        nl: `Minstens 3 bomen zichtbaar: ${formatValue(rule3(layer.feature), corrections ? corrections.r3 : -1, "nl")}`,
                     });
 
                     l3.setText(legend3);
 
                     let legend30 = i18n.span({
-                        fr: `Plus de 30% de couverture arborée : ${rule30(layer.feature) ? "Oui" : "Non"}<br>(dans un rayon de 500m)`,
-                        en: `Over 30% canopy cover: ${rule30(layer.feature) ? "Yes" : "No"}<br>(In a 500m radius)`,
-                        nl: `Meer dan 30% boomkruinbedekking: ${rule30(layer.feature) ? "Ja" : "Nee"}<br>(in een straal van 500m)`,
+                        fr: `Plus de 30% de couverture arborée : ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "fr")}<br>(dans un rayon de 500m)`,
+                        en: `Over 30% canopy cover: ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "en")}<br>(In a 500m radius)`,
+                        nl: `Meer dan 30% boomkruinbedekking: ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "nl")}<br>(in een straal van 500m)`,
                     });
 
                     l30.setText(legend30);
 
                     let legend300 = i18n.span({
-                        fr: `À moins de 300m d'un parc public : ${rule300(layer.feature) ? "Oui" : "Non"}`,
-                        en: `Less than 300m from public park: ${rule300(layer.feature) ? "Yes" : "No"}`,
-                        nl: `Op minder dan 300m van een publiek park: ${rule300(layer.feature) ? "Ja" : "Nee"}`,
+                        fr: `À moins de 300m d'un parc public : ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "fr")}`,
+                        en: `Less than 300m from public park: ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "en")}`,
+                        nl: `Op minder dan 300m van een publiek park: ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "nl")}`,
                     });
 
                     l300.setText(legend300);
@@ -1100,6 +1191,7 @@
                     );
 
                     map.fitBounds(newBounds, { padding: [20, 20] });
+
                     correction_module.show(layer.feature.properties, center);
                 }
 
@@ -1127,21 +1219,21 @@
                     on: { click: highlightBuilding },
                     data_id: "id",
                 },
-                {
-                    name: "centroids",
-                    min_zoom: min_building_zoom - 3,
-                    tiling: true,
-                    extent: {
-                        min_y: 49.499671,
-                        min_x: 2.554748,
-                        max_y: 51.505145,
-                        max_x: 6.407739,
-                    },
-                    grid_size: 100,
-                    url: (i, j) =>
-                        `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`,
-                    score: score,
-                },
+                // {
+                //     name: "centroids",
+                //     min_zoom: min_building_zoom - 3,
+                //     tiling: true,
+                //     extent: {
+                //         min_y: 49.499671,
+                //         min_x: 2.554748,
+                //         max_y: 51.505145,
+                //         max_x: 6.407739,
+                //     },
+                //     grid_size: 100,
+                //     url: (i, j) =>
+                //         `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_centroids/buildings_${i}_${j}.geojson`,
+                //     score: score,
+                // },
             ];
 
             // Create the layers
@@ -1158,6 +1250,80 @@
                 update_map();
                 toggle_zoom_message();
             });
+
+            // Store processed corrections globally
+            window.buildingCorrections = {};
+
+            // Fetch and process corrections
+            fetch("https://backend-330300.vandendriesche-c.workers.dev/all")
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`,
+                        );
+                    }
+                    return response.json();
+                })
+                .then((corrections) => {
+                    const correctionsByBuilding = {};
+
+                    // Group corrections by building_id
+                    corrections.forEach((correction) => {
+                        if (!correctionsByBuilding[correction.building_id]) {
+                            correctionsByBuilding[correction.building_id] = [];
+                        }
+                        correctionsByBuilding[correction.building_id].push(
+                            correction,
+                        );
+                    });
+
+                    // Process corrections for each building
+                    for (const buildingId in correctionsByBuilding) {
+                        const buildingCorrections =
+                            correctionsByBuilding[buildingId];
+                        const r3Counts = { 0: 0, 1: 0 };
+                        const r30Counts = { 0: 0, 1: 0 };
+                        const r300Counts = { 0: 0, 1: 0 };
+
+                        buildingCorrections.forEach((correction) => {
+                            if (correction.r3 !== -1) r3Counts[correction.r3]++;
+                            if (correction.r30 !== -1)
+                                r30Counts[correction.r30]++;
+                            if (correction.r300 !== -1)
+                                r300Counts[correction.r300]++;
+                        });
+
+                        // Determine majority decision (-1 for no clear majority/no corrections)
+                        const getMajority = (counts) => {
+                            if (counts["1"] > counts["0"]) return 1;
+                            if (counts["0"] > counts["1"]) return 0;
+                            return -1; // Equality or no valid corrections
+                        };
+
+                        window.buildingCorrections[buildingId] = {
+                            r3: getMajority(r3Counts),
+                            r30: getMajority(r30Counts),
+                            r300: getMajority(r300Counts),
+                        };
+                    }
+
+                    console.log(
+                        "Processed building corrections:",
+                        window.buildingCorrections,
+                    );
+
+                    // After fetching and processing, maybe trigger a map update or repaint
+                    // to apply styling changes based on corrections.
+                    // For now, we'll rely on the next map interaction or data load.
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error fetching building corrections:",
+                        error,
+                    );
+                    // Initialize with an empty object even on error
+                    window.buildingCorrections = {};
+                });
 
             function repaint() {
                 for (let layer of layers) {
