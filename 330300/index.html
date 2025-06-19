@@ -56,7 +56,6 @@
         ></script>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
-        <script src="scripts/leaflet.pattern.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/queue.js"></script>
         <script src="scripts/layers_handling.js"></script>
@@ -804,7 +803,7 @@
             /* Create the base map */
 
             const map = L.map("map", {
-                // renderer: L.canvas(),
+                renderer: L.canvas(),
                 minZoom: 7,
             }).setView(init_center, init_zoom);
 
@@ -1026,17 +1025,7 @@
                     this.circle.setStyle({
                         color: color,
                         fillColor: color,
-                        fillPattern: null,
                         dashArray: null,
-                    });
-                };
-
-                marker.setPattern = function (pattern) {
-                    console.log(pattern);
-                    this.circle.setStyle({
-                        fillPattern: pattern,
-                        color: "black",
-                        dashArray: 4,
                     });
                 };
 
@@ -1057,27 +1046,82 @@
                 return marker;
             }
 
+            // Function to create mobile popup text with building scores
+            function buildingPopupText(feature) {
+                const buildingId = feature.properties.id;
+                const corrections =
+                    window.buildingCorrections &&
+                    window.buildingCorrections[buildingId];
+
+                // Helper to format original/corrected value text
+                const formatValue = (originalValue, correctedValue, lang) => {
+                    const yesText = { fr: "Oui", en: "Yes", nl: "Ja" }[lang];
+                    const noText = { fr: "Non", en: "No", nl: "Nee" }[lang];
+
+                    // If there's a correction that differs from original
+                    if (
+                        correctedValue !== -1 &&
+                        correctedValue !== originalValue
+                    ) {
+                        const yesNo = correctedValue ? yesText : noText;
+                        const modelLabel = {
+                            fr: `(Cette valeur a été corrigée par un utilisateur)`,
+                            en: `(This value was corrected by a user)`,
+                            nl: `(Deze waarde is door een gebruiker gecorrigeerd)`,
+                        }[lang];
+                        return `${yesNo} ${modelLabel}`;
+                    }
+
+                    // No correction - just show original score
+                    const originalText = originalValue ? yesText : noText;
+                    return originalText;
+                };
+
+                const rule3Score = rule3(feature);
+                const rule30Score = rule30(feature);
+                const rule300Score = rule300(feature);
+
+                const r3Correction = corrections ? corrections.r3 : -1;
+                const r30Correction = corrections ? corrections.r30 : -1;
+                const r300Correction = corrections ? corrections.r300 : -1;
+
+                return i18n.div({
+                    fr: `<strong>Scores du bâtiment</strong><br><br>
+                         <strong>🌳 Au moins 3 arbres visibles :</strong><br>
+                         <span style="margin-left: 10px;">${formatValue(rule3Score, r3Correction, "fr")}</span><br><br>
+                         <strong>🌿 Plus de 30% de couverture arborée :</strong><br>
+                         <span style="margin-left: 10px; font-size: 12px; color: #666;">(dans un rayon de 500m)</span><br>
+                         <span style="margin-left: 10px;">${formatValue(rule30Score, r30Correction, "fr")}</span><br><br>
+                         <strong>🏞️ À moins de 300m d'un parc public :</strong><br>
+                         <span style="margin-left: 10px;">${formatValue(rule300Score, r300Correction, "fr")}</span>
+                         `,
+                    en: `<strong>Building Scores</strong><br><br>
+                         <strong>🌳 At least 3 trees visible:</strong><br>
+                         <span style="margin-left: 10px;">${formatValue(rule3Score, r3Correction, "en")}</span><br><br>
+                         <strong>🌿 Over 30% canopy cover:</strong><br>
+                         <span style="margin-left: 10px; font-size: 12px; color: #666;">(In a 500m radius)</span><br>
+                         <span style="margin-left: 10px;">${formatValue(rule30Score, r30Correction, "en")}</span><br><br>
+                         <strong>🏞️ Less than 300m from public park:</strong><br>
+                         <span style="margin-left: 10px;">${formatValue(rule300Score, r300Correction, "en")}</span>
+                         `,
+                    nl: `<strong>Gebouw Scores</strong><br><br>
+                         <strong>🌳 Minstens 3 bomen zichtbaar:</strong><br>
+                         <span style="margin-left: 10px;">${formatValue(rule3Score, r3Correction, "nl")}</span><br><br>
+                         <strong>🌿 Meer dan 30% boomkruinbedekking:</strong><br>
+                         <span style="margin-left: 10px; font-size: 12px; color: #666;">(in een straal van 500m)</span><br>
+                         <span style="margin-left: 10px;">${formatValue(rule30Score, r30Correction, "nl")}</span><br><br>
+                         <strong>🏞️ Op minder dan 300m van een publiek park:</strong><br>
+                         <span style="margin-left: 10px;">${formatValue(rule300Score, r300Correction, "nl")}</span>
+                         `,
+                });
+            }
+
             let highlightBuilding = (function () {
                 let l3 = makeCircleAndLegend(map, 60);
                 let l300 = makeCircleAndLegend(map, 300);
                 let l30 = makeCircleAndLegend(map, 500);
 
                 let current_center = null;
-
-                // Striped pattern for disputed cases
-                const yesColor = get_color(colors_scheme, true);
-                const noColor = get_color(colors_scheme, false);
-                console.log({ yesColor, noColor });
-                const stripedPattern = new L.StripePattern({
-                    patternUnits: "objectBoundingBox",
-                    patternContentUnits: "objectBoundingBox",
-                    weight: 0.1,
-                    spaceWeight: 0.1,
-                    height: 0.2,
-                    angle: 45,
-                    color: noColor,
-                    spaceColor: yesColor,
-                }).addTo(map);
 
                 // hide highlight when building is no longer visible
                 map.on("moveend", function () {
@@ -1086,9 +1130,14 @@
 
                     if (
                         current_center !== null &&
-                        (zoom < layers[layers.length - 1].min_zoom ||
+                        (zoom < min_building_zoom ||
                             !bounds.contains(current_center))
                     ) {
+                        unfocus();
+                    }
+                });
+                map.on("zoomend", function () {
+                    if (map.getZoom() < min_building_zoom) {
                         unfocus();
                     }
                 });
@@ -1102,6 +1151,8 @@
                 }
 
                 function focus(e) {
+                    buildingClicked = true; // Needed to distinguish between clicks that open a building and clicks that don't
+
                     var layer = e.target;
                     const buildingId = layer.feature.properties.id;
                     const corrections =
@@ -1121,15 +1172,10 @@
                         originalScore,
                         correction,
                     ) => {
-                        if (correction !== -1 && correction !== originalScore) {
-                            circleLayer.setPattern(stripedPattern);
-                        } else {
-                            const originalColor = get_color(
-                                colors_scheme,
-                                originalScore,
-                            );
-                            circleLayer.setColor(originalColor);
-                        }
+                        const score =
+                            correction !== -1 ? correction : originalScore;
+                        const color = get_color(colors_scheme, score);
+                        circleLayer.setColor(color);
                     };
 
                     // Apply styles to circles based on rules and corrections
@@ -1159,25 +1205,25 @@
                             lang
                         ];
                         const noText = { fr: "Non", en: "No", nl: "Nee" }[lang];
-                        const originalText = originalValue ? yesText : noText;
-                        let correctedDisplay = "";
-                        // Only show corrected if a clear majority correction exists and it's different from original for this rule
+
+                        // If there's a correction that differs from original
                         if (
                             correctedValue !== -1 &&
                             correctedValue !== originalValue
                         ) {
-                            const correctedYesNo = {
-                                fr: correctedValue ? "Oui" : "Non",
-                                en: correctedValue ? "Yes" : "No",
-                                nl: correctedValue ? "Ja" : "Nee",
+                            const yesNo = correctedValue ? yesText : noText;
+                            const modelLabel = {
+                                fr: `<br>(Cette valeur a été corrigée par un utilisateur)`,
+                                en: `<br>(This value was corrected by a user)`,
+                                nl: `<br>(Deze waarde is door een gebruiker gecorrigeerd)`,
                             }[lang];
-                            correctedDisplay = {
-                                fr: `<br>(${correctedYesNo} d'après un utilisateur)`,
-                                en: `<br>(${correctedYesNo} according to a user)`,
-                                nl: `<br>(${correctedYesNo} volgens een gebruiker)`,
-                            }[lang];
+
+                            return `${yesNo}${modelLabel}`;
                         }
-                        return `${originalText}${correctedDisplay}`;
+
+                        // No correction - just show original score without explanation
+                        const originalText = originalValue ? yesText : noText;
+                        return originalText;
                     };
 
                     let legend3 = i18n.span({
@@ -1251,24 +1297,31 @@
 
             /* Layers' description */
 
-            const layers = [
-                {
-                    name: "buildings",
-                    min_zoom: min_building_zoom,
-                    tiling: true,
-                    extent: {
-                        min_x: 2.55474755527399,
-                        max_x: 6.40769823206217,
-                        min_y: 49.5020739840214,
-                        max_y: 51.5051447052005,
-                    },
-                    grid_size: 100,
-                    url: (i, j) =>
-                        `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings_v2/tile_${i}_${j}.geojson`,
-                    score: score,
-                    on: { click: highlightBuilding },
-                    data_id: "id",
+            const buildingsLayer = {
+                name: "buildings",
+                min_zoom: min_building_zoom,
+                tiling: true,
+                extent: {
+                    min_x: 2.55474755527399,
+                    max_x: 6.40769823206217,
+                    min_y: 49.5020739840214,
+                    max_y: 51.5051447052005,
                 },
+                grid_size: 100,
+                url: (i, j) =>
+                    `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings_v2/tile_${i}_${j}.geojson`,
+                score: score,
+                data_id: "id",
+            };
+
+            if (window.innerWidth >= 640) {
+                buildingsLayer.on = { click: highlightBuilding };
+            } else {
+                buildingsLayer.popup_text = buildingPopupText;
+            }
+
+            const layers = [
+                buildingsLayer,
                 {
                     name: "sectors",
                     min_zoom: 12,
@@ -1343,6 +1396,17 @@
             map.on("zoomend", () => {
                 update_map();
                 // toggle_zoom_message();
+            });
+            // 3. When clicking on the map (outside buildings), unfocus highlight
+            let buildingClicked = false;
+            map.on("click", function (e) {
+                // Use a small delay to allow building click events to fire first
+                setTimeout(function () {
+                    if (!buildingClicked) {
+                        highlightBuilding.unfocus();
+                    }
+                    buildingClicked = false;
+                }, 10);
             });
 
             // Store processed corrections globally

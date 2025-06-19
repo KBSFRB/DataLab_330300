@@ -1,19 +1,16 @@
-
-
-const i18n = function () {
-
-	const i18n = {};
+const i18n = (function () {
+  const i18n = {};
 
   const placeholders = {
-      en: {
-          search_address: 'Enter address',
-      },
-      fr: {
-          search_address: "Entrez l'addresse",
-      },
-      nl: {
-          search_address:'Geef een adres in',
-      }
+    en: {
+      search_address: "Enter address",
+    },
+    fr: {
+      search_address: "Entrez l'addresse",
+    },
+    nl: {
+      search_address: "Geef een adres in",
+    },
   };
 
   i18n.lang = navigator.language;
@@ -24,8 +21,8 @@ const i18n = function () {
    */
   function get_url_lang() {
     const url_params = new URLSearchParams(window.location.search);
-    if (url_params.has('lang')) {
-      return url_params.get('lang');
+    if (url_params.has("lang")) {
+      return url_params.get("lang");
     }
     return null;
   }
@@ -42,43 +39,51 @@ const i18n = function () {
       }
     }
 
-    console.log(`Failed to match ${lang} to ${options} -> return first option (${options[0]}) as default`)
+    console.log(
+      `Failed to match ${lang} to ${options} -> return first option (${options[0]}) as default`,
+    );
     return options[0];
   }
 
   /**
-   * Remove the i18n-picker-active from every i18n-picker-* element 
+   * Remove the i18n-picker-active from every i18n-picker-* element
    * set the i18n-picker-active to the i18n-picker-[lang] element
    * hide element whose lang attribute is not lang
    */
   function set_lang(lang) {
     i18n.lang = lang;
 
-    document.querySelectorAll("[id^='i18n-picker-']").forEach(el => el.classList.remove('active'));
-    document.getElementById(`i18n-picker-${lang}`).classList.add('active');
+    document
+      .querySelectorAll("[id^='i18n-picker-']")
+      .forEach((el) => el.classList.remove("active"));
+    document.getElementById(`i18n-picker-${lang}`).classList.add("active");
 
-    document.querySelectorAll(`body *[lang]`).forEach(el => {el.style.display = 'none'});
-    document.querySelectorAll(`[lang='${lang}']`).forEach(el => el.style.display = '');
+    document.querySelectorAll(`body *[lang]`).forEach((el) => {
+      el.style.display = "none";
+    });
+    document
+      .querySelectorAll(`[lang='${lang}']`)
+      .forEach((el) => (el.style.display = ""));
 
     // Update placeholders based on language
-    document.querySelectorAll("input[data-i18n-placeholder]").forEach(el => {
+    document.querySelectorAll("input[data-i18n-placeholder]").forEach((el) => {
       const placeholderKey = el.getAttribute("data-i18n-placeholder");
       el.placeholder = placeholders[lang][placeholderKey];
     });
   }
 
-	/**
-	 * initialise the language picking options
-   * 
+  /**
+   * initialise the language picking options
+   *
    * it expects to find for each language an element with the id "i18n-picker-[lang]"
    * the currently active language is given the class "i18n-picker-active"
-   * 
+   *
    * elements with the class "i18n-[lang]" will only be shown when lang is the selected language
-   * 
+   *
    * it will add event listener to detect when language is changed.
-	 * it will also set the current language the the browser lang
-	 */ 
-	i18n.start = function(languages) {
+   * it will also set the current language the the browser lang
+   */
+  i18n.start = function (languages) {
     // set lang based on navigator preferences
     i18n.options = languages;
 
@@ -91,30 +96,45 @@ const i18n = function () {
     }
     // add event listeners
     for (let lang of languages) {
-      document.getElementById(`i18n-picker-${lang}`).addEventListener('click', () => {
-        set_lang(lang);
-      })
+      document
+        .getElementById(`i18n-picker-${lang}`)
+        .addEventListener("click", () => {
+          set_lang(lang);
+        });
     }
-
-	}
+  };
 
   /**
-   * Gets a dict of {lang: text}, 
-   * returns a string of <span lang="lang">text</span>...
+   * Gets a dict of {lang: text},
+   * returns a string of <elem lang="lang">text</elem>...
    */
-  i18n.span = function(texts) {
-    let html = '';
+  i18n.elem = function (elem, texts) {
+    let html = "";
     for (let lang in texts) {
       if (lang == i18n.lang) {
-        html += `<span lang="${lang}">${texts[lang]}</span>`
+        html += `<${elem} lang="${lang}">${texts[lang]}</${elem}>`;
       } else {
-        html += `<span lang="${lang}" style="display: none">${texts[lang]}</span>`
+        html += `<${elem} lang="${lang}" style="display: none">${texts[lang]}</${elem}>`;
       }
     }
     return html;
-  }
+  };
 
+  /**
+   * Gets a dict of {lang: text},
+   * returns a string of <span lang="lang">text</span>...
+   */
+  i18n.span = function (texts) {
+    return i18n.elem("span", texts);
+  };
 
-	return i18n;
+  /**
+   * Gets a dict of {lang: text},
+   * returns a string of <div lang="lang">text</div>...
+   */
+  i18n.div = function (texts) {
+    return i18n.elem("div", texts);
+  };
 
-}()
+  return i18n;
+})();
