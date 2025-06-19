@@ -1060,9 +1060,14 @@
 
                     if (
                         current_center !== null &&
-                        (zoom < layers[layers.length - 1].min_zoom ||
+                        (zoom < min_building_zoom ||
                             !bounds.contains(current_center))
                     ) {
+                        unfocus();
+                    }
+                });
+                map.on("zoomend", function () {
+                    if (map.getZoom() < min_building_zoom) {
                         unfocus();
                     }
                 });
@@ -1076,6 +1081,8 @@
                 }
 
                 function focus(e) {
+                    buildingClicked = true; // Needed to distinguish between clicks that open a building and clicks that don't
+
                     var layer = e.target;
                     const buildingId = layer.feature.properties.id;
                     const corrections =
@@ -1235,7 +1242,9 @@
                     url: (i, j) =>
                         `https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/chopped_buildings_v2/tile_${i}_${j}.geojson`,
                     score: score,
-                    on: { click: highlightBuilding },
+                    on: {
+                        click: highlightBuilding,
+                    },
                     data_id: "id",
                 },
                 {
@@ -1312,6 +1321,17 @@
             map.on("zoomend", () => {
                 update_map();
                 // toggle_zoom_message();
+            });
+            // 3. When clicking on the map (outside buildings), unfocus highlight
+            let buildingClicked = false;
+            map.on("click", function (e) {
+                // Use a small delay to allow building click events to fire first
+                setTimeout(function () {
+                    if (!buildingClicked) {
+                        highlightBuilding.unfocus();
+                    }
+                    buildingClicked = false;
+                }, 10);
             });
 
             // Store processed corrections globally
