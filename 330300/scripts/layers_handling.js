@@ -76,9 +76,9 @@ function filter_new_data(data, layer) {
   let new_data = data.filter(
     (d) => !layer.ids.has(d.properties[layer.data_id]),
   );
-  console.log(
-    `filtering data for ${layer.name}: ${data.length} -> ${new_data.length}`,
-  );
+  // console.log(
+  //   `filtering data for ${layer.name}: ${data.length} -> ${new_data.length}`,
+  // );
   return new_data;
 }
 
@@ -88,10 +88,10 @@ function get_data(layer, tile) {
 
   if (layer.data.has(`${i}_${j}`)) {
     if (layer.data.get(`${i}_${j}`) === null) {
-      console.log(`fetching ${layer.name} ${i}, ${j}`);
+      // console.log(`fetching ${layer.name} ${i}, ${j}`);
       return;
     } else {
-      console.log(`already fetched ${layer.name} ${i}, ${j}`);
+      // console.log(`already fetched ${layer.name} ${i}, ${j}`);
       return;
     }
   }
@@ -109,7 +109,7 @@ function get_data(layer, tile) {
       return response.json();
     })
     .then((data) => {
-      console.log(`fetched ${layer.name} ${i}, ${j}`);
+      // console.log(`fetched ${layer.name} ${i}, ${j}`);
       // save data in the layer object
       layer.data.set(`${i}_${j}`, true);
       // find the new data that is not already on the map
@@ -142,7 +142,7 @@ function show_layer(layer, bounds) {
     tiles.push([0, 0]);
   }
 
-  console.log(`Looking for tiles for ${layer.name}: `, tiles);
+  // console.log(`Looking for tiles for ${layer.name}: `, tiles);
 
   for (let tile of tiles) {
     get_data(layer, tile);
@@ -166,8 +166,6 @@ function update_map() {
   let bounds = map.getBounds();
   let zoom = map.getZoom();
 
-  console.log({ bounds, zoom });
-
   // find layer corresponding to zoom level
   let layer = layers.find((l) => l.min_zoom <= zoom);
   if (layer === undefined) {
@@ -188,7 +186,6 @@ function update_map() {
 
 function draw_bounds() {
   let bounds = map.getBounds();
-  console.log(bounds);
   let rect = L.rectangle(bounds, { color: "#ff7800", weight: 1 }).addTo(map);
 }
 
