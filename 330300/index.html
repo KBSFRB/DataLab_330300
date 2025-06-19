@@ -56,7 +56,6 @@
         ></script>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/leaflet-geosearch@latest/dist/bundle.min.js"></script>
-        <script src="scripts/leaflet.pattern.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/queue.js"></script>
         <script src="scripts/layers_handling.js"></script>
@@ -804,7 +803,7 @@
             /* Create the base map */
 
             const map = L.map("map", {
-                // renderer: L.canvas(),
+                renderer: L.canvas(),
                 minZoom: 7,
             }).setView(init_center, init_zoom);
 
@@ -1026,17 +1025,7 @@
                     this.circle.setStyle({
                         color: color,
                         fillColor: color,
-                        fillPattern: null,
                         dashArray: null,
-                    });
-                };
-
-                marker.setPattern = function (pattern) {
-                    console.log(pattern);
-                    this.circle.setStyle({
-                        fillPattern: pattern,
-                        color: "black",
-                        dashArray: 4,
                     });
                 };
 
@@ -1063,21 +1052,6 @@
                 let l30 = makeCircleAndLegend(map, 500);
 
                 let current_center = null;
-
-                // Striped pattern for disputed cases
-                const yesColor = get_color(colors_scheme, true);
-                const noColor = get_color(colors_scheme, false);
-                console.log({ yesColor, noColor });
-                const stripedPattern = new L.StripePattern({
-                    patternUnits: "objectBoundingBox",
-                    patternContentUnits: "objectBoundingBox",
-                    weight: 0.1,
-                    spaceWeight: 0.1,
-                    height: 0.2,
-                    angle: 45,
-                    color: noColor,
-                    spaceColor: yesColor,
-                }).addTo(map);
 
                 // hide highlight when building is no longer visible
                 map.on("moveend", function () {
@@ -1121,15 +1095,10 @@
                         originalScore,
                         correction,
                     ) => {
-                        if (correction !== -1 && correction !== originalScore) {
-                            circleLayer.setPattern(stripedPattern);
-                        } else {
-                            const originalColor = get_color(
-                                colors_scheme,
-                                originalScore,
-                            );
-                            circleLayer.setColor(originalColor);
-                        }
+                        const score =
+                            correction !== -1 ? correction : originalScore;
+                        const color = get_color(colors_scheme, score);
+                        circleLayer.setColor(color);
                     };
 
                     // Apply styles to circles based on rules and corrections
@@ -1159,25 +1128,25 @@
                             lang
                         ];
                         const noText = { fr: "Non", en: "No", nl: "Nee" }[lang];
-                        const originalText = originalValue ? yesText : noText;
-                        let correctedDisplay = "";
-                        // Only show corrected if a clear majority correction exists and it's different from original for this rule
+
+                        // If there's a correction that differs from original
                         if (
                             correctedValue !== -1 &&
                             correctedValue !== originalValue
                         ) {
-                            const correctedYesNo = {
-                                fr: correctedValue ? "Oui" : "Non",
-                                en: correctedValue ? "Yes" : "No",
-                                nl: correctedValue ? "Ja" : "Nee",
+                            const yesNo = correctedValue ? yesText : noText;
+                            const modelLabel = {
+                                fr: `<br>(Cette valeur a été corrigée par un utilisateur)`,
+                                en: `<br>(This value was corrected by a user)`,
+                                nl: `<br>(Deze waarde is door een gebruiker gecorrigeerd)`,
                             }[lang];
-                            correctedDisplay = {
-                                fr: `<br>(${correctedYesNo} d'après un utilisateur)`,
-                                en: `<br>(${correctedYesNo} according to a user)`,
-                                nl: `<br>(${correctedYesNo} volgens een gebruiker)`,
-                            }[lang];
+
+                            return `${yesNo}${modelLabel}`;
                         }
-                        return `${originalText}${correctedDisplay}`;
+
+                        // No correction - just show original score without explanation
+                        const originalText = originalValue ? yesText : noText;
+                        return originalText;
                     };
 
                     let legend3 = i18n.span({

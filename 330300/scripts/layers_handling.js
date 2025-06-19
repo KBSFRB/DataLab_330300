@@ -246,7 +246,6 @@ function initialize_layers(layers) {
     layer.layer = L.geoJSON(
       { type: "FeatureCollection", features: [] },
       {
-        renderer: L.canvas(),
         onEachFeature: function (f, l) {
           if (f.properties && layer.popup_text !== undefined) {
             l.bindPopup(layer.popup_text(f));
@@ -259,22 +258,19 @@ function initialize_layers(layers) {
           const { originalScore, correctedScore, hasDifferingCorrection } =
             getCorrectionInfo(f, layer);
 
-          if (hasDifferingCorrection) {
-            return {
-              fillColor: get_color(colors_scheme, originalScore),
-              fillOpacity: 0.5, // Maybe slightly higher opacity for pattern
-              color: get_color(colors_scheme, correctedScore), // Default border color
-              weight: 5, // Default border weight
-            };
-          } else {
-            // Default styling based on original score
-            return {
-              fillColor: get_color(colors_scheme, originalScore),
-              color: "black",
-              weight: 1,
-              fillOpacity: 0.5,
-            };
-          }
+          const color = hasDifferingCorrection
+            ? get_color(colors_scheme, correctedScore)
+            : get_color(colors_scheme, originalScore);
+
+          const dashArray = hasDifferingCorrection ? "5" : undefined;
+
+          return {
+            fillColor: color,
+            fillOpacity: 0.5,
+            color: "black",
+            weight: 1,
+            dashArray,
+          };
         },
         pointToLayer: function (f, latlng) {
           return L.circleMarker(latlng, {
@@ -282,7 +278,6 @@ function initialize_layers(layers) {
             fillColor: get_color(colors_scheme, layer.score(f)),
             stroke: false,
             fillOpacity: 0.9,
-            renderer: L.canvas(),
           });
         },
       },
