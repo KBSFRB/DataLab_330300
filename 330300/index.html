@@ -1277,9 +1277,13 @@
             function make_area_popup_text(level) {
                 return function (f) {
                     const areaName = i18n.span({
-                        fr: f.properties[`T_${level}_FR`],
-                        nl: f.properties[`T_${level}_NL`],
-                        en: f.properties[`T_${level}_NL`],
+                        fr: f.properties[`T_${level}_FR`] || "Secteur sans nom",
+                        nl:
+                            f.properties[`T_${level}_NL`] ||
+                            "Sector zonder naam",
+                        en:
+                            f.properties[`T_${level}_NL`] ||
+                            "Sector without name",
                     });
                     const rule3Score = rule3(f);
                     const rule30Score = rule30(f);
