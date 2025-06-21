@@ -1275,23 +1275,53 @@
             })();
 
             function make_area_popup_text(level) {
-                function area_name(f) {
-                    let lang = "NL";
-                    if (navigator.language.startsWith("fr")) {
-                        lang = "FR";
-                    } else if (navigator.language.startsWith("de")) {
-                        lang = "DE";
-                    }
-
-                    return f.properties[`T_${level}_${lang}`];
-                }
-
                 return function (f) {
-                    return `<strong>${area_name(f)}</strong><br>
-            		At least 3 trees: ${format_percent(rule3(f))} of buildings<br>
-            		At least 30% canopy: ${format_percent(rule30(f))} of buildings<br>
-            		Public green space less than 300m away: ${format_percent(rule300(f))} of buildings<br>
-            		Average score: ${format_score(rule3(f) + rule30(f) + rule300(f))} / 3`;
+                    const areaName = i18n.span({
+                        fr: f.properties[`T_${level}_FR`],
+                        nl: f.properties[`T_${level}_NL`],
+                        en: f.properties[`T_${level}_NL`],
+                    });
+                    const rule3Score = rule3(f);
+                    const rule30Score = rule30(f);
+                    const rule300Score = rule300(f);
+                    const averageScore =
+                        (rule3Score + rule30Score + rule300Score) / 3;
+
+                    return i18n.div({
+                        fr: `<strong>${areaName}</strong><br><br>
+                                 <strong>🌳 Au moins 3 arbres visibles :</strong><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule3Score)} des bâtiments</span><br><br>
+                                 <strong>🌿 Plus de 30% de couverture arborée :</strong><br>
+                                 <span style="margin-left: 10px; font-size: 12px; color: #666;">(dans un rayon de 500m)</span><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule30Score)} des bâtiments</span><br><br>
+                                 <strong>🏞️ À moins de 300m d'un parc public :</strong><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule300Score)} des bâtiments</span><br><br>
+                                 <strong>Score moyen :</strong><br>
+                                 <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
+                                 `,
+                        en: `<strong>${areaName}</strong><br><br>
+                                 <strong>🌳 At least 3 trees visible:</strong><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule3Score)} of buildings</span><br><br>
+                                 <strong>🌿 Over 30% canopy cover:</strong><br>
+                                 <span style="margin-left: 10px; font-size: 12px; color: #666;">(In a 500m radius)</span><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule30Score)} of buildings</span><br><br>
+                                 <strong>🏞️ Less than 300m from public park:</strong><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule300Score)} of buildings</span><br><br>
+                                 <strong>Average score:</strong><br>
+                                 <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
+                                 `,
+                        nl: `<strong>${areaName}</strong><br><br>
+                                 <strong>🌳 Minstens 3 bomen zichtbaar:</strong><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule3Score)} van de gebouwen</span><br><br>
+                                 <strong>🌿 Meer dan 30% boomkruinbedekking:</strong><br>
+                                 <span style="margin-left: 10px; font-size: 12px; color: #666;">(in een straal van 500m)</span><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule30Score)} van de gebouwen</span><br><br>
+                                 <strong>🏞️ Op minder dan 300m van een publiek park:</strong><br>
+                                 <span style="margin-left: 10px;">${format_percent(rule300Score)} van de gebouwen</span><br><br>
+                                 <strong>Gemiddelde score:</strong><br>
+                                 <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
+                                 `,
+                    });
                 };
             }
 
