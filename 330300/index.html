@@ -1395,6 +1395,7 @@
             // 2. When we zoom in or out
             map.on("zoomend", () => {
                 update_map();
+                legend.update();
                 // toggle_zoom_message();
             });
             // 3. When clicking on the map (outside buildings), unfocus highlight
