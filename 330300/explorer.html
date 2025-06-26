@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Municipality Explorer</title>
+
+        <!-- Observable Plot and D3 -->
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+
+        <!-- Alpine.js -->
+        <script
+            defer
+            src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"
+        ></script>
+        <script src="scripts/explorer.js"></script>
+
+        <link rel="stylesheet" href="style/reset.css" />
+        <link rel="stylesheet" href="style/explorer.css" />
+    </head>
+    <body>
+        <div x-data="explorerApp()" x-init="init()">
+            <header>
+                <h1>Municipality Explorer</h1>
+            </header>
+
+            <main class="main-container">
+                <!-- Search Bar with Datalist -->
+                <section class="controls">
+                    <input
+                        type="search"
+                        x-model="searchTerm"
+                        @input="handleSearchInput()"
+                        list="municipalities-list"
+                        placeholder="Search municipalities..."
+                        aria-label="Search municipalities"
+                    />
+                    <datalist id="municipalities-list">
+                        <template
+                            x-for="municipality in municipalities"
+                            :key="municipality.properties.id"
+                        >
+                            <option
+                                :value="municipality.properties.name"
+                                x-text="municipality.properties.name"
+                            ></option>
+                        </template>
+                    </datalist>
+                </section>
+
+                <!-- Back button when viewing neighborhoods -->
+                <section x-show="selectedMunicipality">
+                    <button
+                        @click="goBackToMunicipalities()"
+                        class="back-button"
+                    >
+                        ← Back to Municipalities
+                    </button>
+                </section>
+
+                <!-- Map and Chart Container -->
+                <section class="viz-container">
+                    <!-- Map -->
+                    <div>
+                        <div id="map-container"></div>
+                    </div>
+
+                    <!-- Chart (only show when municipality is selected) -->
+                    <div x-show="selectedMunicipality">
+                        <div id="chart-container"></div>
+                        <!-- Chart Controls -->
+                        <form>
+                            <label
+                                >X-axis:
+                                <select
+                                    x-model="chartXAxis"
+                                    @change="updateChart()"
+                                >
+                                    <option value="population">
+                                        Population
+                                    </option>
+                                    <option value="wealth">Wealth Index</option>
+                                    <option value="treecover">
+                                        Tree Cover %
+                                    </option>
+                                    <option value="density">
+                                        Population Density
+                                    </option>
+                                </select>
+                            </label>
+                            <label
+                                >Y-axis:
+                                <select
+                                    x-model="chartYAxis"
+                                    @change="updateChart()"
+                                >
+                                    <option value="wealth">Wealth Index</option>
+                                    <option value="population">
+                                        Population
+                                    </option>
+                                    <option value="treecover">
+                                        Tree Cover %
+                                    </option>
+                                    <option value="density">
+                                        Population Density
+                                    </option>
+                                </select>
+                            </label>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Neighborhood Data Table -->
+                <section
+                    x-show="selectedMunicipality && neighborhoods.length > 0"
+                >
+                    <h2>
+                        Neighborhoods in
+                        <span
+                            x-text="selectedMunicipality?.properties.name"
+                        ></span>
+                    </h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th @click="sortTable('name')">Name</th>
+                                <th @click="sortTable('population')">
+                                    Population
+                                </th>
+                                <th @click="sortTable('wealth')">
+                                    Wealth Index
+                                </th>
+                                <th @click="sortTable('treecover')">
+                                    Tree Cover %
+                                </th>
+                                <th @click="sortTable('density')">
+                                    Population Density
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template
+                                x-for="neighborhood in sortedNeighborhoods"
+                                :key="neighborhood.properties.id"
+                            >
+                                <tr>
+                                    <td
+                                        x-text="neighborhood.properties.name"
+                                    ></td>
+                                    <td
+                                        x-text="neighborhood.properties.population.toLocaleString()"
+                                    ></td>
+                                    <td
+                                        x-text="neighborhood.properties.wealth.toFixed(2)"
+                                    ></td>
+                                    <td
+                                        x-text="neighborhood.properties.treecover.toFixed(1) + '%'"
+                                    ></td>
+                                    <td
+                                        x-text="neighborhood.properties.density.toFixed(0)"
+                                    ></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
