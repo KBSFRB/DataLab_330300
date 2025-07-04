@@ -22,148 +22,172 @@
     <body>
         <div x-data="explorerApp()" x-init="init()">
             <header>
-                <h1>Municipality Explorer</h1>
+                <h1>3-30-300 Explorer</h1>
             </header>
 
             <main class="main-container">
+                <!-- Loading indicator -->
+                <section x-show="isLoading" class="loading">
+                    <p>Loading data...</p>
+                </section>
+
+                <!-- Error message -->
+                <section x-show="error" class="error">
+                    <p x-text="error"></p>
+                </section>
+
                 <!-- Search Bar with Datalist -->
-                <section class="controls">
+                <section class="controls" x-show="!isLoading">
                     <input
                         type="search"
                         x-model="searchTerm"
                         @input="handleSearchInput()"
-                        list="municipalities-list"
-                        placeholder="Search municipalities..."
-                        aria-label="Search municipalities"
+                        placeholder="Search places..."
+                        aria-label="Search"
+                        list="search-results"
+                        autocomplete="off"
                     />
-                    <datalist id="municipalities-list">
-                        <template
-                            x-for="municipality in municipalities"
-                            :key="municipality.properties.id"
-                        >
+                    <datalist id="search-results">
+                        <template x-for="item in searchResults" :key="item.nis">
                             <option
-                                :value="municipality.properties.name"
-                                x-text="municipality.properties.name"
+                                :value="getSearchDisplayName(item)"
+                                x-text="getSearchDisplayName(item)"
                             ></option>
                         </template>
                     </datalist>
                 </section>
 
-                <!-- Back button when viewing neighborhoods -->
-                <section x-show="selectedMunicipality">
-                    <button
-                        @click="goBackToMunicipalities()"
-                        class="back-button"
-                    >
-                        ← Back to Municipalities
-                    </button>
+                <!-- Current level title -->
+                <section x-show="!isLoading && metadata" class="level-title">
+                    <h2>
+                        <span x-text="currentLevelName"></span>
+                        <span x-show="parentName">
+                            in <span x-text="parentName"></span>
+                        </span>
+                    </h2>
                 </section>
 
                 <!-- Map and Chart Container -->
-                <section class="viz-container">
+                <section class="viz-container" x-show="!isLoading">
                     <!-- Map -->
-                    <div>
+                    <div class="map-section">
                         <div id="map-container"></div>
+                        <p x-show="metadata?.zoomable" class="map-hint">
+                            Click on a region to zoom in
+                        </p>
                     </div>
 
-                    <!-- Chart (only show when municipality is selected) -->
-                    <div x-show="selectedMunicipality">
+                    <!-- Chart (only show when metadata indicates) -->
+                    <div x-show="showChart" class="chart-section">
                         <div id="chart-container"></div>
+
                         <!-- Chart Controls -->
-                        <form>
-                            <label
-                                >X-axis:
+                        <form class="chart-controls">
+                            <label>
+                                X-axis:
                                 <select
                                     x-model="chartXAxis"
                                     @change="updateChart()"
                                 >
-                                    <option value="population">
-                                        Population
-                                    </option>
-                                    <option value="wealth">Wealth Index</option>
-                                    <option value="treecover">
-                                        Tree Cover %
-                                    </option>
-                                    <option value="density">
-                                        Population Density
-                                    </option>
+                                    <template
+                                        x-for="indicator in availableXAxisOptions"
+                                        :key="indicator.id"
+                                    >
+                                        <option
+                                            :value="indicator.id"
+                                            x-text="indicator.name"
+                                        ></option>
+                                    </template>
                                 </select>
                             </label>
-                            <label
-                                >Y-axis:
+
+                            <label>
+                                Y-axis:
                                 <select
                                     x-model="chartYAxis"
                                     @change="updateChart()"
                                 >
-                                    <option value="wealth">Wealth Index</option>
-                                    <option value="population">
-                                        Population
-                                    </option>
-                                    <option value="treecover">
-                                        Tree Cover %
-                                    </option>
-                                    <option value="density">
-                                        Population Density
-                                    </option>
+                                    <template
+                                        x-for="indicator in availableYAxisOptions"
+                                        :key="indicator.id"
+                                    >
+                                        <option
+                                            :value="indicator.id"
+                                            x-text="indicator.name"
+                                        ></option>
+                                    </template>
                                 </select>
                             </label>
                         </form>
                     </div>
                 </section>
 
-                <!-- Neighborhood Data Table -->
-                <section
-                    x-show="selectedMunicipality && neighborhoods.length > 0"
-                >
-                    <h2>
-                        Neighborhoods in
-                        <span
-                            x-text="selectedMunicipality?.properties.name"
-                        ></span>
-                    </h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th @click="sortTable('name')">Name</th>
-                                <th @click="sortTable('population')">
-                                    Population
-                                </th>
-                                <th @click="sortTable('wealth')">
-                                    Wealth Index
-                                </th>
-                                <th @click="sortTable('treecover')">
-                                    Tree Cover %
-                                </th>
-                                <th @click="sortTable('density')">
-                                    Population Density
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <template
-                                x-for="neighborhood in sortedNeighborhoods"
-                                :key="neighborhood.properties.id"
-                            >
+                <!-- Data Table -->
+                <section x-show="showTable" class="table-section">
+                    <h3>
+                        Data for <span x-text="currentLevelName"></span>
+                        <span x-show="parentName">
+                            in <span x-text="parentName"></span>
+                        </span>
+                    </h3>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td
-                                        x-text="neighborhood.properties.name"
-                                    ></td>
-                                    <td
-                                        x-text="neighborhood.properties.population.toLocaleString()"
-                                    ></td>
-                                    <td
-                                        x-text="neighborhood.properties.wealth.toFixed(2)"
-                                    ></td>
-                                    <td
-                                        x-text="neighborhood.properties.treecover.toFixed(1) + '%'"
-                                    ></td>
-                                    <td
-                                        x-text="neighborhood.properties.density.toFixed(0)"
-                                    ></td>
+                                    <template
+                                        x-for="column in tableColumns"
+                                        :key="column.id"
+                                    >
+                                        <th
+                                            @click="column.sortable && sortTable(column.id)"
+                                            :class="{
+                                                'sortable': column.sortable,
+                                                'sorted-asc': sortField === column.id && sortDirection === 'asc',
+                                                'sorted-desc': sortField === column.id && sortDirection === 'desc'
+                                            }"
+                                        >
+                                            <span x-text="column.name"></span>
+                                            <span
+                                                x-show="sortField === column.id"
+                                                x-text="sortDirection === 'asc' ? '↑' : '↓'"
+                                                class="sort-indicator"
+                                            ></span>
+                                        </th>
+                                    </template>
                                 </tr>
-                            </template>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <template
+                                    x-for="feature in sortedFeatures"
+                                    :key="feature.properties.nis || feature.properties.id"
+                                >
+                                    <tr>
+                                        <template
+                                            x-for="column in tableColumns"
+                                            :key="column.id"
+                                        >
+                                            <td>
+                                                <span
+                                                    x-text="column.id === 'name'
+                                                        ? (feature.properties.name_en || feature.properties.nis)
+                                                        : formatValue(feature.properties[column.id], column.id)"
+                                                ></span>
+                                            </td>
+                                        </template>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Empty state -->
+                <section
+                    x-show="!isLoading && !error && features.length === 0"
+                    class="empty-state"
+                >
+                    <p>No data available for this level.</p>
                 </section>
             </main>
         </div>

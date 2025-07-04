@@ -1,14 +1,23 @@
 function explorerApp() {
   return {
     // Data
-    municipalities: [], // GeoJSON features
-    neighborhoods: [], // GeoJSON features
-    selectedMunicipality: null,
+    features: [], // Current level features (GeoJSON features)
+    metadata: null, // Current level metadata
+    searchList: [], // Full search list from API
+
+    // Navigation state
+    currentLevel: null, // 'prov', 'mun', 'sector'
+    parentId: null, // NIS code of parent
+
+    // UI state
     searchTerm: "",
+    isLoading: false,
+    error: null,
+    searchResults: [], // Filtered search results for datalist
 
     // Chart settings
-    chartXAxis: "population",
-    chartYAxis: "wealth",
+    chartXAxis: null, // Will be set from available_indicators
+    chartYAxis: null, // Will be set from other_indicators
 
     // Table sorting
     sortField: "name",
@@ -19,8 +28,8 @@ function explorerApp() {
     chartPlot: null,
 
     // Computed
-    get sortedNeighborhoods() {
-      return [...this.neighborhoods].sort((a, b) => {
+    get sortedFeatures() {
+      return [...this.features].sort((a, b) => {
         let aVal = a.properties[this.sortField];
         let bVal = b.properties[this.sortField];
 
@@ -37,107 +46,147 @@ function explorerApp() {
       });
     },
 
-    // Methods
-    async init() {
-      await this.loadMunicipalities();
-      this.renderMap();
+    get showChart() {
+      return this.metadata?.show_child_indicators && this.features.length > 0;
     },
 
-    async loadMunicipalities() {
-      // Mock GeoJSON data - replace with actual API call
-      const mockMunicipalitiesGeoJSON = {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {
-              id: 1,
-              name: "Springfield",
-              population: 51500,
-              wealth: 64.7,
-              treecover: 23.6,
-              density: 1850,
-            },
-            geometry: {
-              type: "Polygon",
-              coordinates: [
-                [
-                  [-74.016, 40.7028],
-                  [-73.996, 40.7028],
-                  [-73.996, 40.7228],
-                  [-74.016, 40.7228],
-                  [-74.016, 40.7028],
-                ],
-              ],
-            },
-          },
-          {
-            type: "Feature",
-            properties: {
-              id: 2,
-              name: "Riverside",
-              population: 21600,
-              wealth: 56.3,
-              treecover: 16.3,
-              density: 1583,
-            },
-            geometry: {
-              type: "Polygon",
-              coordinates: [
-                [
-                  [-73.9951, 40.7489],
-                  [-73.9751, 40.7489],
-                  [-73.9751, 40.7689],
-                  [-73.9951, 40.7689],
-                  [-73.9951, 40.7489],
-                ],
-              ],
-            },
-          },
-          {
-            type: "Feature",
-            properties: {
-              id: 3,
-              name: "Hilldale",
-              population: 28000,
-              wealth: 66.0,
-              treecover: 33.2,
-              density: 1430,
-            },
-            geometry: {
-              type: "Polygon",
-              coordinates: [
-                [
-                  [-73.9812, 40.7731],
-                  [-73.9612, 40.7731],
-                  [-73.9612, 40.7931],
-                  [-73.9812, 40.7931],
-                  [-73.9812, 40.7731],
-                ],
-              ],
-            },
-          },
-        ],
+    get showTable() {
+      return this.metadata?.show_child_indicators && this.features.length > 0;
+    },
+
+    get currentLevelName() {
+      if (!this.metadata) return "";
+
+      const levelNames = {
+        prov: "Provinces",
+        mun: "Municipalities",
+        sector: "Statistical Sectors",
       };
 
-      this.municipalities = mockMunicipalitiesGeoJSON.features;
+      return levelNames[this.metadata.child_level] || this.metadata.child_level;
+    },
+
+    get parentName() {
+      if (!this.metadata?.parent_name) return "";
+
+      // Use English name if available, fallback to other languages
+      return (
+        this.metadata.parent_name.en ||
+        this.metadata.parent_name.fr ||
+        this.metadata.parent_name.nl ||
+        ""
+      );
+    },
+
+    // Methods
+    async init() {
+      const url = new URL(window.location.href);
+      const viewName = url.searchParams.get("v") || "prov_in_BE";
+
+      // Load search list and show view in parallel
+      await Promise.all([this.loadSearchList(), this.showView(viewName)]);
+    },
+
+    async loadSearchList() {
+      try {
+        const response = await fetch(
+          "https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/explorer/search_list.json",
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch search list: ${response.status}`);
+        }
+        this.searchList = await response.json();
+        this.searchResults = this.searchList.slice(0, 50); // Show first 50 results initially
+      } catch (err) {
+        console.error("Error loading search list:", err);
+        // Don't show error to user as search is optional functionality
+      }
+    },
+
+    async loadData(viewName) {
+      const baseUrl =
+        "https://pub-89fa60aa9ca34badb10c8e2401454ce8.r2.dev/explorer";
+
+      try {
+        // Load metadata and GeoJSON in parallel
+        const [metadataResponse, geojsonResponse] = await Promise.all([
+          fetch(`${baseUrl}/${viewName}.json`),
+          fetch(`${baseUrl}/${viewName}.geojson`),
+        ]);
+
+        if (!metadataResponse.ok) {
+          throw new Error(
+            `Failed to fetch metadata: ${metadataResponse.status}`,
+          );
+        }
+
+        if (!geojsonResponse.ok) {
+          throw new Error(`Failed to fetch GeoJSON: ${geojsonResponse.status}`);
+        }
+
+        const metadata = await metadataResponse.json();
+        const geojson = await geojsonResponse.json();
+
+        this.metadata = metadata;
+        this.features = geojson.features || [];
+        this.currentLevel = metadata.child_level;
+        this.parentId = metadata.parent_id;
+      } catch (err) {
+        throw new Error(`Error loading data for ${viewName}: ${err.message}`);
+      }
+    },
+
+    setupDefaultChartAxes() {
+      if (!this.metadata) return;
+
+      // Set default X axis from available_indicators
+      if (this.metadata.available_indicators?.length > 0) {
+        this.chartXAxis = this.metadata.available_indicators[0].id;
+      }
+
+      // Set default Y axis from other_indicators
+      if (this.metadata.other_indicators?.length > 0) {
+        this.chartYAxis = this.metadata.other_indicators[0].id;
+      }
     },
 
     renderMap() {
       const container = document.getElementById("map-container");
       container.innerHTML = "";
 
-      const dataToShow = this.selectedMunicipality
-        ? this.neighborhoods
-        : this.municipalities;
-
-      if (dataToShow.length === 0) return;
+      if (this.features.length === 0) return;
 
       // Create a proper GeoJSON FeatureCollection
       const geoData = {
         type: "FeatureCollection",
-        features: dataToShow,
+        features: this.features,
       };
+
+      const marks = [
+        // Polygon fills
+        Plot.geo(geoData, {
+          fill: "lightblue",
+          stroke: "black",
+          strokeWidth: 2,
+          fillOpacity: 0.7,
+        }),
+      ];
+
+      // Add click interaction if zoomable
+      if (this.metadata?.zoomable) {
+        marks.push(
+          Plot.geo(geoData, {
+            fill: "transparent",
+            stroke: "transparent",
+            cursor: "pointer",
+            title: (d) => d.properties.name_en,
+            href: (d) =>
+              this.metadata?.zoomable
+                ? `?v=${this.metadata.next_level}_in_${d.properties.nis}`
+                : null,
+          }),
+        );
+      }
 
       this.mapPlot = Plot.plot({
         width: container.clientWidth || 600,
@@ -150,216 +199,57 @@ function explorerApp() {
           ticks: 0,
           label: null,
         },
-        marks: [
-          // Polygon fills
-          Plot.geo(geoData, {
-            fill: "lightblue",
-            stroke: "black",
-            strokeWidth: 2,
-            fillOpacity: 0.7,
-          }),
-        ],
+        marks: marks,
       });
 
       container.appendChild(this.mapPlot);
     },
 
-    handleSearchInput() {
-      // Check if the entered text matches a municipality name
-      const matchedMunicipality = this.municipalities.find(
-        (m) => m.properties.name === this.searchTerm,
-      );
+    async showView(viewName) {
+      this.isLoading = true;
+      this.error = null;
 
-      if (matchedMunicipality) {
-        this.selectMunicipalityById(matchedMunicipality.properties.id);
-      }
-    },
+      try {
+        // Load next level data
+        await this.loadData(viewName);
 
-    async selectMunicipalityById(municipalityId) {
-      this.selectedMunicipality = this.municipalities.find(
-        (m) => m.properties.id === municipalityId,
-      );
-
-      if (this.selectedMunicipality) {
-        // Load neighborhood data
-        await this.loadNeighborhoodData(municipalityId);
-
-        // Re-render map with neighborhoods
         this.renderMap();
-
-        // Update chart
+        this.setupDefaultChartAxes();
         this.updateChart();
+      } catch (err) {
+        this.error = `Failed to load detailed view: ${err.message}`;
+        console.error("Error selecting feature:", err);
+      } finally {
+        this.isLoading = false;
       }
-    },
-
-    async loadNeighborhoodData(municipalityId) {
-      // Mock GeoJSON neighborhood data - replace with actual API call
-      const mockNeighborhoodsGeoJSON = {
-        1: {
-          // Springfield
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                id: 1,
-                name: "Downtown",
-                population: 15000,
-                wealth: 65.2,
-                treecover: 12.5,
-                density: 2500,
-              },
-              geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [-74.01, 40.705],
-                    [-74.002, 40.705],
-                    [-74.002, 40.712],
-                    [-74.01, 40.712],
-                    [-74.01, 40.705],
-                  ],
-                ],
-              },
-            },
-            {
-              type: "Feature",
-              properties: {
-                id: 2,
-                name: "North Hills",
-                population: 8500,
-                wealth: 78.9,
-                treecover: 35.2,
-                density: 1200,
-              },
-              geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [-74.01, 40.712],
-                    [-74.002, 40.712],
-                    [-74.002, 40.719],
-                    [-74.01, 40.719],
-                    [-74.01, 40.712],
-                  ],
-                ],
-              },
-            },
-            {
-              type: "Feature",
-              properties: {
-                id: 3,
-                name: "East Side",
-                population: 12000,
-                wealth: 45.6,
-                treecover: 8.9,
-                density: 3200,
-              },
-              geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [-74.002, 40.705],
-                    [-73.998, 40.705],
-                    [-73.998, 40.719],
-                    [-74.002, 40.719],
-                    [-74.002, 40.705],
-                  ],
-                ],
-              },
-            },
-          ],
-        },
-        2: {
-          // Riverside
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                id: 6,
-                name: "Riverside Center",
-                population: 11000,
-                wealth: 58.7,
-                treecover: 15.3,
-                density: 2100,
-              },
-              geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [-73.99, 40.752],
-                    [-73.98, 40.752],
-                    [-73.98, 40.762],
-                    [-73.99, 40.762],
-                    [-73.99, 40.752],
-                  ],
-                ],
-              },
-            },
-          ],
-        },
-        3: {
-          // Hilldale
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              properties: {
-                id: 9,
-                name: "Old Town",
-                population: 5600,
-                wealth: 89.3,
-                treecover: 45.8,
-                density: 890,
-              },
-              geometry: {
-                type: "Polygon",
-                coordinates: [
-                  [
-                    [-73.975, 40.776],
-                    [-73.965, 40.776],
-                    [-73.965, 40.786],
-                    [-73.975, 40.786],
-                    [-73.975, 40.776],
-                  ],
-                ],
-              },
-            },
-          ],
-        },
-      };
-
-      const neighborhoodData = mockNeighborhoodsGeoJSON[municipalityId];
-      this.neighborhoods = neighborhoodData ? neighborhoodData.features : [];
     },
 
     updateChart() {
-      if (!this.selectedMunicipality || this.neighborhoods.length === 0) return;
+      if (!this.showChart || !this.chartXAxis || !this.chartYAxis) return;
 
       const container = document.getElementById("chart-container");
 
       // Use requestAnimationFrame to ensure the container is properly laid out
       requestAnimationFrame(() => {
-        const neighborhoodData = this.neighborhoods.map((n) => n.properties);
+        const featureData = this.features.map((f) => f.properties);
 
         const containerWidth = container.clientWidth || 400;
 
         this.chartPlot = Plot.plot({
-          title: `${this.getAxisLabel(this.chartYAxis)} vs ${this.getAxisLabel(this.chartXAxis)}`,
+          title: `${this.getIndicatorLabel(this.chartYAxis)} vs ${this.getIndicatorLabel(this.chartXAxis)}`,
           width: containerWidth,
           height: 400,
           grid: true,
           x: {
-            label: this.getAxisLabel(this.chartXAxis),
+            label: this.getIndicatorLabel(this.chartXAxis),
             nice: true,
           },
           y: {
-            label: this.getAxisLabel(this.chartYAxis),
+            label: this.getIndicatorLabel(this.chartYAxis),
             nice: true,
           },
           marks: [
-            Plot.dot(neighborhoodData, {
+            Plot.dot(featureData, {
               x: this.chartXAxis,
               y: this.chartYAxis,
               fill: "steelblue",
@@ -367,12 +257,12 @@ function explorerApp() {
               strokeWidth: 2,
               r: 6,
               title: (d) =>
-                `${d.name}\n${this.getAxisLabel(this.chartXAxis)}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getAxisLabel(this.chartYAxis)}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
+                `${d.name || d.nis}\n${this.getIndicatorLabel(this.chartXAxis)}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicatorLabel(this.chartYAxis)}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
             }),
-            Plot.text(neighborhoodData, {
+            Plot.text(featureData, {
               x: this.chartXAxis,
               y: this.chartYAxis,
-              text: "name",
+              text: (d) => d.name || d.nis,
               dy: -12,
               fontSize: 10,
               fill: "black",
@@ -385,29 +275,45 @@ function explorerApp() {
       });
     },
 
-    formatValue(value, axis) {
-      switch (axis) {
-        case "population":
-          return value.toLocaleString();
-        case "wealth":
-          return value.toFixed(2);
-        case "treecover":
-          return value.toFixed(1) + "%";
-        case "density":
-          return value.toFixed(0);
-        default:
-          return value;
-      }
+    getIndicatorLabel(indicatorId) {
+      if (!this.metadata) return indicatorId;
+
+      // Look in available_indicators first
+      const availableIndicator = this.metadata.available_indicators?.find(
+        (ind) => ind.id === indicatorId,
+      );
+      if (availableIndicator) return availableIndicator.name;
+
+      // Then look in other_indicators
+      const otherIndicator = this.metadata.other_indicators?.find(
+        (ind) => ind.id === indicatorId,
+      );
+      if (otherIndicator) return otherIndicator.name;
+
+      return indicatorId;
     },
 
-    getAxisLabel(axis) {
-      const labels = {
-        population: "Population",
-        wealth: "Wealth Index",
-        treecover: "Tree Cover %",
-        density: "Population Density",
-      };
-      return labels[axis] || axis;
+    formatValue(value, indicatorId) {
+      if (value == null) return "N/A";
+
+      // Special formatting based on indicator type
+      if (indicatorId.includes("perc") || indicatorId.includes("%")) {
+        return (value * 100).toFixed(1) + "%";
+      }
+
+      if (indicatorId === "pop" || indicatorId === "buildings") {
+        return value.toLocaleString();
+      }
+
+      if (indicatorId === "Shape_Area") {
+        return value.toFixed(2) + " km²";
+      }
+
+      if (typeof value === "number") {
+        return value.toFixed(2);
+      }
+
+      return value;
     },
 
     sortTable(field) {
@@ -419,11 +325,84 @@ function explorerApp() {
       }
     },
 
-    goBackToMunicipalities() {
-      this.selectedMunicipality = null;
-      this.neighborhoods = [];
-      this.searchTerm = "";
-      this.renderMap();
+    handleSearchInput() {
+      if (!this.searchTerm.trim()) {
+        this.searchResults = this.searchList.slice(0, 50);
+        return;
+      }
+
+      // Check if the input matches an exact item from the search list
+      const selectedItem = this.searchList.find(
+        (item) => this.getSearchDisplayName(item) === this.searchTerm,
+      );
+
+      if (selectedItem) {
+        // Navigate immediately if exact match found
+        window.location.href = `?v=${this.getViewName(selectedItem)}`;
+        return;
+      }
+
+      const term = this.searchTerm.toLowerCase();
+      this.searchResults = this.searchList
+        .filter(
+          (item) =>
+            (item.name_fr && item.name_fr.toLowerCase().includes(term)) ||
+            (item.name_nl && item.name_nl.toLowerCase().includes(term)) ||
+            (item.nis && item.nis.includes(term)),
+        )
+        .slice(0, 50); // Limit to 50 results for performance
+    },
+
+    getViewName(item) {
+      return `${item.level}_in_${item.nis}`;
+    },
+
+    getSearchDisplayName(item) {
+      let name = item.name_nl;
+      if (item.name_fr != item.name_nl) {
+        name += " - " + item.name_fr;
+      }
+      return name;
+    },
+
+    // Utility method to get all available indicators for select options
+    get availableXAxisOptions() {
+      return this.metadata?.available_indicators || [];
+    },
+
+    get availableYAxisOptions() {
+      return this.metadata?.other_indicators || [];
+    },
+
+    // Get table columns based on metadata
+    get tableColumns() {
+      if (!this.metadata) return [];
+
+      const columns = [{ id: "name", name: "Name", sortable: true }];
+
+      // Add available indicators
+      if (this.metadata.available_indicators) {
+        columns.push(
+          ...this.metadata.available_indicators.map((ind) => ({
+            id: ind.id,
+            name: ind.name,
+            sortable: true,
+          })),
+        );
+      }
+
+      // Add other indicators
+      if (this.metadata.other_indicators) {
+        columns.push(
+          ...this.metadata.other_indicators.map((ind) => ({
+            id: ind.id,
+            name: ind.name,
+            sortable: true,
+          })),
+        );
+      }
+
+      return columns;
     },
   };
 }
