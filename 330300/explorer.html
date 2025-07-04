@@ -57,6 +57,41 @@
                     </datalist>
                 </section>
 
+                <!-- Breadcrumbs -->
+                <section
+                    x-show="!isLoading && breadcrumbs.length > 0"
+                    class="breadcrumbs"
+                >
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb-list">
+                            <template
+                                x-for="(crumb, index) in breadcrumbs"
+                                :key="crumb.nis"
+                            >
+                                <li class="breadcrumb-item">
+                                    <a
+                                        x-show="crumb.isClickable"
+                                        :href="'?v=' + crumb.viewName"
+                                        x-text="crumb.name"
+                                        class="breadcrumb-link"
+                                    ></a>
+                                    <span
+                                        x-show="!crumb.isClickable"
+                                        x-text="crumb.name"
+                                        class="breadcrumb-current"
+                                    ></span>
+                                    <span
+                                        x-show="index < breadcrumbs.length - 1"
+                                        class="breadcrumb-separator"
+                                        aria-hidden="true"
+                                        >></span
+                                    >
+                                </li>
+                            </template>
+                        </ol>
+                    </nav>
+                </section>
+
                 <!-- Current level title -->
                 <section x-show="!isLoading && metadata" class="level-title">
                     <h2>

@@ -78,6 +78,31 @@ function explorerApp() {
       );
     },
 
+    get breadcrumbs() {
+      if (!this.metadata?.breadcrumbs) return [];
+
+      const crumbs = this.metadata.breadcrumbs.map((crumb) => ({
+        nis: crumb.nis,
+        child_level: crumb.child_level,
+        name: crumb.name.en || crumb.name.fr || crumb.name.nl || crumb.nis,
+        viewName: `${crumb.child_level}_in_${crumb.nis}`,
+        isClickable: true,
+      }));
+
+      // Add current parent name as final breadcrumb (non-clickable)
+      if (this.parentName) {
+        crumbs.push({
+          nis: this.parentId,
+          child_level: this.currentLevel,
+          name: this.parentName,
+          viewName: null,
+          isClickable: false,
+        });
+      }
+
+      return crumbs;
+    },
+
     // Methods
     async init() {
       const url = new URL(window.location.href);
