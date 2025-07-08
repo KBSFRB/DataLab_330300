@@ -190,6 +190,7 @@ input[type="search"]:disabled {
 #map-container {
     width: 100%;
     min-height: 400px;
+    position: relative;
 }
 
 #chart-container {
@@ -203,6 +204,42 @@ input[type="search"]:disabled {
     color: #666;
     text-align: center;
     font-style: italic;
+}
+
+/* Map Legend */
+.map-legend {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    z-index: 10;
+    min-width: 150px;
+}
+
+.map-legend .legend-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.map-legend .legend-color-bar {
+    width: 150px;
+    height: 15px;
+    background: linear-gradient(to right, #8c510a, #01665e);
+    border: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+.map-legend .legend-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #666;
 }
 
 /* Chart Controls */

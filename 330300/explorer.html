@@ -14,6 +14,7 @@
             defer
             src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"
         ></script>
+        <script src="scripts/utils.js"></script>
         <script src="scripts/explorer.js"></script>
 
         <link rel="stylesheet" href="style/reset.css" />
@@ -202,7 +203,12 @@
                                             x-for="column in tableColumns"
                                             :key="column.id"
                                         >
-                                            <td>
+                                            <td
+                                                :style="{
+                                                    backgroundColor: getTableCellBackgroundColor(feature, column.id),
+                                                    color: getTableCellTextColor(feature, column.id)
+                                                }"
+                                            >
                                                 <span
                                                     x-text="column.id === 'name'
                                                         ? (feature.properties.name_en || feature.properties.nis)

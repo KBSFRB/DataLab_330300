@@ -27,6 +27,15 @@ function explorerApp() {
     mapPlot: null,
     chartPlot: null,
 
+    colors_scheme: [
+      "#8c510a",
+      "#d8b365",
+      "#f6e8c3",
+      "#c7eae5",
+      "#5ab4ac",
+      "#01665e",
+    ],
+
     // Computed
     get sortedFeatures() {
       return [...this.features].sort((a, b) => {
@@ -187,10 +196,13 @@ function explorerApp() {
         features: this.features,
       };
 
+      // Get the color fill function
+      const fillColor = this.getMapFillColor();
+
       const marks = [
         // Polygon fills
         Plot.geo(geoData, {
-          fill: "lightblue",
+          fill: fillColor,
           stroke: "black",
           strokeWidth: 2,
           fillOpacity: 0.7,
@@ -260,6 +272,8 @@ function explorerApp() {
 
         const containerWidth = container.clientWidth || 400;
 
+        const fillColor = this.getScatterFillColor();
+
         this.chartPlot = Plot.plot({
           title: `${this.getIndicatorLabel(this.chartYAxis)} vs ${this.getIndicatorLabel(this.chartXAxis)}`,
           width: containerWidth,
@@ -277,7 +291,7 @@ function explorerApp() {
             Plot.dot(featureData, {
               x: this.chartXAxis,
               y: this.chartYAxis,
-              fill: "steelblue",
+              fill: fillColor,
               stroke: "white",
               strokeWidth: 2,
               r: 6,
@@ -298,6 +312,9 @@ function explorerApp() {
         container.innerHTML = "";
         container.appendChild(this.chartPlot);
       });
+
+      // Update map colors when chart axes change
+      this.renderMap();
     },
 
     getIndicatorLabel(indicatorId) {
@@ -428,6 +445,73 @@ function explorerApp() {
       }
 
       return columns;
+    },
+
+    getMapFillColor() {
+      // If no x-axis selected or no features, use default color
+      if (!this.chartXAxis || this.features.length === 0) {
+        return "lightblue";
+      }
+
+      // Return function that maps feature to color
+      return (d) => {
+        const value = d.properties[this.chartXAxis];
+        if (value == null || isNaN(value)) {
+          return "#cccccc"; // Gray for missing values
+        }
+        return get_color(this.colors_scheme, value);
+      };
+    },
+
+    getScatterFillColor() {
+      // If no x-axis selected or no features, use default color
+      if (!this.chartXAxis || this.features.length === 0) {
+        return "lightblue";
+      }
+
+      // Return function that maps feature to color
+      return (d) => {
+        const value = d[this.chartXAxis];
+        if (value == null || isNaN(value)) {
+          return "#cccccc"; // Gray for missing values
+        }
+        return get_color(this.colors_scheme, value);
+      };
+    },
+
+    // Check if a column is an x-axis option (available indicator)
+    isXAxisColumn(columnId) {
+      return (
+        this.metadata?.available_indicators?.some(
+          (ind) => ind.id === columnId,
+        ) || false
+      );
+    },
+
+    // Get background color for table cell
+    getTableCellBackgroundColor(feature, columnId) {
+      if (!this.isXAxisColumn(columnId)) {
+        return "transparent";
+      }
+
+      const value = feature.properties[columnId];
+      if (value == null || isNaN(value)) {
+        return "#cccccc"; // Gray for missing values
+      }
+      return get_color(this.colors_scheme, value);
+    },
+
+    // Get text color for table cell based on background
+    getTableCellTextColor(feature, columnId) {
+      if (!this.isXAxisColumn(columnId)) {
+        return "inherit";
+      }
+
+      const backgroundColor = this.getTableCellBackgroundColor(
+        feature,
+        columnId,
+      );
+      return color_is_light(backgroundColor) ? "black" : "white";
     },
   };
 }
