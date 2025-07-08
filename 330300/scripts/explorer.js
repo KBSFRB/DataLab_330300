@@ -338,23 +338,19 @@ function explorerApp() {
     },
 
     formatValue(value, indicatorId) {
+      const indicator = this.getIndicator(indicatorId);
+
       if (value == null) return "N/A";
 
-      // Special formatting based on indicator type
-      if (indicatorId.includes("perc") || indicatorId.includes("%")) {
-        return (value * 100).toFixed(1) + "%";
+      // if the indicator as a format option, use it.
+      if (indicator.format) {
+        const formatter = new Intl.NumberFormat("fr-BE", indicator.format);
+        value = formatter.format(value);
       }
 
-      if (indicatorId === "pop" || indicatorId === "buildings") {
-        return value.toLocaleString();
-      }
-
-      if (indicatorId === "Shape_Area") {
-        return value.toFixed(2) + " km²";
-      }
-
-      if (typeof value === "number") {
-        return value.toFixed(2);
+      // if the indicator has a unit, append it
+      if (indicator.unit) {
+        value += ` ${indicator.unit}`;
       }
 
       return value;
