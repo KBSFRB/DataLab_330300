@@ -275,16 +275,16 @@ function explorerApp() {
         const fillColor = this.getScatterFillColor();
 
         this.chartPlot = Plot.plot({
-          title: `${this.getIndicatorLabel(this.chartYAxis)} vs ${this.getIndicatorLabel(this.chartXAxis)}`,
+          title: `${this.getIndicator(this.chartYAxis).name} vs ${this.getIndicator(this.chartXAxis).name}`,
           width: containerWidth,
           height: 400,
           grid: true,
           x: {
-            label: this.getIndicatorLabel(this.chartXAxis),
+            label: this.getIndicator(this.chartXAxis).name,
             nice: true,
           },
           y: {
-            label: this.getIndicatorLabel(this.chartYAxis),
+            label: this.getIndicator(this.chartYAxis).name,
             nice: true,
           },
           marks: [
@@ -296,7 +296,7 @@ function explorerApp() {
               strokeWidth: 2,
               r: 6,
               title: (d) =>
-                `${d.name || d.nis}\n${this.getIndicatorLabel(this.chartXAxis)}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicatorLabel(this.chartYAxis)}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
+                `${d.name || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
             }),
             Plot.text(featureData, {
               x: this.chartXAxis,
@@ -317,22 +317,24 @@ function explorerApp() {
       this.renderMap();
     },
 
-    getIndicatorLabel(indicatorId) {
-      if (!this.metadata) return indicatorId;
+    getIndicator(indicatorId) {
+      if (!this.metadata) {
+        throw new Error(`Metadata not found`);
+      }
 
       // Look in available_indicators first
       const availableIndicator = this.metadata.available_indicators?.find(
         (ind) => ind.id === indicatorId,
       );
-      if (availableIndicator) return availableIndicator.name;
+      if (availableIndicator) return availableIndicator;
 
       // Then look in other_indicators
       const otherIndicator = this.metadata.other_indicators?.find(
         (ind) => ind.id === indicatorId,
       );
-      if (otherIndicator) return otherIndicator.name;
+      if (otherIndicator) return otherIndicator;
 
-      return indicatorId;
+      throw new Error(`Failed to find indicator ${indicatorId}`);
     },
 
     formatValue(value, indicatorId) {
@@ -447,6 +449,20 @@ function explorerApp() {
       return columns;
     },
 
+    getColor(value, indicatorId) {
+      if (value == null || isNaN(value)) {
+        return "#cccccc"; // Gray for missing values
+      }
+
+      const indicator = this.getIndicator(indicatorId);
+      // if the indicator has a range, rescale the value to the range
+      if (indicator.range) {
+        value = rescale(value, indicator.range[0], indicator.range[1]);
+      }
+
+      return get_color(this.colors_scheme, value);
+    },
+
     getMapFillColor() {
       // If no x-axis selected or no features, use default color
       if (!this.chartXAxis || this.features.length === 0) {
@@ -456,10 +472,7 @@ function explorerApp() {
       // Return function that maps feature to color
       return (d) => {
         const value = d.properties[this.chartXAxis];
-        if (value == null || isNaN(value)) {
-          return "#cccccc"; // Gray for missing values
-        }
-        return get_color(this.colors_scheme, value);
+        return this.getColor(value, this.chartXAxis);
       };
     },
 
@@ -472,10 +485,7 @@ function explorerApp() {
       // Return function that maps feature to color
       return (d) => {
         const value = d[this.chartXAxis];
-        if (value == null || isNaN(value)) {
-          return "#cccccc"; // Gray for missing values
-        }
-        return get_color(this.colors_scheme, value);
+        return this.getColor(value, this.chartXAxis);
       };
     },
 
@@ -488,6 +498,39 @@ function explorerApp() {
       );
     },
 
+    // Generate grades for the color scale legend
+    getLegendGrades() {
+      const numGrades = this.colors_scheme.length + 1;
+      return Array.from(
+        { length: numGrades },
+        (_, i) => i / this.colors_scheme.length,
+      );
+    },
+
+    // Generate legend data for the color scale
+    getLegendData() {
+      if (!this.chartXAxis || this.features.length === 0) {
+        return null;
+      }
+
+      const indicator = this.getIndicator(this.chartXAxis);
+
+      const grades = this.getLegendGrades();
+
+      return {
+        colors: this.colors_scheme,
+        grades: grades,
+        range: indicator.range,
+        label: indicator.name,
+      };
+    },
+
+    // Format legend values
+    formatLegendValue(value) {
+      if (!this.chartXAxis) return value;
+      return this.formatValue(value, this.chartXAxis);
+    },
+
     // Get background color for table cell
     getTableCellBackgroundColor(feature, columnId) {
       if (!this.isXAxisColumn(columnId)) {
@@ -495,10 +538,7 @@ function explorerApp() {
       }
 
       const value = feature.properties[columnId];
-      if (value == null || isNaN(value)) {
-        return "#cccccc"; // Gray for missing values
-      }
-      return get_color(this.colors_scheme, value);
+      return this.getColor(value, columnId);
     },
 
     // Get text color for table cell based on background

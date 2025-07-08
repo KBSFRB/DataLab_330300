@@ -2,6 +2,10 @@ function clamp(value, min = 0, max = 100) {
   return Math.min(Math.max(value, min), max);
 }
 
+function rescale(value, min, max) {
+  return (value - min) / (max - min);
+}
+
 /**
  * Return a color from the color scheme, based on the given value
  * @param {Array[string]} scheme: array of colors

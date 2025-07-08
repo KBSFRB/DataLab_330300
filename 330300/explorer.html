@@ -108,6 +108,38 @@
                     <!-- Map -->
                     <div class="map-section">
                         <div id="map-container"></div>
+                        <div
+                            x-show="chartXAxis && getLegendData()"
+                            class="color-legend"
+                        >
+                            <div
+                                class="legend-title"
+                                x-text="getLegendData()?.label"
+                            ></div>
+                            <div class="legend-color-bar">
+                                <template
+                                    x-for="(color, index) in getLegendData()?.colors"
+                                    :key="index"
+                                >
+                                    <div
+                                        class="legend-color-segment"
+                                        :style="{ backgroundColor: color }"
+                                    ></div>
+                                </template>
+                            </div>
+                            <div class="legend-labels">
+                                <template
+                                    x-for="(grade, index) in getLegendData()?.grades"
+                                    :key="index"
+                                >
+                                    <span
+                                        class="legend-label"
+                                        :style="{ left: (grade * 100) + '%' }"
+                                        x-text="formatLegendValue(getLegendData().range[0] + (getLegendData().range[1] - getLegendData().range[0]) * grade)"
+                                    ></span>
+                                </template>
+                            </div>
+                        </div>
                         <p x-show="metadata?.zoomable" class="map-hint">
                             Click on a region to zoom in
                         </p>
