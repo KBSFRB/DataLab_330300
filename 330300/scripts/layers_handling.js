@@ -1,7 +1,3 @@
-function clamp(value, min = 0, max = 100) {
-  return Math.min(Math.max(value, min), max);
-}
-
 function get_geojson_extent(data) {
   let lng = data.features.map((d) => d.geometry.coordinates[0]);
   let lat = data.features.map((d) => d.geometry.coordinates[1]);
