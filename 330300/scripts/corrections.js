@@ -119,8 +119,11 @@ const correction_module = (function () {
   }
 
   // Event listeners must be added after the page is loaded
-  // initialise is called the first time show is called, to ensure that the DOM is properly loaded
-  function initialise() {
+  // init is called the first time show is called, to ensure that the DOM is properly loaded
+  function init() {
+    // ensure that init is only called once
+    if (initialised) return;
+
     document
       .getElementById("correction-module")
       .addEventListener("click", function (e) {
@@ -146,17 +149,27 @@ const correction_module = (function () {
           submit(data);
         }
       });
+
+    initialised = true;
   }
 
-  function show(building_properties, building_location) {
-
+  /**
+   * Show the correction form for a selected building.
+   * @param {L.Map} map - The map instance.
+   * @param {L.Layer} layer - The selected building layer.
+   *
+   * map is not used, but it is passed to be consistent with the other interaction functions (such as the one showing three circles)
+   */
+  function show(map, layer) {
     if (!initialised) {
-      initialise();
-      initialised = true;
+      init();
     }
 
-    document.getElementById('correction-form').classList.add('hidden');
-    document.getElementById('correction-module').classList.remove('hidden');
+    const building_properties = layer.feature.properties;
+    const building_location = layer.getCenter();
+
+    document.getElementById("correction-form").classList.add("hidden");
+    document.getElementById("correction-module").classList.remove("hidden");
 
     document.getElementById("rule3-correction").checked =
       building_properties.r3 === 1 ? true : false;
@@ -167,15 +180,14 @@ const correction_module = (function () {
     selected_building_location = building_location;
 
     set_button_state("ready");
-
-    console.log(`Starting correction for ${building_properties}`);
   }
 
   function hide() {
-    document.getElementById('correction-module').classList.add('hidden');
+    document.getElementById("correction-module").classList.add("hidden");
   }
 
   return {
+    init,
     show,
     hide,
     session_id,
