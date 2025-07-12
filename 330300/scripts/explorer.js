@@ -225,9 +225,14 @@ function explorerApp() {
         );
       }
 
+      const projection = d3
+        .geoMercator()
+        .fitSize([container.clientWidth, 400], geoData);
+
       this.mapPlot = Plot.plot({
         width: container.clientWidth || 600,
         height: 400,
+        projection,
         x: {
           ticks: 0,
           label: null,
@@ -249,7 +254,6 @@ function explorerApp() {
       try {
         // Load next level data
         await this.loadData(viewName);
-
         this.renderMap();
         this.setupDefaultChartAxes();
         this.updateChart();
