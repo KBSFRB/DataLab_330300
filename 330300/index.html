@@ -823,7 +823,7 @@
                 style: "bar",
                 autoComplete: true, // fail when I set it to false -> I increased the delay instaid
                 autoCompleteDelay: 2000,
-                searchLabel: "Enter address"
+                searchLabel: `<p>${i18n.span({fr: `Rechercher une adresse...`, en: `Search for an address...`, nl: `Zoek een adres...` })}</p>`
             };
             const search = new GeoSearch.GeoSearchControl(search_options);
 
@@ -859,7 +859,7 @@
                 if (zoom < min_building_zoom) {
                     // compute grades by splitting the range 0-1 into n equal parts, where n is the number of colors in the color scheme
                     if (mode == "overall") {
-                        this._div.innerHTML = `<p>${i18n.span({ fr: "Nombre moyen de règles satisfaites", en: "Average number of rules satisfied", nl: "Gemiddeld aantal regels waaraan voldaan is" })}</p>`;
+                        this._div.innerHTML = `<p>${i18n.span({fr: "Nombre moyen de règles satisfaites", en: "Average number of rules satisfied", nl: "Gemiddeld aantal regels waaraan voldaan is" })}</p>`;
 
                         this._div.innerHTML += make_color_scale_legend(
                             colors_scheme,
@@ -869,7 +869,7 @@
                         );
                     } else {
                         const rule = parseInt(mode.replace("rule", ""));
-                        this._div.innerHTML = `<p>${i18n.span({ fr: `Pourcentage de batiments qui satisfont la règle ${rule}`, en: `Percentage of buildings satisfying the ${rule}-rule`, nl: `Percentage gebouwen dat voldoet aan de ${rule}-regel` })}</p>`;
+                        this._div.innerHTML = `<p>${i18n.span({fr: `Pourcentage de batiments qui satisfont la règle ${rule}`, en: `Percentage of buildings satisfying the ${rule}-rule`, nl: `Percentage gebouwen dat voldoet aan de ${rule}-regel` })}</p>`;
                         let format = (v) =>
                             new Intl.NumberFormat(navigator.language, {
                                 maximumSignificantDigits: 2,
