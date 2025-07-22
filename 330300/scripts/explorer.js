@@ -299,16 +299,9 @@ function explorerApp() {
               stroke: "white",
               strokeWidth: 2,
               r: 6,
+              tip: true,
               title: (d) =>
-                `${d.name || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
-            }),
-            Plot.text(featureData, {
-              x: this.chartXAxis,
-              y: this.chartYAxis,
-              text: (d) => d.name || d.nis,
-              dy: -12,
-              fontSize: 10,
-              fill: "black",
+                `${d.name_en || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
             }),
           ],
         });
