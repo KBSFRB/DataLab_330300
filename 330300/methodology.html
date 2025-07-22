@@ -95,166 +95,207 @@
                     following sources:
                     <ul>
                         <li>
+                            Brussels:
                             <a href = "https://datastore.brussels/web/data/dataset/2cf42541-1813-11ef-8a81-00090ffe0001#access">
-                                Brussels: 2024 URBIS Parcels and Buildings dataset</a>
+                            2024 URBIS Parcels and Buildings dataset</a>
                         </li>
                         <li>
+                            Wallonia:
                             <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html">
-                                Wallonia: 2023 PICC dataset</a>
+                            2023 PICC dataset</a>
                         </li>
                         <li>
+                            Flanders:
                             <a href="https://www.vlaanderen.be/datavindplaats/catalogus/grbgis">
-                                Flanders: 2024 GRB - GBG dataset
-                            </a>
+                            2024 GRB - GBG dataset</a>
                         </li>
                     </ul>
                 </p>
                 <p>
-                    In the data from Wallonia, annexes are also counted as
-                    separate buildings. For example, the veranda of a house and
-                    the garden house are counted as a separate building with its
-                    own 3-30-300 score. This is not the case in Flanders and
-                    Brussels, which causes problems for comparison between the
-                    regions in aggregated data. Consequently, the Walloon
-                    aggregated data represents an underestimation of reality. In
-                    addition, garden houses larger than 18m2 will also be
-                    scored, causing a slight deviation in the three regions when
-                    averaging at the sector, municipality, provinces or region
-                    level.
+                    New buildings that were not yet existing/referenced in
+                    the datasets mentioned above are thus not included in the
+                    map nor in the analyses.
                 </p>
                 <p>
-                    <span class="font-bold">3 trees</span>: the assumption is
-                    that a tree may be visible from a property if it is within a
-                    60m radius around the centroid of a building. Therefore, a
-                    60 meter buffer around each building was calculated and
-                    examined to see if there was a tree in it. If another
-                    building blocks the line of sight to a tree, the perimeter
-                    was cut off at that intersection and this greenery was not
-                    included in the 60-meter buffer around the building. The
-                    presence of trees was then calculated by looking at the area
-                    of tall greenery in that radius. A tree was calculated to be
-                    16m2 of tall greenery, which is the average crown area per
-                    tree used for most such studies of crown cover. Regarding
-                    the perimeter, other studies use a radius of 15 to 100
-                    meters around the building. 60 meters was chosen as the
-                    golden mean. Thus, a building scores positively on the
-                    3-tree rule if there is at least 48m2 of tall greenery in
-                    the line of sight of a building within a radius of 60 meters
-                    around that dwelling.
+                    In the datasets from Flanders and Wallonia, a difference is
+                    made between "main buildings" and "annexes". We decided to ignore
+                    annexes if they were not connected to a main building (they are
+                    likely something like a garden shed) and to merge the annexes
+                    connected to a main building with that main building (they are
+                    likely an extension of the building that now functions as a
+                    part of the main building).
                 </p>
                 <p>
-                    For this, the data mentioned above regarding buildings were
-                    used, in combination with the
+                    In the absence of identifiers linking an annex to its corresponding
+                    main building, we merged the annexes with the building with which it
+                    shared its longest border. This heuristic has inevitably led to some
+                    wrong connections.
+                </p>
+                <p>
+                    Finally, buildings smaller than 18m2 were filtered out because Flemish
+                    Housing Quality Standards prescribe that the total net floor area of a
+                    self-contained dwelling must be at least 18m2.
+                </p>
+                <p>
+                    NB: Although we do not show them in the final map, the unconnected
+                    annexes were taken into account in the computation of the 3-rule,
+                    as they may affect the view from the main buildings and
+                    therefore the number of trees visible. We recognize that this decision
+                    is debatable, as one could argue that such an annex might
+                    not be tall enough to hide trees.
+                </p>
+                <p>
+                    <span class="font-bold">3 trees</span> 
+                </p>
+                <p>
+                    We made the decision to only consider trees that are less than
+                    60m away from the building. It is of course possible to see
+                    trees that are further away, especially in areas with a low density
+                    of habitations, but the spirit of the rule is not only to have
+                    trees visible from the building, but to have trees nearby. Other 
+                    studies use a radius of 15 to 100 metres around the building.
+                    60 metres was chosen as the golden mean.
+                </p>
+                <p>
+                    For this, the data mentioned above regarding buildings was used,
+                    in combination with the
                     <a
                         href="https://www.vlaanderen.be/datavindplaats/catalogus/groenkaart-vlaanderen-2021"
-                        >Flemish Green Map</a
+                        >Flemish Green Map (2021)</a
                     >, the
                     <a
                         href="https://geodata.environnement.brussels/client/view/67bc5ff0-90f6-4b76-9f05-15c15a928980"
-                        >Brussels Vegetation Map</a
+                        >Brussels Vegetation Map (2021)</a
                     >, and the
                     <a
                         href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
-                        >“Occupation du sol en Wallonie”-map</a
-                    >. The 2021 Flemish Green Map is a 1-meter resolution grid
-                    of segmentation classification from summer flight
-                    orthophotos, which classifies the Flemish territory into
-                    high green (above 3 meters), low green, not green, and
-                    agricultural area. The high green category was used to
-                    identify trees. Also, the 2020 Walloon land use map is a
-                    1-meter resolution grid that identifies land cover based on
-                    orthophotos, including the categories of deciduous and
-                    coniferous trees higher than 3 meters, with an
+                        >“Occupation du sol en Wallonie”-map (2020)</a
+                    >.
+                    The 2021 Flemish Green Map is a 1-metre resolution grid of segmentation
+                    classification from summer flight orthophotos, which classifies
+                    the Flemish territory into high green (above 3 metres), low green,
+                    not green, and agricultural area. The high green category was used to
+                    identify trees. Similarly, the 2020 Walloon land use map is a 1-metre
+                    resolution grid that identifies land cover based on orthophotos,
+                    including the categories of deciduous and coniferous trees higher
+                    than 3 metres, with an
                     <a
                         href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
                         >accuracy</a
                     >
-                    of 92.29%. The Brussels vegetation map was created based on
-                    infrared aerial photos with a resolution of 2 meters, and
-                    distinguishes tall vegetation (interpreted as trees) and low
-                    vegetation with an
+                    of 92.29%. The Brussels vegetation map
+                    was created based on infrared aerial photos with a resolution of 2
+                    metres, and distinguishes tall vegetation (interpreted as trees)
+                    and low vegetation with an
                     <a
                         href="https://environnement.brussels/pro/outils-et-donnees/cartes/toutes-les-cartes-danalyse-nature-bruxelles"
                         >accuracy</a
                     >
-                    of 92.5%. Given these very similar methodologies, these
-                    datasets are comparable.
+                    of 92.5%. Given these very
+                    similar methodologies, we consider these datasets to be comparable.
+                    Unfortunately, the data is already old and may be outdated in several
+                    places. Wallonia is preparing a new dataset based on orthophoto from
+                    2023, but it has not been released at the time of writing.
                 </p>
                 <p>
-                    Calculating the 3-tree rule based on crown area has
-                    limitations. For one thing, it can lead to an overestimate
-                    because that radius only takes into account other buildings
-                    that are between the window and the tree, but does not
-                    consider other obstacles such as (garden) walls or bridges.
-                    Also, the analysis cannot possibly take into account the
-                    placement of windows in a building, so there will certainly
-                    be tall greenery that is not visible from a building when it
-                    does fall within the radius.
+                    The estimation of the 3-rule was done via a machine learning approach,
+                    using a convolutional neural network (CNN). This is the main difference
+                    with the first version of this map, which used a geometrical estimation
+                    of the field of view combined with a simple threshold based on the number
+                    of square metres of seen tree canopy.
                 </p>
                 <p>
-                    On the other hand, it may lead to an underestimate, because
-                    in open areas you could have views of trees that are outside
-                    the radius. Also, a number of small trees or parts of
-                    different trees within the radius might be counted as 1 tree
-                    because the 16m2 did not have to be contiguous to count as a
-                    tree. This does mean that the map cannot accurately predict
-                    the exact number of trees, given the large variation in
-                    reality between different trees, their size and their
-                    location within the radius.
+                    The CNN uses as input an image representing an aerial view of the
+                    neighborhood of the target building, cropped to a 60m radius. The
+                    image has 3 layers: the target building, the other buildings, and
+                    the data from the vegetation maps described earlier. The output is
+                    a probability that at least 3 trees are visible from that target building.
                 </p>
                 <p>
-                    <span class="font-bold">30% tree canopy cover</span>: for
-                    this calculation, a 500-meter radius was drawn around the
-                    geometric centre of each building within which the number of
-                    square meters of green vegetation taller than 3 meters was
-                    calculated as a percentage of the entire radius. The same
-                    publicly available data were used for this as for
-                    identifying trees (the Flemish and Brussels vegetation map
-                    and the Walloon land use map). Because canopy cover is
-                    exactly represented on the vegetation and land use maps, and
-                    thus we do not have to make derivations and assumptions as
-                    in estimating the amount of trees, we can assume that these
-                    data are very accurate. Other such studies also use a
-                    500-meter radius, and Professor Cecil Konijnendijk (who
-                    popularised the rule) also recommended that we use a
-                    500-meter radius.
+                    The CNN was trained on almost 10,000 annotated images. The annotations came
+                    from 3 different sources:
+                    <ul>
+                        <li>
+                            The survey data described in a later section,
+                        </li>
+                        <li>
+                            Correction data sent in by users of the first version of the map,
+                        </li>
+                        <li>
+                            Manual labels from the datalab team.
+                        </li>
+                    </ul>
                 </p>
                 <p>
-                    <span class="font-bold"
-                        >300 meters to public green space</span
-                    >: public green space is here defined as publicly accessible
-                    green space of at least 0.2 hectares. A 300-meter buffer was
+                    Those annotated images were split into 3 groups: 60% in a train set,
+                    20% in a validation set and 20% in a test set. Several models were trained
+                    on the train set, using the validation set to perform early stopping
+                    (a technique to avoid overfitting). The models were then evaluated and
+                    compared on the test set, and we used the best ones in an ensemble method
+                    to make the final predictions. The accuracy of our final prediction is about
+                    90% on the test set.
+                </p>
+                <p>
+                    The actual accuracy of the model is lower, both due to the fact that our
+                    data is sometimes outdated, and that our manual labelling also contains
+                    some errors.
+                </p>
+                <p>
+                    <span class="font-bold">30% tree canopy cover</span> 
+                </p>
+                <p>
+                    For this calculation, a 500-metre radius was drawn around the geometric
+                    centre of each building within which the number of square metres of green
+                    vegetation taller than 3 metres was calculated as a percentage of the entire
+                    radius. The same publicly available data were used for this as for identifying trees
+                    (the Flemish and Brussels vegetation map and the Walloon land use map).
+                    Because canopy cover is exactly represented on the vegetation and land use
+                    maps, and thus we do not have to make derivations and assumptions as in
+                    estimating the amount of trees, we can assume that these data are very accurate.
+                    Other such studies also use a 500-metre radius, and Professor Cecil Konijnendijk
+                    (who popularised the rule) also recommended that we use a 500-metre radius.
+                </p>
+                <p>
+                    <span class="font-bold">300 metres to a public green space</span> 
+                </p>
+                <p>
+                    A public green space is in this context defined as a publicly accessible
+                    green space of at least 0.2 hectares. A 300-metre buffer was
                     drawn around the park boundaries, and all buildings within
                     that buffer meet the rule. To do this, we used publicly
                     available data of public parks and neighbourhood green space
-                    in
-                    <a
-                        href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml"
-                        >Brussels</a
-                    >,
-                    <a
-                        href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
-                        >Wallonia</a
-                    >
-                    and
-                    <a
-                        href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019"
-                        >Flanders</a
-                    >.
+                    from the following sources:
+                    <ul>
+                        <li>
+                            Brussels:
+                            <a href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml"
+                            >INSPIRE - Public green spaces (2012)</a>
+                        </li>
+                        <li>
+                            Wallonia:
+                            <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
+                            >2023 PICC dataset</a>
+                        </li>
+                        <li>
+                            Flanders:
+                            <a href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019"
+                            >Buurtgroen (2019)</a>
+                        </li>
+                    </ul>
                 </p>
                 <p>
-                    The 2019 Flemish “neighbourhood green space” map includes
+                    The 2019 Flemish "Buurtgroen"-map includes
                     all clusters of publicly accessible green space with an area
-                    from 0.2 hectares, with a resolution of 10x10 m2. From this
-                    map, the categories of neighbourhood green, neighbourhood
-                    green, district green, urban green and urban forest were
-                    included. The Walloon Projet Informatique de Cartographie
-                    Continue (PICC) contains landscape elements such as
+                    from 0.2 hectares, with a resolution of 10x10m2. From this
+                    map, the categories of neighbourhood green, district green,
+                    urban green and urban forest were
+                    included. The Walloon "Projet Informatique de Cartographie
+                    Continue (PICC)" contains landscape elements such as
                     buildings, infrastructure, relief, as well as natural
-                    landscape elements. From this map, the categories Bosquet,
-                    Parc récréatif, Terrain de Sport and Forêt were used to
-                    describe publicly accessible green space together. The
-                    Brussels land use map GEMET INSPIRE includes categories park
+                    landscape elements. From this map, the categories "Bosquet",
+                    "Parc récréatif", "Terrain de Sport" and "Forêt" were used to
+                    describe publicly accessible green space. The
+                    Brussels land use map INSPIRE includes categories park
                     and forest, which were used to identify public green space.
                     Because each of these maps applies different categories to
                     identify public green space, there will be slight variations
@@ -266,7 +307,7 @@
                     limitations of the available data. Professor Konijnendijk
                     imposes a park size of 1 hectare with a lower limit of 0.5
                     hectare in densely populated urbanised areas. The pragmatic
-                    choice here was made for 0.2 hectares because the Flemish
+                    choice here was set to 0.2 hectares because the Flemish
                     dataset uses this as the lower limit for green space. This
                     lower limit could not be raised to 0.5 hectares, because the
                     parks in the Flemish dataset are divided by footpaths
@@ -277,19 +318,22 @@
                     methodology as much as possible across the three regions, it
                     was opted to then set the minimum area of green space for
                     the entire map at 0.2 hectares. An additional overestimation
-                    lies in the fact that the 300 meter distance from a park is
+                    lies in the fact that the 300 metre distance from a park is
                     calculated as a bird's eye view, without taking into account
                     the effective walking distance to that green space. This
-                    choice overestimates the proportion of homes that
+                    choice overestimates the proportion of buildings that
                     effectively meet the 300 rule.
                 </p>
                 <p>
-                    <span class="font-bold">Survey data</span>: in May 2024,
+                    <span class="font-bold">Survey data</span> 
+                </p>
+                <p>
+                    In May 2024,
                     Greenpeace distributed an online survey via social media and
                     by email to its own database about the 3-30-300 rule. People
                     were asked to count the trees they can see from their homes
                     and measure the distance to the nearest public green space.
-                    In this way, Greenpeace collected 4432 responses. We then
+                    In this way, Greenpeace collected 4,432 responses. We then
                     used this data to fact-check the automated analysis to
                     improve its methodology. In this way, citizens helped map
                     urban nature in Belgium.
