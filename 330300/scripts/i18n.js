@@ -3,10 +3,10 @@ const i18n = (function () {
 
   const placeholders = {
     en: {
-      search_address: "Enter address",
+      search_address: "Enter an address",
     },
     fr: {
-      search_address: "Entrez l'addresse",
+      search_address: "Entrez l'adresse",
     },
     nl: {
       search_address: "Geef een adres in",
