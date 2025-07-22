@@ -366,9 +366,9 @@
                             <span lang="nl">Zoeken</span>
                         </button>
                     </form>
-                    <div lang="en">Or</div>
-                    <div lang="fr">Ou</div>
-                    <div lang="nl">Of</div>
+                    <div lang="en">or</div>
+                    <div lang="fr">ou</div>
+                    <div lang="nl">of</div>
                     <button
                         class="p-2 border-black inline-block rounded text-white bg-emerald-900"
                         id="closeModalBtn"
@@ -442,9 +442,9 @@
                             id="scoring_rule300"
                         />
                         <label for="scoring_rule300">
-                            <span lang="en">Rule 300: Access to parks</span>
-                            <span lang="fr">Règle 300 : Accès aux parcs</span>
-                            <span lang="nl">Regel 300: Toegang tot parken</span>
+                            <span lang="en">Rule 300: Distance to parks</span>
+                            <span lang="fr">Règle 300 : Distance aux parcs</span>
+                            <span lang="nl">Regel 300: Afstand tot parken</span>
                         </label>
                     </div>
                 </fieldset>
@@ -616,7 +616,8 @@
         >
             <div id="correction-invite">
                 <span lang="en"
-                    >That doesn't seem right? You can
+                    >That doesn't seem right?
+                    You can
                     <a
                         href="#"
                         class="underline text-blue-700"
@@ -625,7 +626,8 @@
                     >.</span
                 >
                 <span lang="fr"
-                    >Ça n'a pas l'air correct ? Vous pouvez
+                    >Ça n'a pas l'air correct ?
+                    Vous pouvez
                     <a
                         href="#"
                         class="underline text-blue-700"
@@ -634,7 +636,8 @@
                     >.</span
                 >
                 <span lang="nl"
-                    >Lijkt dat niet correct? U kunt
+                    >Lijkt dat niet correct?
+                    U kunt
                     <a
                         href="#"
                         class="underline text-blue-700"
@@ -849,7 +852,7 @@
                 if (zoom < min_building_zoom) {
                     // compute grades by splitting the range 0-1 into n equal parts, where n is the number of colors in the color scheme
                     if (mode == "overall") {
-                        this._div.innerHTML = `<p>${i18n.span({ fr: "Nombre moyen de règles satisfaites", en: "Average number of rules satisfied", nl: "Average number of rules satisfied" })}</p>`;
+                        this._div.innerHTML = `<p>${i18n.span({ fr: "Nombre moyen de règles satisfaites", en: "Average number of rules satisfied", nl: "Gemiddeld aantal regels waaraan voldaan is" })}</p>`;
 
                         this._div.innerHTML += make_color_scale_legend(
                             colors_scheme,
@@ -859,7 +862,7 @@
                         );
                     } else {
                         const rule = parseInt(mode.replace("rule", ""));
-                        this._div.innerHTML = `<p>${i18n.span({ fr: `Pourcentage de batiments qui satisfont la règle ${rule}`, en: `Percentage of buildings satisfying rule ${rule}`, nl: `Percentage of buildings satisfying rule ${rule}` })}</p>`;
+                        this._div.innerHTML = `<p>${i18n.span({ fr: `Pourcentage de batiments qui satisfont la règle ${rule}`, en: `Percentage of buildings satisfying rule ${rule}`, nl: `Percentage de gebouwen dat voldoet aan regel ${rule}` })}</p>`;
                         let format = (v) =>
                             new Intl.NumberFormat(navigator.language, {
                                 maximumSignificantDigits: 2,
