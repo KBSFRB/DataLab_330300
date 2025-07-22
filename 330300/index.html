@@ -416,9 +416,9 @@
                             id="scoring_rule3"
                         />
                         <label for="scoring_rule3">
-                            <span lang="en">Rule 3: Trees</span>
-                            <span lang="fr">Règle 3 : Arbres</span>
-                            <span lang="nl">Regel 3: Bomen</span>
+                            <span lang="en">Rule 3: trees</span>
+                            <span lang="fr">Règle 3 : arbres</span>
+                            <span lang="nl">Regel 3: bomen</span>
                         </label>
                     </div>
                     <div>
@@ -429,9 +429,9 @@
                             id="scoring_rule30"
                         />
                         <label for="scoring_rule30">
-                            <span lang="en">Rule 30: Tree canopy cover</span>
-                            <span lang="fr">Règle 30 : Couverture arborée</span>
-                            <span lang="nl">Regel 30: Boomkruinbedekking</span>
+                            <span lang="en">Rule 30: tree canopy cover</span>
+                            <span lang="fr">Règle 30 : couverture arborée</span>
+                            <span lang="nl">Regel 30: boomkruinbedekking</span>
                         </label>
                     </div>
                     <div>
@@ -442,9 +442,9 @@
                             id="scoring_rule300"
                         />
                         <label for="scoring_rule300">
-                            <span lang="en">Rule 300: Distance to parks</span>
-                            <span lang="fr">Règle 300 : Distance aux parcs</span>
-                            <span lang="nl">Regel 300: Afstand tot parken</span>
+                            <span lang="en">Rule 300: distance to parks</span>
+                            <span lang="fr">Règle 300 : distance aux parcs</span>
+                            <span lang="nl">Regel 300: afstand tot parken</span>
                         </label>
                     </div>
                 </fieldset>
@@ -862,7 +862,7 @@
                         );
                     } else {
                         const rule = parseInt(mode.replace("rule", ""));
-                        this._div.innerHTML = `<p>${i18n.span({ fr: `Pourcentage de batiments qui satisfont la règle ${rule}`, en: `Percentage of buildings satisfying rule ${rule}`, nl: `Percentage de gebouwen dat voldoet aan regel ${rule}` })}</p>`;
+                        this._div.innerHTML = `<p>${i18n.span({ fr: `Pourcentage de batiments qui satisfont la règle ${rule}`, en: `Percentage of buildings satisfying the ${rule}-rule`, nl: `Percentage gebouwen dat voldoet aan de ${rule}-regel` })}</p>`;
                         let format = (v) =>
                             new Intl.NumberFormat(navigator.language, {
                                 maximumSignificantDigits: 2,
@@ -899,16 +899,16 @@
                                 "La règle des " +
                                 rule_number +
                                 " est-elle respectée ?",
-                            en: "Is Rule " + rule_number + " satisfied ?",
+                            en: "Is rule " + rule_number + " satisfied?",
                             nl:
-                                "Wordt de  " +
+                                "Wordt de " +
                                 rule_number +
-                                "-regel gerespecteerd ?",
+                                "-regel gerespecteerd?",
                         };
                         this._div.innerHTML = `
             	<p>${i18n.span(title_dict)}</p>
+                <span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> ${i18n.span({ fr: "Oui", en: "Yes", nl: "Ja" })}<br>
             	<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 0)}"></span> ${i18n.span({ fr: "Non", en: "No", nl: "Nee" })}<br>
-            	<span class="inline-block w-3 h-3" style="background:${get_color(colors_scheme, 1)}"></span> ${i18n.span({ fr: "Oui", en: "Yes", nl: "Ja" })}<br>
             `;
                     }
                 }
