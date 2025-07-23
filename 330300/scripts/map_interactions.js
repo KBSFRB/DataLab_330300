@@ -54,16 +54,16 @@ function buildingPopupText(feature) {
 
   // Helper to format original/corrected value text
   const formatValue = (originalValue, correctedValue, lang) => {
-    const yesText = { fr: "Oui", en: "Yes", nl: "Ja" }[lang];
-    const noText = { fr: "Non", en: "No", nl: "Nee" }[lang];
+    const yesText = { fr: "oui", en: "yes", nl: "ja" }[lang];
+    const noText = { fr: "non", en: "no", nl: "nee" }[lang];
 
     // If there's a correction that differs from original
     if (correctedValue !== -1 && correctedValue !== originalValue) {
       const yesNo = correctedValue ? yesText : noText;
       const modelLabel = {
-        fr: `(Cette valeur a été corrigée par un utilisateur)`,
-        en: `(This value was corrected by a user)`,
-        nl: `(Deze waarde is door een gebruiker gecorrigeerd)`,
+        fr: `<em>Cette valeur a été corrigée par un utilisateur</em>`,
+        en: `<em>This value was corrected by a user</em>`,
+        nl: `<em>Deze waarde is door een gebruiker gecorrigeerd</em>`,
       }[lang];
       return `${yesNo} ${modelLabel}`;
     }
@@ -94,10 +94,10 @@ function buildingPopupText(feature) {
     en: `<strong>Building Scores</strong><br><br>
              <strong>🌳 At least 3 trees visible:</strong><br>
              <span style="margin-left: 10px;">${formatValue(rule3Score, r3Correction, "en")}</span><br><br>
-             <strong>🌿 Over 30% canopy cover:</strong><br>
-             <span style="margin-left: 10px; font-size: 12px; color: #666;">(In a 500m radius)</span><br>
+             <strong>🌿 Over 30% tree canopy cover:</strong><br>
+             <span style="margin-left: 10px; font-size: 12px; color: #666;">(in a 500m radius)</span><br>
              <span style="margin-left: 10px;">${formatValue(rule30Score, r30Correction, "en")}</span><br><br>
-             <strong>🏞️ Less than 300m from public park:</strong><br>
+             <strong>🏞️ Less than 300m from a public park:</strong><br>
              <span style="margin-left: 10px;">${formatValue(rule300Score, r300Correction, "en")}</span>
              `,
     nl: `<strong>Gebouw Scores</strong><br><br>
@@ -106,7 +106,7 @@ function buildingPopupText(feature) {
              <strong>🌿 Meer dan 30% boomkruinbedekking:</strong><br>
              <span style="margin-left: 10px; font-size: 12px; color: #666;">(in een straal van 500m)</span><br>
              <span style="margin-left: 10px;">${formatValue(rule30Score, r30Correction, "nl")}</span><br><br>
-             <strong>🏞️ Op minder dan 300m van een publiek park:</strong><br>
+             <strong>🏞️ Op minder dan 300m van een publiek toegankelijk park:</strong><br>
              <span style="margin-left: 10px;">${formatValue(rule300Score, r300Correction, "nl")}</span>
              `,
   });
@@ -158,16 +158,16 @@ const threeCirclesInteraction = (function () {
 
     // Helper to format original/corrected value text
     const formatValue = (originalValue, correctedValue, lang) => {
-      const yesText = { fr: "Oui", en: "Yes", nl: "Ja" }[lang];
-      const noText = { fr: "Non", en: "No", nl: "Nee" }[lang];
+      const yesText = { fr: "oui", en: "yes", nl: "ja" }[lang];
+      const noText = { fr: "non", en: "no", nl: "nee" }[lang];
 
       // If there's a correction that differs from original
       if (correctedValue !== -1 && correctedValue !== originalValue) {
         const yesNo = correctedValue ? yesText : noText;
         const modelLabel = {
-          fr: `<br>(Cette valeur a été corrigée par un utilisateur)`,
-          en: `<br>(This value was corrected by a user)`,
-          nl: `<br>(Deze waarde is door een gebruiker gecorrigeerd)`,
+          fr: `<br><em>Cette valeur a été corrigée par un utilisateur</em>`,
+          en: `<br><em>This value was corrected by a user</em>`,
+          nl: `<br><em>Deze waarde is door een gebruiker gecorrigeerd</em>`,
         }[lang];
 
         return `${yesNo}${modelLabel}`;
@@ -188,7 +188,7 @@ const threeCirclesInteraction = (function () {
 
     let legend30 = i18n.span({
       fr: `Plus de 30% de couverture arborée : ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "fr")}<br>(dans un rayon de 500m)`,
-      en: `Over 30% canopy cover: ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "en")}<br>(In a 500m radius)`,
+      en: `Over 30% tree canopy cover: ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "en")}<br>(in a 500m radius)`,
       nl: `Meer dan 30% boomkruinbedekking: ${formatValue(rule30(layer.feature), corrections ? corrections.r30 : -1, "nl")}<br>(in een straal van 500m)`,
     });
 
@@ -196,8 +196,8 @@ const threeCirclesInteraction = (function () {
 
     let legend300 = i18n.span({
       fr: `À moins de 300m d'un parc public : ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "fr")}`,
-      en: `Less than 300m from public park: ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "en")}`,
-      nl: `Op minder dan 300m van een publiek park: ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "nl")}`,
+      en: `Less than 300m from a public park: ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "en")}`,
+      nl: `Op minder dan 300m van een publiek toegankelijk park: ${formatValue(rule300(layer.feature), corrections ? corrections.r300 : -1, "nl")}`,
     });
 
     l300.setText(legend300);
@@ -368,8 +368,8 @@ function make_area_popup_text(level) {
       en: `<strong>${areaName}</strong><br><br>
           <strong>🌳 At least 3 trees visible:</strong><br>
           <span style="margin-left: 10px;">${format_percent(rule3Score)} of buildings</span><br><br>
-          <strong>🌿 Over 30% canopy cover:</strong><br>
-          <span style="margin-left: 10px; font-size: 12px; color: #666;">(In a 500m radius)</span><br>
+          <strong>🌿 Over 30% tree canopy cover:</strong><br>
+          <span style="margin-left: 10px; font-size: 12px; color: #666;">(in a 500m radius)</span><br>
           <span style="margin-left: 10px;">${format_percent(rule30Score)} of buildings</span><br><br>
           <strong>🏞️ Less than 300m from public park:</strong><br>
           <span style="margin-left: 10px;">${format_percent(rule300Score)} of buildings</span><br><br>
@@ -382,7 +382,7 @@ function make_area_popup_text(level) {
           <strong>🌿 Meer dan 30% boomkruinbedekking:</strong><br>
           <span style="margin-left: 10px; font-size: 12px; color: #666;">(in een straal van 500m)</span><br>
           <span style="margin-left: 10px;">${format_percent(rule30Score)} van de gebouwen</span><br><br>
-          <strong>🏞️ Op minder dan 300m van een publiek park:</strong><br>
+          <strong>🏞️ Op minder dan 300m van een publiek toegankelijk park:</strong><br>
           <span style="margin-left: 10px;">${format_percent(rule300Score)} van de gebouwen</span><br><br>
           <strong>Gemiddelde score:</strong><br>
           <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
