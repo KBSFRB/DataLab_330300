@@ -10,7 +10,7 @@ div h1 {
 
 p a {
     color:#01665E;
-    text-decoration-line: underline;
+    text-decoration: underline;
 }
 
 #lang-picker .active {

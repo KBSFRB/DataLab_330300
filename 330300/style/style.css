@@ -16,7 +16,9 @@ div h1 {
     /* letter-spacing: -0.025em; */
 }
 
-p a {
+p a,
+li a,
+div a {
     color:#01665E;
 	text-decoration-line: underline;
 }

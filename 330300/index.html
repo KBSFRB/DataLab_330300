@@ -622,8 +622,8 @@
             class="hidden absolute bottom-20 left-0 w-full sm:bottom-4 sm:left-1/2 sm:w-[400px] sm:-ml-[200px] z-[1000] text-center items-center bg-white py-2 px-3 border-black border rounded"
         >
             <div id="correction-invite">
-                <span lang="en"
-                    >That doesn't seem right?
+                <span lang="en">
+                    That doesn't seem right?<br>
                     You can
                     <a
                         href="#"
@@ -632,8 +632,8 @@
                         >suggest a correction</a
                     >.</span
                 >
-                <span lang="fr"
-                    >Ça n'a pas l'air correct ?
+                <span lang="fr">
+                    Ça n'a pas l'air correct ?<br>
                     Vous pouvez
                     <a
                         href="#"
@@ -642,8 +642,8 @@
                         >proposer une correction</a
                     >.</span
                 >
-                <span lang="nl"
-                    >Lijkt dat niet correct?
+                <span lang="nl">
+                    Lijkt dat niet correct?<br>
                     U kunt
                     <a
                         href="#"
@@ -820,6 +820,8 @@
                 nl: 'Zoek een adres...'
             };
 
+            // console.log(i18n.lang)
+
             /* Add the search bar */
             const search_options = {
                 provider: new GeoSearch.OpenStreetMapProvider({
@@ -830,7 +832,7 @@
                 style: "bar",
                 autoComplete: true, // fail when I set it to false -> I increased the delay instaid
                 autoCompleteDelay: 2000,
-                searchLabel: `<p>${i18n.span({fr: `Rechercher une adresse...`, en: `Search for an address...`, nl: `Zoek een adres...` })}</p>`
+                searchLabel: searchLabelMap[i18n.lang] //data-i18n-placeholder="search_address"
             };
             const search = new GeoSearch.GeoSearchControl(search_options);
 
