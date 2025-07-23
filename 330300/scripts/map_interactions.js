@@ -351,7 +351,7 @@ function make_area_popup_text(level) {
     const rule3Score = rule3(f);
     const rule30Score = rule30(f);
     const rule300Score = rule300(f);
-    const averageScore = (rule3Score + rule30Score + rule300Score) / 3;
+    const averageScore = rule3Score + rule30Score + rule300Score;
 
     return i18n.div({
       fr: `<strong>${areaName}</strong><br><br>
