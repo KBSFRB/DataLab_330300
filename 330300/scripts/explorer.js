@@ -90,7 +90,7 @@ function explorerApp() {
     get breadcrumbs() {
       if (!this.metadata?.breadcrumbs) return [];
 
-      const crumbs = this.metadata.breadcrumbs.map((crumb) => ({
+      let crumbs = this.metadata.breadcrumbs.map((crumb) => ({
         nis: crumb.nis,
         child_level: crumb.child_level,
         name: crumb.name.en || crumb.name.fr || crumb.name.nl || crumb.nis,
@@ -108,6 +108,19 @@ function explorerApp() {
           isClickable: false,
         });
       }
+
+      // if the same nis appears multiple time, only keep last
+      // This avoids showing brussels as both a region and a province
+      const uniqueNis = new Set();
+      crumbs = crumbs
+        .slice()
+        .reverse()
+        .filter((crumb) => {
+          if (uniqueNis.has(crumb.nis)) return false;
+          uniqueNis.add(crumb.nis);
+          return true;
+        })
+        .reverse();
 
       return crumbs;
     },
@@ -206,6 +219,8 @@ function explorerApp() {
           stroke: "black",
           strokeWidth: 2,
           fillOpacity: 0.7,
+          tip: true,
+          title: (d) => d.properties.name_en,
         }),
       ];
 
@@ -216,7 +231,6 @@ function explorerApp() {
             fill: "transparent",
             stroke: "transparent",
             cursor: "pointer",
-            title: (d) => d.properties.name_en,
             href: (d) =>
               this.metadata?.zoomable
                 ? `?v=${this.metadata.next_level}_in_${d.properties.nis}`
@@ -299,16 +313,9 @@ function explorerApp() {
               stroke: "white",
               strokeWidth: 2,
               r: 6,
+              tip: true,
               title: (d) =>
-                `${d.name || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
-            }),
-            Plot.text(featureData, {
-              x: this.chartXAxis,
-              y: this.chartYAxis,
-              text: (d) => d.name || d.nis,
-              dy: -12,
-              fontSize: 10,
-              fill: "black",
+                `${d.name_en || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
             }),
           ],
         });
