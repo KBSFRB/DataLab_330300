@@ -219,6 +219,8 @@ function explorerApp() {
           stroke: "black",
           strokeWidth: 2,
           fillOpacity: 0.7,
+          tip: true,
+          title: (d) => d.properties.name_en,
         }),
       ];
 
@@ -229,7 +231,6 @@ function explorerApp() {
             fill: "transparent",
             stroke: "transparent",
             cursor: "pointer",
-            title: (d) => d.properties.name_en,
             href: (d) =>
               this.metadata?.zoomable
                 ? `?v=${this.metadata.next_level}_in_${d.properties.nis}`
