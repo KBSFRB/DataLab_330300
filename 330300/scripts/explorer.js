@@ -90,7 +90,7 @@ function explorerApp() {
     get breadcrumbs() {
       if (!this.metadata?.breadcrumbs) return [];
 
-      const crumbs = this.metadata.breadcrumbs.map((crumb) => ({
+      let crumbs = this.metadata.breadcrumbs.map((crumb) => ({
         nis: crumb.nis,
         child_level: crumb.child_level,
         name: crumb.name.en || crumb.name.fr || crumb.name.nl || crumb.nis,
@@ -108,6 +108,19 @@ function explorerApp() {
           isClickable: false,
         });
       }
+
+      // if the same nis appears multiple time, only keep last
+      // This avoids showing brussels as both a region and a province
+      const uniqueNis = new Set();
+      crumbs = crumbs
+        .slice()
+        .reverse()
+        .filter((crumb) => {
+          if (uniqueNis.has(crumb.nis)) return false;
+          uniqueNis.add(crumb.nis);
+          return true;
+        })
+        .reverse();
 
       return crumbs;
     },
