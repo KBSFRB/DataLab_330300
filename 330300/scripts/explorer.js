@@ -199,7 +199,6 @@ function explorerApp() {
 
     renderMap() {
       const container = document.getElementById("map-container");
-      container.innerHTML = "";
 
       if (this.features.length === 0) return;
 
@@ -239,26 +238,29 @@ function explorerApp() {
         );
       }
 
-      const projection = d3
-        .geoMercator()
-        .fitSize([container.clientWidth, 400], geoData);
+      requestAnimationFrame(() => {
+        const projection = d3
+          .geoMercator()
+          .fitSize([container.clientWidth || 600, 400], geoData);
 
-      this.mapPlot = Plot.plot({
-        width: container.clientWidth || 600,
-        height: 400,
-        projection,
-        x: {
-          ticks: 0,
-          label: null,
-        },
-        y: {
-          ticks: 0,
-          label: null,
-        },
-        marks: marks,
+        this.mapPlot = Plot.plot({
+          width: container.clientWidth || 600,
+          height: 400,
+          projection,
+          x: {
+            ticks: 0,
+            label: null,
+          },
+          y: {
+            ticks: 0,
+            label: null,
+          },
+          marks: marks,
+        });
+
+        container.innerHTML = "";
+        container.appendChild(this.mapPlot);
       });
-
-      container.appendChild(this.mapPlot);
     },
 
     async showView(viewName) {
