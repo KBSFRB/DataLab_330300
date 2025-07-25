@@ -294,8 +294,56 @@ function explorerApp() {
 
         const fillColor = this.getScatterFillColor();
 
+        // Calculate correlation coefficient
+        const nonNullData = featureData.filter(
+          (d) => d[this.chartXAxis] !== null && d[this.chartYAxis] !== null,
+        );
+        const correlation = ss.sampleCorrelation(
+          nonNullData.map((d) => d[this.chartXAxis]),
+          nonNullData.map((d) => d[this.chartYAxis]),
+        );
+
+        console.log(correlation);
+
+        // Determine if correlation is significant (threshold: |r| >= 0.3)
+        const isCorrelated =
+          correlation !== null && Math.abs(correlation) >= 0.3;
+
+        // Create marks array starting with scatter plot
+        const marks = [
+          Plot.dot(featureData, {
+            x: this.chartXAxis,
+            y: this.chartYAxis,
+            fill: fillColor,
+            stroke: "white",
+            strokeWidth: 2,
+            r: 6,
+            tip: true,
+            title: (d) =>
+              `${d.name_en || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
+          }),
+        ];
+
+        // Add linear regression line if variables are correlated
+        if (isCorrelated) {
+          marks.push(
+            Plot.linearRegressionY(featureData, {
+              x: this.chartXAxis,
+              y: this.chartYAxis,
+              stroke: "#ff6b6b",
+              strokeWidth: 2,
+              strokeDasharray: "5,5",
+            }),
+          );
+        }
+
+        // Update title to include correlation info
+        const titleText = isCorrelated
+          ? `${this.getIndicator(this.chartYAxis).name} vs ${this.getIndicator(this.chartXAxis).name} (r = ${correlation.toFixed(3)})`
+          : `${this.getIndicator(this.chartYAxis).name} vs ${this.getIndicator(this.chartXAxis).name}`;
+
         this.chartPlot = Plot.plot({
-          title: `${this.getIndicator(this.chartYAxis).name} vs ${this.getIndicator(this.chartXAxis).name}`,
+          title: titleText,
           width: containerWidth,
           height: 400,
           grid: true,
@@ -307,19 +355,7 @@ function explorerApp() {
             label: this.getIndicator(this.chartYAxis).name,
             nice: true,
           },
-          marks: [
-            Plot.dot(featureData, {
-              x: this.chartXAxis,
-              y: this.chartYAxis,
-              fill: fillColor,
-              stroke: "white",
-              strokeWidth: 2,
-              r: 6,
-              tip: true,
-              title: (d) =>
-                `${d.name_en || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
-            }),
-          ],
+          marks: marks,
         });
 
         container.innerHTML = "";
