@@ -988,7 +988,7 @@
                         return rule300(f);
                     default:
                         // Turns out this is equivalent to computing the average score of all buildings in the area
-                        return rule3(f) + rule30(f) + rule300(f);
+                        return (rule3(f) + rule30(f) + rule300(f))/3;
                 }
             }
 
