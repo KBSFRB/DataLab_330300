@@ -38,20 +38,25 @@ function explorerApp() {
 
     // Computed
     get sortedFeatures() {
-      return [...this.features].sort((a, b) => {
-        let aVal = a.properties[this.sortField];
-        let bVal = b.properties[this.sortField];
+      return this.features.slice().sort((a, b) => {
+        let aVal, bVal;
 
-        if (typeof aVal === "string") {
-          aVal = aVal.toLowerCase();
-          bVal = bVal.toLowerCase();
-        }
-
-        if (this.sortDirection === "asc") {
-          return aVal > bVal ? 1 : -1;
+        if (this.sortField === 'name') {
+          aVal = a.properties.name_en || a.properties.nis || '';
+          bVal = b.properties.name_en || b.properties.nis || '';
         } else {
-          return aVal < bVal ? 1 : -1;
+          aVal = a.properties[this.sortField];
+          bVal = b.properties[this.sortField];
         }
+
+        if (aVal == null) aVal = '';
+        if (bVal == null) bVal = '';
+        if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+        if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+
+        if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
+        if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
+        return 0;
       });
     },
 
