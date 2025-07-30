@@ -118,32 +118,18 @@
                 </p>
                 <p>
                     In the datasets from Flanders and Wallonia, a difference is
-                    made between "main buildings" and "annexes". We decided to ignore
-                    annexes if they were not connected to a main building (they are
-                    likely something like a garden shed) and to merge the annexes
-                    connected to a main building with that main building (they are
-                    likely an extension of the building that now functions as a
-                    part of the main building).
+                    made between "main buildings" and "annexes". On the final map, we chose
+                    to display only the main buildings, but annexes were still used
+                    to better calculate the 3-trees-visible rule (see next section).
                 </p>
                 <p>
-                    In the absence of identifiers linking an annex to its corresponding
-                    main building, we merged the annexes with the building with which it
-                    shared its longest border. This heuristic has inevitably led to some
-                    wrong connections.
-                </p>
-                <p>
-                    Finally, buildings smaller than 18 m² were filtered out because Flemish
-                    Housing Quality Standards prescribe that the total net floor area of a
+                    Finally, buildings smaller than 18 m² were filtered out because
+                    <a href="https://www.vlaanderen.be/bouwen-wonen-en-energie/veilig-gezond-en-kwaliteitsvol-wonen/woningkwaliteitsnormen/minimale-grootte-van-een-woning">
+                        Flemish Housing Quality Standards
+                    </a>
+                    prescribe that the total net floor area of a
                     self-contained dwelling must be at least 18 m². Annexes that are smaller
-                    than 18 m² are also not considered.
-                </p>
-                <p>
-                    NB: Although we do not show them in the final map, the unconnected
-                    annexes were taken into account in the computation of the 3-rule,
-                    as they may affect the view from the main buildings and
-                    therefore the number of trees visible. We recognize that this decision
-                    is debatable, as one could argue that such an annex might
-                    not be tall enough to hide trees.
+                    than 18 m² were also excluded.
                 </p>
                 <p>
                     <span class="font-bold">3 trees</span> 
@@ -170,7 +156,7 @@
                     >, and the
                     <a
                         href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
-                        >“Occupation du sol en Wallonie”-map (2020)</a
+                        >“Occupation du Sol en Wallonie”-map (2020)</a
                     >.
                     The 2021 Flemish Green Map is a 1-metre resolution grid of segmentation
                     classification from summer flight orthophotos, which classifies
@@ -197,6 +183,26 @@
                     Unfortunately, the data is already old and may be outdated in several
                     places. Wallonia is preparing a new dataset based on orthophoto from
                     2023, but it has not been released at the time of writing.
+                </p>
+                <p>
+                    In a development compared to the first version of the map,
+                    we chose in some cases to group buildings with their annexes
+                    to more accurately calculate the 3-trees rule. These merged buildings
+                    were only used for calculations, only the main building is shown on the map.
+                    More precisely, we decided to ignore annexes not connected to a main
+                    building (likely garden sheds, for example) and to merge annexes
+                    connected to a main building with that building (likely extensions
+                    that are now integral parts of the main building).
+                </p>
+                <p>
+                    In the absence of identifiers linking an annex to its corresponding
+                    main building, we merged each annex with the building with which it
+                    shared the longest boundary. This heuristic method inevitably led to
+                    some incorrect associations. Unconnected annexes were still taken into
+                    account in the tree visibility calculation, as they may affect the view
+                    from main buildings and thus the number of visible trees. We acknowledge
+                    this is debatable, as one could argue such an annex might not be tall
+                    enough to obstruct trees.
                 </p>
                 <p>
                     The estimation of the 3-rule was done via a machine learning approach,
@@ -234,12 +240,9 @@
                     (a technique to avoid overfitting). The models were then evaluated and
                     compared on the test set, and we used the best ones in an ensemble method
                     to make the final predictions. The accuracy of our final prediction is about
-                    90% on the test set.
-                </p>
-                <p>
-                    The actual accuracy of the model is lower, both due to the fact that our
-                    data is sometimes outdated, and that our manual labelling also contains
-                    some errors.
+                    90% on the test set, but the actual accuracy of the model depends on the
+                    quality of the data sources, and might be lower dus to outdated data
+                    or labelling errors.
                 </p>
                 <p>
                     <span class="font-bold">30% tree canopy cover</span> 
@@ -422,7 +425,11 @@
                 </p>
                 <p>
                     Enfin, les bâtiments de moins de 18 m² ont été enlevés. Cette décision se
-                    base sur les normes flamandes de qualité du logement qui prescrivent qu'une
+                    base sur les 
+                    <a href="https://www.vlaanderen.be/bouwen-wonen-en-energie/veilig-gezond-en-kwaliteitsvol-wonen/woningkwaliteitsnormen/minimale-grootte-van-een-woning">
+                        normes flamandes de qualité du logement
+                    </a>
+                    qui prescrivent qu'une
                     habitation indépendante doit posséder une surface nette totale d'au moins 18 m²
                     pour être habitable. Les annexes d'une superficie inférieure à 18 m² ne sont pas
                     prises en compte non plus.
@@ -670,238 +677,294 @@
             <div lang="nl" class="flex flex-col gap-4">
                 <h1>Methodologie</h1>
                 <p>
-                    Om de score van 3-30-300 per gebouw te berekenen, hebben
-                    wij, DataLab, gebruik gemaakt van open data die voor elke
-                    regio beschikbaar was. Omdat de gegevensbronnen per regio
-                    verschillen, waarschuwen we ervoor om de regio’s niet
-                    onderling te vergelijken. Om een score voor elk gebouw te
-                    verkrijgen, moesten we ook verschillendeaannames maken. Een
-                    andere methodologie met andere aannames en databronnen kan
-                    daarom resulteren in andere resultaten. Bovendien is de
-                    ouderdom van elke databron anders. Met recente data zouden
-                    de scores hoogstwaarschijnlijk nauwkeuriger zijn en dichter
-                    bij de werkelijkheid liggen.
+                    Om de 3-30-300-score voor elk gebouw te berekenen, hebben wij,
+                    DataLab, gebruik gemaakt van openbaar beschikbare gegevens
+                    voor elke regio. Aangezien de gegevensbronnen per regio
+                    verschillen, raden we aan om de regio's niet met elkaar
+                    te vergelijken. Om een score voor elk gebouw te verkrijgen,
+                    moesten we bovendien verschillende aannames maken.
+                    Een andere methodologie, met andere databronnen en
+                    aannames, zou dus tot andere resultaten leiden. Bovendien is
+                    het tijdstip van de laatste gegevensupdate per bron verschillend. 
+                    Recentere data zou de nauwkeurigheid van de
+                    scores verbeteren en ze dichter bij de werkelijkheid brengen.
                 </p>
                 <p>
-                    In de momenteel beschikbare kaart worden alleen gegevens per
-                    gebouw weergegeven. We hebben ook percentages berekend per
-                    gemeente, provincie en regio. Vanwege de mindere
-                    accuraatheid en verschillen in de datasets hebben we
-                    besloten om de percentagesvoorlopig niet op de website te
-                    publiceren, maar als u hier toegang toe wilt hebben of de
-                    volledige dataset wilt raadplegen, kunt u ze aanvragen via
-                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>.
+                    <span class="font-bold">Gebouwen</span>: 
                 </p>
                 <p>
-                    <span class="font-bold">Gebouwen</span>: individuele
-                    gebouwen zijn het uitgangspunt van de kartering van de
-                    3-30-300-regel. De GIS-kaarten van alle gebouwen in België
-                    worden hiervoor gebruikt, waarbij de gebouwen kleiner dan
-                    18 m² er uit werden gefilterd. Vervolgens werd het
-                    geometrische centrum van die gebouwen berekend. Hiervoor
-                    gebruikten we de publiek beschikbare data van de gewesten
-                    <a href="https://gis.urban.brussels/brugis/#/">Brussel</a>,
-                    <a
-                        href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
-                        >Wallonië</a
-                    >, en
-                    <a
-                        href="https://www.vlaanderen.be/datavindplaats/catalogus/grbgis"
-                        >Vlaanderen</a
-                    >.
+                    Individuele gebouwen zijn het uitgangspunt voor het in kaart brengen
+                    van de 3-30-300-regel. De lijst van gebouwen in België is
+                    samengesteld op basis van de volgende bronnen:
+                </p>
+                <ul class="list-disc list-inside">
+                    <li class="ml-8">
+                        Brussel:
+                        <a href = "https://datastore.brussels/web/data/dataset/2cf42541-1813-11ef-8a81-00090ffe0001#access">
+                        URBIS Parcels and Buildings dataset (2024)</a>
+                    </li>
+                    <li class="ml-8">
+                        Wallonië:
+                        <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html">
+                        PICC dataset (2023)</a>
+                    </li>
+                    <li class="ml-8">
+                        Vlaanderen:
+                        <a href="https://www.vlaanderen.be/datavindplaats/catalogus/grbgis">
+                        GRB - GBG dataset (2024)</a>
+                    </li>
+                </ul>
+                <p>
+                    Nieuwe gebouwen die nog niet bestonden of nog niet
+                    opgenomen waren in bovenstaande databases, zijn niet
+                    meegenomen op de kaart of in de analyses.
                 </p>
                 <p>
-                    In de data voor Wallonië, werden ook annexen als aparte
-                    gebouwen gerekend. Zo is de veranda van een woning en het
-                    tuinhuis meegerekend als een apart gebouw met een eigen
-                    3-30-300-score. Dit is niet het geval in Vlaanderen en
-                    Brussel, wat problemen veroorzaakt voor de vergelijking
-                    tussen de gewesten bij data op aggregatieniveau. De Waalse
-                    geaggregeerde data stellen bijgevolg een onderschatting van
-                    de werkelijkheid grafisch voor. Daarnaast zullen ook
-                    tuinhuizen die groter zijn dan 18m² een score krijgen, wat
-                    voor een lichte afwijking in de drie gewesten zorgt wanneer
-                    we op sector-, gemeente-, provincie- of gewestniveau
-                    gemiddelden berekenen.
+                    In de databases van Vlaanderen en Wallonië wordt een
+                    onderscheid gemaakt tussen "hoofdgebouwen" en "bijgebouwen".
+                    Op de uiteindelijke kaart tonen we enkel de hoofdgebouwen,
+                    maar de bijgebouwen werden wel gebruikt om de regel
+                    van 3 zichtbare bomen beter te berekenen (zie volgende sectie).
                 </p>
                 <p>
-                    <span class="font-bold">3 bomen</span>: de aanname is dat
-                    een boom zichtbaar kan zijn vanuit een woning als die binnen
-                    een 60 meter radius rond het gebouw staat. Daarom werd een
-                    buffer van 60 meter rond elk gebouw getrokken en gekeken of
-                    daar een boom in stond. Wanneer een ander gebouw de
-                    gezichtslijn tot een boom blokkeert, werd deze boom niet mee
-                    opgenomen in de buffer van 60 meter rond het gebouw. De
-                    aanwezigheid van bomen werd berekend door te kijken naar het
-                    oppervlak hoog groen in die radius. Een boom werd berekend
-                    op 16m2 hoog groen, wat overeenkomt met het gemiddelde
-                    kroonoppervlak per boom voor de meeste dergelijke studies
-                    van kroonbedekking. Wat betreft de perimeter, gebruiken
-                    andere studies een radius van 15 tot 100 meter rond het
-                    gebouw. Er werd voor 60 meter geopteerd als gulden
-                    middenweg. Een gebouw scoort dus positief op de 3-bomenregel
-                    als er minstens 48m2 hoog groen staat in de gezichtslijn van
-                    een woning in een radius van 60 meter rond dat gebouw.
+                    Gebouwen met een oppervlakte van minder dan 18 m² zijn uit de dataset gehaald.
+                    Deze beslissing is gebaseerd op de
+                    <a href="https://www.vlaanderen.be/bouwen-wonen-en-energie/veilig-gezond-en-kwaliteitsvol-wonen/woningkwaliteitsnormen/minimale-grootte-van-een-woning">
+                        Vlaamse woningkwaliteitsnormen
+                    </a>,
+                    die voorschrijven dat een zelfstandige woning minstens 18 m²
+                    netto-oppervlakte moet hebben om bewoonbaar te zijn.
+                    Ook bijgebouwen met een kleinere oppervlakte zijn niet meegenomen.
                 </p>
                 <p>
-                    Hiervoor werden de hierboven vermelde data omtrent gebouwen
-                    gebruikt, in combinatie met de
+                    <span class="font-bold">3 bomen</span>
+                </p>
+                <p>
+                    We hebben ervoor gekozen enkel rekening te houden met bomen
+                    die zich binnen een straal van 60 meter rond het gebouw bevinden.
+                    Het is uiteraard mogelijk om bomen te zien die verder weg staan,
+                    zeker in minder dichtbebouwde gebieden, maar de opzet van de regel
+                    is niet enkel het zicht op bomen, maar ook hun onmiddellijke nabijheid.
+                    Andere studies hanteren een straal tussen 15 en 100 meter.
+                    60 meter werd gekozen als compromis.
+                </p>
+                <p>
+                    Voor de bereking van het zicht op minstens 3 bomen
+                    werden de eerder vermelde gebouwgegevens gecombineerd met de
                     <a
                         href="https://www.vlaanderen.be/datavindplaats/catalogus/groenkaart-vlaanderen-2021"
-                        >Vlaamse Groenkaart</a
+                        >Vlaamse Groenkaart (2021)</a
                     >, de
                     <a
                         href="https://geodata.environnement.brussels/client/view/67bc5ff0-90f6-4b76-9f05-15c15a928980"
-                        >Brusselse vegetatiekaart</a
+                        >Brusselse Vegetatiekaart (2021)</a
                     >, en de
                     <a
                         href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
-                        >"Occupation du sol en Wallonie"-kaart</a
-                    >. De Vlaamse Groenkaart van 2021 is een raster van 1 meter
-                    resolutie van segmentatieclassificatie van zomervlucht
-                    orthofoto’s, die het Vlaams grondgebied classificeert in
-                    hoog groen (boven de 3 meter), laag groen, niet groen, en
-                    landbouw gebied. De categorie hoog groen werd gebruikt om
-                    bomen te identificeren. Ook de Waalse grondgebruikskaart van
-                    2020 is een raster van 1 meter resolutie die op basis van
-                    orthofoto’s de bodembedekking identificeert, waaronder de
-                    categorieën loofbomen en naaldbomen hoger dan 3 meter, met
-                    een
+                        >"Occupation du Sol en Wallonie"-map (2020)</a
+                    >.
+                    De Vlaamse Groenkaart van 2021 is een vegetatieclassificatie met een
+                    resolutie van 1 meter,
+                    gebaseerd op orthofoto's uit de zomer. Ze verdeelt het Vlaamse
+                    grondgebied in zones met hoge vegetatie (meer dan 3 meter),
+                    lage vegetatie, niet-vegetatie en landbouwzones. De categorie
+                    "hoge vegetatie" werd gebruikt om bomen te identificeren.
+                    De Waalse "Occupation du Sol"-kaart heeft ook een resolutie van
+                    1 meter en laat toe om onder andere loof- en naaldbomen van
+                    meer dan 3 meter te herkennen, met een
                     <a
                         href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
                         >nauwkeurigheid</a
                     >
-                    van 92,29%. De Brusselse vegetatiekaart werd opgemaakt op
-                    basis van infrarode luchtfoto’s met een resolutie van 2
-                    meter, en onderscheidt hoge vegetatie (geïnterpreteerd als
-                    bomen) en lage vegetatie met een
+                    92,29%. De Vegetatiekaart van Brussel is gebaseerd op
+                    infraroodluchtfoto's met een resolutie van 2 meter, die hoge
+                    (bomen) en lage vegetatie onderscheiden, met een
                     <a
                         href="https://environnement.brussels/pro/outils-et-donnees/cartes/toutes-les-cartes-danalyse-nature-bruxelles"
                         >nauwkeurigheid</a
                     >
-                    van 92,5%. Gezien deze sterk gelijkende methodologieën, zijn
-                    deze datasets vergelijkbaar.
+                    van 92,5%. Door de gelijkaardige methodologieën beschouwen we
+                    deze datasets als onderling vergelijkbaar. Helaas zijn deze gegevens
+                    al wat verouderd, wat in sommige gebieden tot onnauwkeurigheden kan
+                    leiden. Wallonië bereidt een nieuwe dataset voor op basis van
+                    orthofoto's van 2023, maar die was tijdens de studie nog niet beschikbaar.
                 </p>
                 <p>
-                    De berekening van de 3-bomen-regel op basis van
-                    kroonoppervlakte heeft uiteraard beperkingen. Zo kan het
-                    enerzijds tot een overschatting leiden, omdat die radius
-                    enkel rekening houdt met andere gebouwen die tussen het raam
-                    en de boom staan, maar geen rekening houdt met andere
-                    obstakels zoals (tuin)muren of bruggen. Ook kan de analyse
-                    onmogelijk rekening houden met de plaatsing van de ramen in
-                    een gebouw, dus er zal zeker hoog groen zijn dat niet
-                    zichtbaar is vanuit een gebouw wanneer dat wel binnen de
-                    radius valt.
+                    Ten opzichte van de eerste versie van de kaart hebben we in sommige gevallen
+                    gekozen om hoofdgebouwen en bijgebouwen samen te voegen om de 3-bomenregel
+                    preciezer te berekenen. Deze samengestelde gebouwen zijn enkel gebruikt
+                    voor de berekening, op de kaart wordt enkel het hoofdgebouw weergegeven.
+                    Meer specifiek hebben we bijgebouwen die niet verbonden waren met een hoofdgebouw
+                    (zoals tuinhuizen) weggelaten, en de bijgebouwen die wel verbonden waren,
+                    samengevoegd met het hoofdgebouw (onder de aanname dat deze een uitbreiding
+                    vormen van het hoofdgebouw).
                 </p>
                 <p>
-                    Anderzijds kan het tot een onderschatting leiden, omdat je
-                    in open gebieden zicht zou kunnen hebben op bomen die buiten
-                    de radius staan. Ook kan het dat een aantal kleine bomen of
-                    delen van verschillende bomen binnen de radius als 1 boom
-                    geteld worden, omdat de 16m2 niet aaneengesloten moest zijn
-                    om mee te tellen als boom. Dit betekent dat de kaart geen
-                    accurate voorspelling kan maken van het exacte aantal bomen,
-                    gezien de grote variatie die er in de realiteit is tussen
-                    verschillende bomen hun grootte en hun ligging binnen de
-                    radius.
+                    Omdat er geen unieke identificatie beschikbaar is om een bijgebouw
+                    aan het bijhorende hoofdgebouw te koppelen, hebben we een heuristiek
+                    gebruikt: bijgebouwen zijn samengevoegd met het gebouw waarmee ze de
+                    langste grens deelden. Deze aanpak leidde onvermijdelijk tot enkele
+                    foute koppelingen. Losstaande bijgebouwen werden toch meegenomen
+                    in de berekening van de 3-bomenregel, omdat ze mogelijk het zicht
+                    vanuit het hoofdgebouw belemmeren en dus het aantal zichtbare bomen
+                    beïnvloeden. We erkennen dat deze keuze betwistbaar is, aangezien
+                    zo'n bijgebouw mogelijk niet hoog genoeg is om bomen te blokkeren.
                 </p>
                 <p>
-                    <span class="font-bold">30% kroonbedekking</span>: voor deze
-                    berekening werd vanuit elk gebouw een radius van 500 meter
-                    getrokken waarbinnen het aantal vierkante meter groene
-                    vegetatie van hoger dan 3 meter werd berekend als percentage
-                    van de gehele radius. Hiervoor werden dezelfde publiek
-                    beschikbare data gebruikt als voor het identificeren van
-                    gebouwen en bomen (de Vlaamse en Brusselse vegetatiekaart en
-                    de Waalse bodemgebruikkaart). Omdat kroonbedekking exact
-                    weergegeven wordt op de vegetatie- en bodemgebruik kaarten,
-                    en we dus geen afleidingen en aannames moeten maken zoals
-                    bij het inschatten van de hoeveelheid bomen, kunnen we
-                    veronderstellen dat deze data erg nauwkeurig zijn. Andere
-                    dergelijke studies gebruiken ook een radius van 500 meter,
-                    en ook Professor Cecil Konijnendijk (die de regel
-                    populariseerde) raadde DataLab zelf aan om een 500 meter
-                    radius te hanteren.
+                    De inschatting van de 3-bomenregel is gemaakt via een machine
+                    learning-aanpak op basis van een convolutioneel neuraal netwerk (CNN).
+                    Dit is het grootste verschil met de eerste versie van de kaart,
+                    waarin een geometrische schatting van het gezichtsveld werd gecombineerd
+                    met een drempelwaarde voor boomoppervlak. Door machine learning te
+                    gebruiken, konden we betere resultaten behalen bij vergelijking met
+                    enquêtegegevens (zie laatste paragraaf) en gebruikerscorrecties.
                 </p>
                 <p>
-                    <span class="font-bold">300 meter tot publiek groen</span>:
-                    publieke groene ruimte wordt gedefinieerd als publiek
-                    toegankelijke groene ruimte van minstens 0,2 hectare. Rond
-                    de parkgrenzen werd een buffer van 300 meter getrokken, en
-                    alle gebouwen binnen die buffer voldoen aan de regel.
-                    Hiervoor gebruikten we de publiek beschikbare data van
-                    publieke parken en buurtgroen in
-                    <a
-                        href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml"
-                        >Brussel</a
-                    >,
-                    <a
-                        href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
-                        >Wallonië</a
-                    >
-                    en
-                    <a
-                        href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019"
-                        >Vlaanderen</a
-                    >.
+                    Het CNN-model krijgt als input een afbeelding van de omgeving
+                    van het doelgebouw binnen een straal van 60 meter. Deze afbeelding
+                    bevat 3 lagen: het doelgebouw, andere gebouwen, en de vegetatiegegevens
+                    zoals eerder beschreven. Als output geeft het model de kans dat er
+                    minstens 3 bomen zichtbaar zijn vanuit dit gebouw.
                 </p>
                 <p>
-                    De Vlaamse ‘buurtgroen’ kaart van 2019 bevat alle clusters
-                    van publiek toegankelijke groene ruimte met een oppervlakte
-                    vanaf 0,2 hectare, met een resolutie van 10x10 m2. Uit deze
-                    kaart werden de categorieën buurtgroen, wijkgroen,
-                    stadsdeelgroen, stadsgroen en stadsbos opgenomen. De Waalse
-                    Projet Informatique de Cartographie Continue (PICC) bevat
-                    landschapselementen zoals gebouwen, infrastructuur, reliëf,
-                    en ook natuurlijke landschapselementen. Van deze kaart
-                    werden de categorieën Bosquet, Parc récréatif, Terrain de
-                    Sport en Forêt gebruikt om samen publiek toegankelijke
-                    groene ruimte te beschrijven. De Brusselse landgebruikskaart
-                    GEMET INSPIRE omvat categorieën park en bos, die gebruikt
-                    werden om publieke groene ruimte te identificeren. Omdat elk
-                    van deze kaarten andere categorieën toepast om publieke
-                    groene ruimte te identificeren, zullen er dus lichte
-                    variaties optreden die vergelijking tussen de gewesten
-                    bemoeilijken.
+                    Het netwerk werd getraind op bijna 10.000 gelabelde beelden.
+                    De labels zijn afkomstig uit drie bronnen:
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        Gegevens uit de later beschreven enquête,
+                    </li>
+                    <li class="ml-8">
+                        Correcties van gebruikers op de eerste kaartversie,
+                    </li>
+                    <li class="ml-8">
+                        Handmatige annotaties door het DataLab-team.
+                    </li>
+                </ul>
+                <p>
+                    De beelden zijn onderverdeeld in trainingsdata (60%), validatiedata (20%)
+                    en testdata (20%). Meerdere modellen zijn getraind op de trainingsset,
+                    met vroegtijdige stopzetting op basis van de validatieset
+                    (om overfitting te vermijden). Daarna werden de modellen vergeleken
+                    op de testset en de beste modellen werden gecombineerd via een
+                    ensemble-aanpak om de uiteindelijke voorspellingen te genereren.
+                    De nauwkeurigheid op de testset bedraagt ongeveer 90%, maar de
+                    werkelijke nauwkeurigheid hangt af van de kwaliteit van de
+                    brondata en kan dus lager liggen door verouderde gegevens
+                    of menselijke fouten bij het labelen.
                 </p>
                 <p>
-                    De kartering van de 300-regel is een overschatting van de
-                    realiteit van toegang tot publiek groen, als resultaat van
-                    de beperkingen van de beschikbare data. Professor
-                    Konijnendijk legt een parkgrootte van 1 hectare op met een
-                    ondergrens van 0,5 hectare in dichtbevolkt verstedelijkt
-                    gebied. De pragmatische keuze werd hier gemaakt voor 0,2
-                    hectare, omdat de Vlaamse dataset dit als ondergrens
-                    gebruikt voor groene ruimte. Deze ondergrens kon niet
-                    opgetrokken worden tot 0,5 hectare, omdat de parken in de
-                    Vlaamse dataset worden opgesplitst door wandelwegen die de
-                    parken doorkruisen en deze vlakken op de kaart niet
-                    geclusterd zijn. Door het minimum oppervlak op te trekken
-                    zouden we veel parken verliezen die op de kaart opgesplitst
-                    zijn door wandelwegen. Dit zou de accuraatheid van de kaart
-                    sterk doen afnemen. Om dezelfde methodologie waar mogelijk
-                    toe te passen op de drie gewesten, werd geopteerd om het
-                    minimumoppervlak groene ruimte voor de hele kaart vast te
-                    leggen op 0,2 hectare. Een bijkomende overschatting is dat
-                    de 300 meter afstand tot een park in vogelvlucht wordt
-                    berekend, zonder rekening te houden met de effectieve
-                    wandelweg tot die groene ruimte. Deze keuze overschat dus
-                    het aandeel woningen dat effectief aan de 300-regel voldoet.
+                    <span class="font-bold">30% kroonbedekking</span>
                 </p>
                 <p>
-                    <span class="font-bold">Survey data</span>: in mei 2024
-                    verspreidde Greenpeace een online survey via sociale media
-                    en via een e-mail naar haar eigen database over de
-                    3-30-300-regel. Mensen werden gevraagd de bomen te tellen
-                    die ze vanuit hun woning kunnen zien, en de afstand tot de
-                    dichtstbijzijnde publieke groene ruimte te meten. Zo
-                    verzamelde Greenpeace 4432 antwoorden die ze aan ons ter
-                    beschikking stelden. We gebruikten deze data vervolgens om
-                    de geautomatiseerde analyse te factchecken en zo haar
-                    methodologie te verbeteren. Zo hielpen burgers hetstedelijk
-                    groen mee in kaart te brengen in België.
+                    Voor deze berekening werd een straal van 500 meter rond het
+                    geometrisch centrum van elk gebouw getrokken. Binnen die straal
+                    werd het aantal vierkante meters vegetatie hoger dan 3 meter
+                    berekend als percentage van de totale oppervlakte. Hiervoor werden
+                    dezelfde publieke gegevens gebruikt als bij de identificatie van
+                    bomen (Vlaamse en Brusselse Vegetatiekaart, Waalse Bodemgebruikkaart).
+                    Aangezien deze kaarten de vegetatie accuraat weergeven en er geen
+                    afleidingen of aannames nodig zijn zoals bij het boomzicht,
+                    gaan we ervan uit dat deze data zeer nauwkeurig zijn. Andere
+                    gelijkaardige studies hanteren ook een straal van 500 meter,
+                    en professor Cecil Konijnendijk (die de regel populair maakte)
+                    beveelt dit eveneens aan.
                 </p>
+                <p>
+                    <span class="font-bold">300 meter tot publiek groen</span>
+                </p>
+                <p>
+                    Een publieke groene ruimte is hier gedefinieerd als een publiek
+                    toegankelijke groenzone van minstens 0,2 hectare.
+                    Rond de grenzen van deze parken werd een buffer van 300 meter getrokken,
+                    waarna alle gebouwen die binnen die zone vallen voldoen aan de regel.
+                    Hiervoor gebruikten we publieke gegevens over parken en buurtgroen uit:
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        Brussel:
+                        <a href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml"
+                        >INSPIRE - Public green spaces (2012)</a>
+                    </li>
+                    <li class="ml-8">
+                        Wallonië:
+                        <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
+                        >PICC dataset (2023)</a>
+                    </li>
+                    <li class="ml-8">
+                        Vlaanderen:
+                        <a href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019"
+                        >Buurtgroen (2019)</a>
+                    </li>
+                </ul>
+                <p>
+                    De Vlaamse Buurtgroenkaart van 2019 bevat alle publieke groenzones
+                    vanaf 0,2 hectare, met een resolutie van 10x10 m². De categorieën buurtgroen,
+                    wijkgroen, stadsdeelgroen, stadsgroen en stadsbos zijn meegenomen.
+                    De Waalse PICC-kaart bevat landschapselementen zoals gebouwen,
+                    infrastructuur, reliëf en natuur. Voor publieke groene ruimten zijn
+                    de categorieën Bosquet, Recreatiepark, Sportterrein en Bos gebruikt.
+                    De Brusselse INSPIRE-kaart bevat de categorieën park en bos. Door
+                    deze verschillende categorieën zijn er lichte regionale verschillen,
+                    wat vergelijking tussen regio's moeilijk maakt.
+                </p>
+                <p>
+                    De kaart van de 300-meterregel is een overschatting van de werkelijke
+                    toegang tot publiek groen, door beperkingen in de gegevens. Professor
+                    Konijnendijk stelt een minimumoppervlakte van 1 hectare voor, met
+                    een ondergrens van 0,5 hectare in dichte stedelijke gebieden. We
+                    kozen hier pragmatisch voor 0,2 hectare omdat dit de drempel is
+                    in de Vlaamse dataset. Een hogere grens (bv. 0,5 hectare) was niet
+                    mogelijk, omdat veel parken in de Vlaamse dataset gesegmenteerd zijn
+                    door wandelpaden die niet samengevoegd zijn, wat zou leiden tot het
+                    wegvallen van vele parken. Om in alle regio's dezelfde methodologie toe
+                    te passen, is dus 0,2 hectare als ondergrens gekozen. Een tweede
+                    overschatting is dat de 300 meter in vogelvlucht gemeten wordt,
+                    dus niet volgens de werkelijke wandelroute.
+                </p>
+                <p>
+                    <span class="font-bold">Enquête</span>
+                </p>
+                <p>
+                    In mei 2024 lanceerde Greenpeace een online enquête via sociale
+                    media en per e-mail naar hun databank, over de 3-30-300-regel.
+                    De deelnemers werden gevraagd het aantal zichtbare bomen vanuit hun woning te
+                    tellen en de afstand tot het dichtstbijzijnde publieke groen te meten.
+                    Dit leverde 4.432 reacties op. Deze data werden gebruikt om de
+                    geautomatiseerde analyse te controleren, de methodologie te
+                    verbeteren en deze nieuwe versie van de kaart te verfijnen.
+                    Zo droeg burgerparticipatie bij aan het in kaart brengen van de
+                    stedelijke natuur in België.
+                </p>
+                <p>
+                    <span class="font-bold">Data</span>
+                </p>
+                <p>
+                    Zoals eerder aangegeven, zijn alle gebruikte gegevens voor de
+                    3-30-300-analyse openbaar toegankelijk. In dezelfde geest stellen wij,
+                    als DataLab, ook graag de kaartdata publiek beschikbaar:
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        Een Excel-bestand met de gemiddelde scores per provincie, gemeente en statistische sector is
+                        <a href="https://github.com/KBSFRB/DataLab_330300/raw/refs/heads/main/assets/data.xlsx" download
+                        >hier</a>
+                        te downloaden.
+                    </li>
+                    <li class="ml-8">
+                        Een interactieve pagina maakt verkenning van de gegevens per regio
+                        mogelijk, met socio-economische indicatoren zoals bevolkingsdichtheid en
+                        gemiddeld belastbaar inkomen. Beschikbaar
+                        <a href="explorer.html?lang=nl"
+                        >hier</a>.
+                    </li>
+                    <li class="ml-8">
+                        Wilt u de volledige database (in GPKG-formaat) waarop de kaart is gebaseerd
+                        ontvangen? Stuur ons dan een e-mail op
+                        <a href="mailto:info@thedatalab.be"
+                        >info@thedatalab.be</a>.
+                    </li>
+                </ul>
             </div>
             <a
                 lang="en"
