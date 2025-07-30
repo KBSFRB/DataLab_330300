@@ -132,10 +132,10 @@
                     wrong connections.
                 </p>
                 <p>
-                    Finally, buildings smaller than 18m2 were filtered out because Flemish
+                    Finally, buildings smaller than 18 m² were filtered out because Flemish
                     Housing Quality Standards prescribe that the total net floor area of a
-                    self-contained dwelling must be at least 18m2. Annexes that are smaller
-                    than 18m2 are also not considered.
+                    self-contained dwelling must be at least 18 m². Annexes that are smaller
+                    than 18 m² are also not considered.
                 </p>
                 <p>
                     NB: Although we do not show them in the final map, the unconnected
@@ -326,7 +326,7 @@
                     effectively meet the 300 rule.
                 </p>
                 <p>
-                    <span class="font-bold">Survey data</span> 
+                    <span class="font-bold">Survey</span> 
                 </p>
                 <p>
                     In May 2024,
@@ -339,251 +339,333 @@
                     improve its methodology. In this way, citizens helped map
                     urban nature in Belgium.
                 </p>
+                <p>
+                    <span class="font-bold">Data</span> 
+                </p>
+                <p>
+                    As stated, all data that was used to realise the 3-30-300 analysis
+                    is publicly available. In the same spirit, we, as DataLab, want to
+                    provide public access to the data you see in the map:
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        An Excel-file listing the average scores per province, municipality and
+                        statistical sector is available for download
+                        <a href="https://github.com/KBSFRB/DataLab_330300/raw/refs/heads/main/assets/data.xlsx" download
+                        >here</a>.
+                    </li>
+                    <li class="ml-8">
+                        An interactive page where you can explore the data per region, alongside
+                        some socio-economical indicators such as the population density and the average net
+                        taxable income can be found
+                        <a href="explorer.html?lang=en"
+                        >here</a>.
+                    </li>
+                    <li class="ml-8">
+                        To receive a link where you can download the full GPKG-dataset on which the map is
+                        built, send us an email on
+                        <a href="mailto:info@thedatalab.be"
+                        >info@thedatalab.be</a>.
+                    </li>
+                </ul>
             </div>
             <div lang="fr" class="flex flex-col gap-4">
                 <h1>Méthodologie</h1>
                 <p>
-                    Pour calculer le score 3-30-300 de chaque bâtiment, DataLab
-                    a utilisé les données publiques disponibles pour chaque
-                    région. Comme les sources de données diffèrent d'une région
-                    à l'autre, nous avons pris soin de ne pas comparer les
-                    régions entre elles. Afin d'obtenir un score pour chaque
-                    bâtiment, nous avons également dû faire beaucoup
-                    d'hypothèses. Une méthodologie différente avec des sources
-                    de données et des hypothèses différentes peut donc donner
-                    des résultats différents. En outre, la dernière mise à jour
-                    est différente pour chaque source de données. Disposer de
-                    données plus récentes augmenterait la précision des scores
-                    et les rapprocherait de la réalité.
+                    Pour calculer le score 3-30-300 pour chaque bâtiment, nous, DataLab,
+                    avons utilisé des données publiquement disponibles pour chaque
+                    région. Étant donné que les sources de données diffèrent selon la
+                    région, nous recommandons de ne pas comparer les régions entre elles.
+                    Afin d'obtenir un score pour chaque bâtiment, nous avons également dû
+                    faire de nombreuses hypothèses. Une méthodologie différente, utilisant
+                    d'autres sources de données et d'autres hypothèses, pourrait donc aboutir
+                    à des résultats différents. De plus, la dernière mise à jour des données
+                    varie selon chaque source de données ; disposer de données plus récentes
+                    permettrait d'améliorer la précision des scores et de les rapprocher de
+                    la réalité.
                 </p>
                 <p>
-                    Dans la carte actuellement disponible, seules les données au
-                    niveau du bâtiment sont affichées. Nous avons également
-                    calculé les pourcentages par municipalité, province et
-                    région. En raison des limitations suivantes, nous avons
-                    décidé de ne pas les publier sur le site web pour l'instant,
-                    mais si vous souhaitez y avoir accès ou obtenir l'ensemble
-                    des données, vous pouvez en faire la demande à l'adresse
-                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>.
+                    <span class="font-bold">Bâtiments</span> 
                 </p>
                 <p>
-                    <span class="font-bold">Bâtiments</span> : les bâtiments
-                    individuels constituent la base de la cartographie de la
-                    règle 3-30-300. Les cartes GIS de tous les bâtiments en
-                    Belgique sont utilisées à cette fin, et les bâtiments de
-                    moins de 18 m2 sont filtrés. Le centre géométrique de ces
-                    bâtiments a été calculé. Les données publiques disponibles
-                    des régions de
-                    <a href="https://gis.urban.brussels/brugis/#/">Bruxelles</a
-                    >, de
-                    <a
-                        href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
-                        >Wallonie</a
-                    >
-                    et de
-                    <a
-                        href="https://www.vlaanderen.be/datavindplaats/catalogus/grbgis"
-                        >Flandre</a
-                    >
-                    ont été utilisées à cette fin.
+                    Les bâtiments individuels constituent la base pour cartographier la règle 3-30-300.
+                    La liste des bâtiments et leurs formes ont été établies à partir des sources suivantes :
+                </p>
+                <ul class="list-disc list-inside">
+                    <li class="ml-8">
+                        Bruxelles :
+                        <a href = "https://datastore.brussels/web/data/dataset/2cf42541-1813-11ef-8a81-00090ffe0001#access">
+                        URBIS Parcels and Buildings dataset (2024)</a>
+                    </li>
+                    <li class="ml-8">
+                        Wallonie :
+                        <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html">
+                        PICC dataset (2023)</a>
+                    </li>
+                    <li class="ml-8">
+                        Flandres :
+                        <a href="https://www.vlaanderen.be/datavindplaats/catalogus/grbgis">
+                        GRB - GBG dataset (2024)</a>
+                    </li>
+                </ul>
+                <p>
+                    Les nouveaux bâtiments qui n'étaient pas encore existants ou
+                    référencés dans les bases de données mentionnés ci-dessus ne
+                    sont donc pas inclus dans la carte ni dans les analyses.
                 </p>
                 <p>
-                    Dans les données de Wallonie, les annexes sont également
-                    comptabilisées comme des bâtiments distincts. Par exemple,
-                    la véranda d'une maison et l’abri de jardin sont considérés
-                    comme un bâtiment séparé avec son propre score 3-30-300. Ce
-                    n'est pas le cas en Flandre et à Bruxelles, ce qui pose des
-                    problèmes de comparaison entre les régions dans les données
-                    agrégées. Par conséquent, les données agrégées wallonnes
-                    représentent une sous-estimation de la réalité. Les abris de
-                    jardin de plus de 18 m2 seront également notées, ce qui
-                    entraîne un léger écart dans les trois régions lorsque l'on
-                    calcule la moyenne au niveau de la commune, province ou du
-                    secteur.
+                    Dans les bases de données de Flandre et de Wallonie,
+                    une distinction est faite entre « bâtiments principaux » et « annexes ».
+                    Sur la carte finale, nous avons choisi d'afficher uniquement les bâtiments
+                    principaux, mais nous avons tout de même utilisé les annexes afin de mieux
+                    calculer la règle des 3 arbres visibles (voir section suivante).
                 </p>
                 <p>
-                    <span class="font-bold">3 arbres</span> : l’hypothèse est
-                    qu’un arbre peut être visible d'une propriété s'il se trouve
-                    dans un rayon de 60 mètres autour du centroïde d'un
-                    bâtiment. Par conséquent, une zone tampon de 60 mètres
-                    autour de chaque bâtiment a été calculée et examinée pour
-                    voir s'il y avait un arbre à l'intérieur. Si un autre
-                    bâtiment bloque la ligne de vue vers un arbre, le périmètre
-                    a été coupé à cette intersection et cette verdure n'a pas
-                    été incluse dans la zone tampon de 60 mètres autour du
-                    bâtiment. La présence d'arbres a ensuite été calculée en
-                    examinant la surface de verdure haute dans ce rayon. On a
-                    calculé qu'un arbre représentait 16 m2 de verdure haute, ce
-                    qui correspond à la surface moyenne de la couronne par arbre
-                    utilisée dans la plupart des études de ce type sur la
-                    couverture de la couronne d’un arbre. En ce qui concerne le
-                    périmètre, d'autres études utilisent un rayon de 15 à 100
-                    mètres autour du bâtiment. Un rayon de 60 mètres a été
-                    choisi comme moyenne. Ainsi, une habitation obtient un score
-                    positif pour la règle des 3 arbres s'il y a au moins 48 m2
-                    de verdure haute dans le champ de vision d'une habitation
-                    dans un rayon de 60 mètres autour de cette habitation.
+                    Enfin, les bâtiments de moins de 18 m² ont été enlevés. Cette décision se
+                    base sur les normes flamandes de qualité du logement qui prescrivent qu'une
+                    habitation indépendante doit posséder une surface nette totale d'au moins 18 m²
+                    pour être habitable. Les annexes d'une superficie inférieure à 18 m² ne sont pas
+                    prises en compte non plus.
                 </p>
                 <p>
-                    Pour ce faire, les données mentionnées ci-dessus concernant
-                    les bâtiments ont été utilisées, en combinaison avec la
+                    <span class="font-bold">3 arbres</span>
+                </p>
+                <p>
+                    Nous avons pris la décision de ne considérer que les arbres situés à moins de 60
+                    mètres du bâtiment. Il est bien entendu possible d'apercevoir des arbres qui se trouvent
+                    plus loin, en particulier dans des zones à faible densité d'habitations, mais l'esprit de
+                    la règle ne consiste pas seulement à voir des arbres depuis le bâtiment, mais aussi à en
+                    avoir à proximité immédiate. D'autres études utilisent un rayon allant de 15 à 100 mètres
+                    autour du bâtiment. Les 60 mètres ont été retenus comme compromis optimal.
+                </p>
+                <p>
+                    Pour cela, les données mentionnées ci-dessus concernant les bâtiments ont été combinées
+                    avec la
                     <a
                         href="https://www.vlaanderen.be/datavindplaats/catalogus/groenkaart-vlaanderen-2021"
-                        >carte verte flamande</a
+                        >Carte Verte flamande (2021)</a
                     >, la
                     <a
                         href="https://geodata.environnement.brussels/client/view/67bc5ff0-90f6-4b76-9f05-15c15a928980"
-                        >carte de végétation de Bruxelles</a
-                    >
-                    et la
+                        >Carte de la Végétation de Bruxelles (2021)</a
+                    >, et la
                     <a
                         href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
-                        >carte Occupation du sol en Wallonie</a
-                    >. La carte verte flamande de 2021 est une grille de
-                    classification de segmentation d'une résolution d'un mètre à
-                    partir d'orthophotos aériennes d'été, qui classe le
-                    territoire flamand en vert élevé (au-dessus de 3 mètres),
-                    vert faible, non vert et zone agricole. La catégorie « high
-                    green » a été utilisée pour identifier les arbres. De même,
-                    la carte 2020 de l'utilisation des terres en Wallonie est
-                    une grille d'une résolution de 1 mètre qui identifie
-                    l'occupation des sols sur la base d'orthophotos, y compris
-                    les catégories d'arbres à feuilles caduques et de conifères
-                    de plus de 3 mètres de haut, avec une précision de 92,29 %.
-                    La carte de la végétation de Bruxelles a été créée sur la
-                    base de photos aériennes infrarouges d'une résolution de 2
-                    mètres, et distingue la végétation haute (interprétée comme
-                    des arbres) de la végétation basse avec une précision de
-                    92,5 %. Compte tenu de ces méthodologies très similaires,
-                    ces ensembles de données sont comparables.
+                        >Carte Occupation du Sol en Wallonie (2020)</a
+                    >.
+                    La Carte Verte flamande de 2021 est une grille de classification de la végétation avec une résolution
+                    de 1 mètre, issue d'orthophotos prises durant l'été, qui classe le territoire flamand en zones de
+                    hautes végétations (plus de 3 mètres), basses végétations, non végétalisées et zones agricoles.
+                    La catégorie des hautes végétations a servi à identifier les arbres. De même, la Carte d'Occupation
+                    du Sol wallonne 2020 est une grille d'un mètre de résolution, basée sur des orthophotos et permettant
+                    d'identifier la couverture du sol, y compris les catégories d'arbres feuillus et résineux de plus de
+                    3 mètres, avec une
+                    <a
+                        href="https://geoportail.wallonie.be/catalogue/47b348f1-6e7a-4baa-963c-0232a43c0cff.html"
+                        >précision</a
+                    >
+                    de 92,29 %. La Carte de la Végétation de Bruxelles a été élaborée à partir de photos aériennes infrarouges
+                    d'une résolution de 2 mètres, distinguant la végétation haute (interprétée comme des arbres) et la végétation
+                    basse, avec une
+                    <a
+                        href="https://environnement.brussels/pro/outils-et-donnees/cartes/toutes-les-cartes-danalyse-nature-bruxelles"
+                        >exactitude</a
+                    >
+                    de 92,5 %. Étant donné la proximité des méthodologies, nous considérons que ces jeux de données sont comparables.
+                    Malheureusement, ces données sont déjà anciennes et risquent d'être obsolètes à certains endroits. La Wallonie prépare
+                    un nouveau jeu de données basé sur des orthophotos de 2023, mais il n'était pas encore disponible au moment de la rédaction.
                 </p>
                 <p>
-                    Le calcul de la règle des trois arbres sur la base de la
-                    surface de la couronne des arbres présente des limites.
-                    D'une part, elle peut conduire à une surestimation car ce
-                    rayon ne prend en compte que les autres bâtiments situés
-                    entre la fenêtre et l'arbre, mais ne tient pas compte
-                    d'autres obstacles tels que les murs (de jardin) ou les
-                    ponts. En outre, l'analyse ne peut pas prendre en compte
-                    l'emplacement des fenêtres dans un bâtiment, de sorte qu'il
-                    y aura certainement de la verdure haute qui n'est pas
-                    visible d'un bâtiment alors qu'elle se trouve dans le rayon.
+                    Dans une évolution par rapport à la première version de la carte, nous avons choisi, dans certains cas,
+                    de regrouper les bâtiments avec leurs annexes afin de calculer plus précisément la règle des 3 arbres.
+                    Ces bâtiments fusionnés n'ont été utilisés qu'à des fins de calcul ; seule la partie principale du bâtiment
+                    est affichée sur la carte. Plus précisément, nous avons décidé d'ignorer les annexes qui n'étaient pas connectées
+                    à un bâtiment principal (il s'agit probablement d'abris de jardin, par exemple) et de fusionner les annexes
+                    reliées à un bâtiment principal avec celui-ci (ces annexes sont vraisemblablement des extensions qui font
+                    désormais partie intégrante du bâtiment principal).
                 </p>
                 <p>
-                    D'un autre côté, cela peut conduire à une sous-estimation,
-                    car dans les zones ouvertes, il est possible d'avoir des
-                    vues sur des arbres qui se trouvent en dehors du rayon. En
-                    outre, un certain nombre de petits arbres ou de parties
-                    d'arbres différents situés dans le rayon peuvent être
-                    comptés comme un seul arbre, car les 16 m2 ne doivent pas
-                    nécessairement être contigus pour être comptés comme un
-                    arbre. Cela signifie que la carte ne peut pas prédire avec
-                    précision le nombre exact d'arbres, étant donné la grande
-                    variation dans la réalité entre les différents arbres, leur
-                    taille et leur emplacement dans le rayon.
+                    En l'absence d'identifiants permettant de relier une annexe à son bâtiment principal correspondant,
+                    nous avons fusionné les annexes avec le bâtiment dont elles partageaient la plus longue frontière.
+                    Cette méthode heuristique a inévitablement entraîné certaines associations erronées.
+                    Les annexes non reliées ont néanmoins été prises en compte dans le calcul de la règle des 3 arbres,
+                    car elles peuvent affecter la vue depuis les bâtiments principaux et, par conséquent, le nombre d'arbres visibles.
+                    Nous reconnaissons que cette décision est discutable, puisqu'on pourrait avancer qu'une telle annexe n'est
+                    pas forcément assez haute pour masquer les arbres.
                 </p>
                 <p>
-                    <span class="font-bold">30% de couverture végétale</span> :
-                    for this calculation, a 500-meter radius was drawn around
-                    the geometric centre of each building within which the
-                    number of square meters of green vegetation taller than 3
-                    meters was calculated as a percentage of the entire radius.
-                    The same publicly available data were used for this as for
-                    identifying trees (the Flemish and Brussels vegetation map
-                    and the Walloon land use map). Because canopy cover is
-                    exactly represented on the vegetation and land use maps, and
-                    thus we do not have to make derivations and assumptions as
-                    in estimating the amount of trees, we can assume that these
-                    data are very accurate. Other such studies also use a
-                    500-meter radius, and Professor Cecil Konijnendijk (who
-                    popularised the rule) also recommended that we use a
-                    500-meter radius.
+                    L'estimation de la règle des 3 arbres a été réalisée à l'aide d'une approche d'apprentissage automatique
+                    (machine learning), basée sur un réseau de neurones convolutifs (CNN). Cela constitue la principale
+                    différence avec la première version de la carte, qui s'appuyait sur une estimation géométrique du
+                    champ de vision combinée à un simple seuil basé sur la surface de couvert arboré visible. L'utilisation d'une
+                    méthode d'apprentissage automatique a permis d'obtenir de meilleurs résultats lors de la comparaison
+                    avec les données des enquêtes et les corrections des utilisateurs (voir dernier paragraphe).
+                </p>
+                <p>
+                    Le réseau de neurones convolutifs (CNN) utilise comme entrée une image représentant une vue aérienne
+                    du quartier entourant le bâtiment cible, découpée dans un rayon de 60 mètres. L'image comporte 3 couches :
+                    le bâtiment cible, les autres bâtiments, et les données issues des cartes de végétation décrites
+                    précédemment. En sortie, le modèle donne la probabilité qu'au moins 3 arbres soient visibles
+                    depuis ce bâtiment cible.
+                </p>
+                <p>
+                    Le CNN a été entraîné sur près de 10 000 images annotées. Les annotations proviennent de
+                    trois sources distinctes :
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        Les données d'enquête décrites dans une section ultérieure,
+                    </li>
+                    <li class="ml-8">
+                        Les corrections envoyées par les utilisateurs de la première version de la carte,
+                    </li>
+                    <li class="ml-8">
+                        Des étiquetages manuels réalisés par l'équipe du DataLab.
+                    </li>
+                </ul>
+                <p>
+                    Ces images annotées ont été réparties en trois groupes : 60 % pour l'ensemble d'entraînement,
+                    20 % pour la validation et 20 % pour le test. Plusieurs modèles ont été entraînés sur l'ensemble
+                    d'entraînement, en utilisant l'ensemble de validation pour un arrêt anticipé (une technique
+                    visant à éviter le surapprentissage). Les modèles ont ensuite été évalués et comparés sur l'ensemble
+                    de test, et nous avons utilisé les meilleurs dans une approche par assemblage pour produire
+                    les prédictions finales. L'exactitude de notre prédiction finale atteint environ 90 % sur l'ensemble
+                    de test, mais l'exactitude réelle dépend de la qualité des sources de données ;
+                    elle pourrait donc être inférieure, du fait que certaines données sont parfois
+                    obsolètes et que notre annotation manuelle peut comporter une part d'erreur humaine.
+                </p>
+                <p>
+                    <span class="font-bold">30% de couverture végétale</span>
+                </p>
+                <p>
+                    Pour ce calcul, un rayon de 500 mètres a été tracé autour du centre géométrique de chaque
+                    bâtiment, à l'intérieur duquel le nombre de mètres carrés de végétation verte d'une hauteur
+                    supérieure à 3 mètres a été calculé en pourcentage de l'aire total. Pour ce faire, les mêmes
+                    données publiques ont été utilisées que pour l'identification des arbres (la Carte de la
+                    Végétation flamande et bruxelloise et la Carte de l'Occupation des Sols wallonne).
+                    Étant donné que le couvert végétal est exactement représenté sur les cartes de la
+                    végétation et de l'occupation des sols, et que nous ne devons donc pas faire de
+                    dérivations et d'hypothèses comme pour l'estimation de la quantité d'arbres, nous
+                    pouvons supposer que ces données sont très précises. D'autres études de ce type
+                    utilisent également un rayon de 500 mètres, et le professeur Cecil Konijnendijk
+                    (qui a popularisé la règle) a également recommandé l'utilisation d'un rayon de
+                    500 mètres.
                 </p>
                 <p>
                     <span class="font-bold"
                         >300 mètres d'un espace vert public</span
                     >
-                    : l'espace vert public est défini ici comme un espace vert
-                    accessible au public d'au moins 0,2 hectare. Une zone d’un
-                    rayon de 300 mètres a été tracée autour des limites du parc,
-                    et tous les bâtiments situés à l'intérieur de cette zone
-                    satisfont à la règle. Pour ce faire, nous avons utilisé des
-                    données publiques sur les parcs publics et les espaces verts
-                    de quartier à
-                    <a
-                        href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml"
-                        >Bruxelles</a
-                    >, en
-                    <a
-                        href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
-                        >Wallonie</a
-                    >
-                    et en
-                    <a
-                        href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019"
-                        >Flandres</a
-                    >.
                 </p>
                 <p>
-                    La carte flamande de 2019 des « espaces verts de quartier »
-                    comprend tous les groupes d'espaces verts accessibles au
-                    public d'une superficie de 0,2 hectare, avec une résolution
-                    de 10x10 m2. A partir de cette carte, les catégories
-                    d'espaces verts de quartier, d'espaces verts de voisinage,
-                    d'espaces verts de district, d'espaces verts urbains et de
-                    forêts urbaines ont été incluses. Le Projet Informatique de
-                    Cartographie Continue (PICC) wallon contient des éléments du
-                    paysage tels que les bâtiments, les infrastructures, le
-                    relief, ainsi que des éléments du paysage naturel. A partir
-                    de cette carte, les catégories bosquet, parc récréatif,
-                    terrain de sport et forêt ont été utilisées pour décrire
-                    ensemble les espaces verts accessibles au public. La carte
-                    d'occupation des sols de Bruxelles, GEMET INSPIRE, comprend
-                    les catégories parc et forêt, qui ont été utilisées pour
-                    identifier les espaces verts publics. Comme chacune de ces
-                    cartes applique des catégories différentes pour identifier
-                    les espaces verts publics, il y aura de légères variations
-                    qui rendront les comparaisons entre les régions difficiles.
+                    Un espace vert public est ici défini comme un espace vert accessible au public d'au moins
+                    0,2 hectare. Un périmètre de 300 mètres a été tracé autour des limites des parcs,
+                    et tous les bâtiments situés à l'intérieur de cette zone répondent à la règle.
+                    Pour ce faire, nous avons utilisé les données publiques disponibles sur les
+                    parcs publics et les espaces verts de quartier, provenant des sources suivantes :
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        Bruxelles :
+                        <a href="https://inspire-geoportal.ec.europa.eu/srv/api/records/espaces_verts_region_bruxelloise.xml"
+                        >INSPIRE - Public green spaces (2012)</a>
+                    </li>
+                    <li class="ml-8">
+                        Wallonie:
+                        <a href="https://geoportail.wallonie.be/catalogue/b795de68-726c-4bdf-a62a-a42686aa5b6f.html"
+                        >PICC dataset (2023)</a>
+                    </li>
+                    <li class="ml-8">
+                        Flandres:
+                        <a href="https://www.vlaanderen.be/datavindplaats/catalogus/buurtgroen-toestand-2019"
+                        >Buurtgroen (2019)</a>
+                    </li>
+                </ul>
+                <p>
+                    La carte flamande « Buurtgroen » de 2019 comprend tous les ensembles
+                    d'espaces verts accessibles au public d'une superficie minimale de
+                    0,2 hectare, avec une résolution de 10x10 m². À partir de cette
+                    carte, les catégories “buurtgroen, wijkgroen, stadsdeelgroen,
+                    stadsgroen en stadsbos” ont été incluses. Le Projet Informatique
+                    de Cartographie Continue (PICC) wallon comprend des éléments de
+                    paysage tels que bâtiments, infrastructures, relief, ainsi que des
+                    éléments naturels. À partir de cette carte, les catégories Bosquet,
+                    Parc récréatif, Terrain de Sport et Forêt ont été utilisées pour décrire
+                    les espaces verts publics accessibles. La Carte de l'Occupation du Sol de
+                    Bruxelles INSPIRE comprend les catégories parc et forêt, qui ont servi
+                    à identifier les espaces verts publics. Chaque carte utilisant des
+                    catégories différentes pour identifier les espaces verts publics,
+                    il en résulte de légères variations qui rendent la comparaison
+                    entre régions difficile.
                 </p>
                 <p>
-                    La cartographie de la règle des 300 est une surestimation de
-                    la réalité de l'accès aux espaces verts publics, en raison
-                    des limites des données disponibles. Le professeur
-                    Konijnendijk impose une taille de parc de 1 hectare avec une
-                    limite inférieure de 0,5 hectare dans les zones urbanisées à
-                    forte densité de population. Le choix pragmatique s'est
-                    porté sur 0,2 hectare parce que l'ensemble des données
-                    flamandes l'utilise comme limite inférieure pour les espaces
-                    verts. Cette limite inférieure n'a pas pu être portée à 0,5
-                    hectare, car les parcs de la base de données flamande sont
-                    divisés par des sentiers qui les traversent et ces zones ne
-                    sont pas regroupées sur la carte. En augmentant la
-                    superficie minimale, nous perdrions de nombreux parcs qui
-                    sont divisés sur la carte par des sentiers de randonnée.
-                    Cela nuirait considérablement à la précision de la carte.
-                    Pour appliquer autant que possible la même méthodologie dans
-                    les trois régions, il a été décidé de fixer la superficie
-                    minimale des espaces verts à 0,2 hectare pour l'ensemble de
-                    la carte. Une surestimation supplémentaire réside dans le
-                    fait que la distance de 300 mètres d'un parc est calculée en
-                    vue aérienne, sans tenir compte de la distance de marche
-                    effective jusqu'à cet espace vert. Ce choix surestime la
-                    proportion de logements qui respectent effectivement la
-                    règle des 300.
+                    La cartographie de la règle des 300 mètres constitue donc une
+                    surestimation de la réalité de l'accès aux espaces verts publics,
+                    en raison des limites des données disponibles. Le professeur
+                    Konijnendijk impose une taille minimale des parcs de 1 hectare,
+                    avec une limite inférieure de 0,5 hectare dans les zones urbaines
+                    denses. Le choix pragmatique ici a été de fixer la limite minimale
+                    à 0,2 hectare parce que l'ensemble de données flamand utilise ce
+                    seuil pour les espaces verts. Cette limite inférieure n'a pas pu
+                    être augmentée à 0,5 hectare, car les parcs du jeu de données
+                    flamand sont divisés par des sentiers piétons qui traversent
+                    les parcs et ces zones ne sont pas regroupées sur la carte.
+                    Augmenter la superficie minimale entraînerait la perte de
+                    nombreux parcs qui sont ainsi segmentés sur la carte par les
+                    chemins de randonnée, ce qui nuirait grandement à la précision
+                    de la cartographie. Afin d'appliquer autant que possible la même
+                    méthodologie dans les trois régions, il a donc été décidé de
+                    fixer la taille minimale des espaces verts à 0,2 hectare pour
+                    toute la carte. Une autre surestimation réside dans le fait
+                    que la distance de 300 mètres depuis un parc est calculée à vol
+                    d'oiseau, sans prendre en compte la distance effective à parcourir
+                    pour accéder à cet espace vert. Ce choix surestime la proportion
+                    de logements respectant effectivement la règle des 300 mètres.
                 </p>
                 <p>
-                    <span class="font-bold">Enquête</span> : en mai 2024,
-                    Greenpeace a diffusé une enquête en ligne via les médias
-                    sociaux et par emails à sa propre base de données sur la
-                    règle des 3-30-300. Les personnes interrogées devaient
-                    compter les arbres qu'elles pouvaient voir de chez elles et
-                    mesurer la distance qui les séparait de l'espace vert public
-                    le plus proche. Greenpeace a ainsi recueilli 4 432 réponses.
-                    Nous avons ensuite utilisé ces données pour vérifier les
-                    faits et améliorer la méthodologie de l'analyse automatisée.
-                    De cette manière, les citoyens ont aidé à cartographier la
-                    nature urbaine en Belgique.
+                    <span class="font-bold">Enquête</span>
                 </p>
+                <p>
+                    En mai 2024, Greenpeace a diffusé une enquête en ligne via les
+                    réseaux sociaux et par courriel auprès de sa propre base de
+                    données au sujet de la règle du 3-30-300. Les personnes interrogées
+                    devaient compter le nombre d'arbres visibles depuis leur domicile
+                    et mesurer la distance jusqu'à l'espace vert public le plus proche.
+                    Ce procédé a permis à Greenpeace de recueillir 4432 réponses.
+                    Ces données ont ensuite servi à vérifier l'analyse automatisée,
+                    à améliorer la méthodologie employée et à affiner cette nouvelle
+                    version de la carte. Ainsi, la participation citoyenne a contribué
+                    à cartographier la nature urbaine en Belgique.
+                </p>
+                <p>
+                    <span class="font-bold">Données</span> 
+                </p>
+                <p>
+                    Comme indiqué précédemment, toutes les données utilisées pour réaliser
+                    l'analyse 3-30-300 sont accessibles au public. Dans le même esprit,
+                    nous, en tant que DataLab, souhaitons offrir un accès public
+                    aux données visibles sur la carte :
+                </p>
+                <ul class="list-disc">
+                    <li class="ml-8">
+                        Un fichier Excel reprenant les scores moyens par province,
+                        commune et secteur statistique est disponible pour téléchargement
+                        <a href="https://github.com/KBSFRB/DataLab_330300/raw/refs/heads/main/assets/data.xlsx" download
+                        >ici</a>.
+                    </li>
+                    <li class="ml-8">
+                        Une page interactive vous permet d'explorer les données par région,
+                        accompagnées de certains indicateurs socio-économiques tels que
+                        la densité de population et le revenu net imposable moyen. Disponible
+                        <a href="explorer.html?lang=fr"
+                        >ici</a>.
+                    </li>
+                    <li class="ml-8">
+                        Pour recevoir un lien de téléchargement du jeu de données complet au format
+                        GPKG, sur lequel la carte est construite, envoyez-nous un e-mail à l'adresse
+                        <a href="mailto:info@thedatalab.be"
+                        >info@thedatalab.be</a>.
+                    </li>
+                </ul>
             </div>
             <div lang="nl" class="flex flex-col gap-4">
                 <h1>Methodologie</h1>
@@ -615,7 +697,7 @@
                     gebouwen zijn het uitgangspunt van de kartering van de
                     3-30-300-regel. De GIS-kaarten van alle gebouwen in België
                     worden hiervoor gebruikt, waarbij de gebouwen kleiner dan
-                    18m² er uit werden gefilterd. Vervolgens werd het
+                    18 m² er uit werden gefilterd. Vervolgens werd het
                     geometrische centrum van die gebouwen berekend. Hiervoor
                     gebruikten we de publiek beschikbare data van de gewesten
                     <a href="https://gis.urban.brussels/brugis/#/">Brussel</a>,
