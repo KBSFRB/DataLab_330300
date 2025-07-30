@@ -820,23 +820,29 @@
                 nl: 'Zoek een adres...'
             };
 
-            // console.log(i18n.lang)
+            let search;
+            
+            function updateSearchControl(lang) {
+                if (search) map.removeControl(search);
 
-            /* Add the search bar */
-            const search_options = {
-                provider: new GeoSearch.OpenStreetMapProvider({
-                    params: {
-                        countrycodes: "be",
-                    },
-                }),
-                style: "bar",
-                autoComplete: true, // fail when I set it to false -> I increased the delay instaid
-                autoCompleteDelay: 2000,
-                searchLabel: searchLabelMap[i18n.lang] //data-i18n-placeholder="search_address"
-            };
-            const search = new GeoSearch.GeoSearchControl(search_options);
+                const search_options = {
+                    provider: new GeoSearch.OpenStreetMapProvider({
+                        params: {
+                            countrycodes: "be",
+                        },
+                    }),
+                    style: "bar",
+                    autoComplete: true, // fail when I set it to false -> I increased the delay instaid
+                    autoCompleteDelay: 2000,
+                    searchLabel: searchLabelMap[lang] //data-i18n-placeholder="search_address"
+                };
 
-            map.addControl(search);
+                /* Add the search bar */
+                search = new GeoSearch.GeoSearchControl(search_options);
+                map.addControl(search);
+            }  
+            
+            updateSearchControl(i18n.lang);
 
             document
                 .getElementById("modalSearch")

@@ -100,6 +100,7 @@ const i18n = (function () {
         .getElementById(`i18n-picker-${lang}`)
         .addEventListener("click", () => {
           set_lang(lang);
+          updateSearchControl(lang);
         });
     }
   };
