@@ -392,7 +392,7 @@ function make_area_popup_text(level) {
           <strong>Average score:</strong><br>
           <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span><br><br>
           <hr><br>
-          <a href="explorer.html?v=${explorer_url_param}&lang=fr" target="_blank">
+          <a href="explorer.html?v=${explorer_url_param}&lang=en" target="_blank">
           Open in the explorer tool
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-icon" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
@@ -411,7 +411,7 @@ function make_area_popup_text(level) {
           <strong>Gemiddelde score:</strong><br>
           <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span><br><br>
           <hr><br>
-          <a href="explorer.html?v=${explorer_url_param}&lang=fr" target="_blank">
+          <a href="explorer.html?v=${explorer_url_param}&lang=nl" target="_blank">
           Openen in de verkenner-tool
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-icon" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>

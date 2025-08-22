@@ -4,12 +4,15 @@ const i18n = (function () {
   const placeholders = {
     en: {
       search_address: "Enter an address",
+      search_places: "Search places...",
     },
     fr: {
       search_address: "Entrez l'adresse",
+      search_places: "Rechercher des lieux...",
     },
     nl: {
       search_address: "Geef een adres in",
+      search_places: "Zoek plaatsen...",
     },
   };
 
@@ -52,6 +55,8 @@ const i18n = (function () {
    */
   function set_lang(lang) {
     i18n.lang = lang;
+
+    window.dispatchEvent(new CustomEvent("changed-lang", { detail: { lang } }));
 
     document
       .querySelectorAll("[id^='i18n-picker-']")

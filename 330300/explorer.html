@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Municipality Explorer</title>
+        <title>3-30-300 Explorer</title>
 
         <!-- Observable Plot and D3 -->
         <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
@@ -15,6 +15,7 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js"
         ></script>
         <script src="https://unpkg.com/simple-statistics@7.8.8/dist/simple-statistics.min.js"></script>
+        <script src="scripts/i18n.js"></script>
         <script src="scripts/utils.js"></script>
         <script src="scripts/explorer.js"></script>
 
@@ -28,7 +29,10 @@
         ></script>
     </head>
     <body>
-        <div x-data="explorerApp()" x-init="init()">
+        <div
+            x-data="explorerApp()"
+            x-on:changed-lang.window="lang = $event.detail.lang"
+        >
             <header>
                 <div id="datalab-logo">
                     <a href="https://thedatalab.be">
@@ -36,13 +40,24 @@
                         The Datalab
                     </a>
                 </div>
-                <h1>3-30-300 Explorer</h1>
+                <h1 lang="en">3-30-300 Explorer</h1>
+                <h1 lang="fr">3-30-300: Outil d'exploration</h1>
+                <h1 lang="nl">3-30-300 Verkenner</h1>
+
+                <!-- Language picker -->
+                <div class="language-picker">
+                    <button id="i18n-picker-nl" class="lang-btn">NL</button>
+                    <button id="i18n-picker-fr" class="lang-btn">FR</button>
+                    <button id="i18n-picker-en" class="lang-btn">EN</button>
+                </div>
             </header>
 
             <main class="main-container">
                 <!-- Loading indicator -->
                 <section x-show="isLoading" class="loading">
-                    <p>Loading data...</p>
+                    <p lang="en">Loading data...</p>
+                    <p lang="fr">Chargement des données...</p>
+                    <p lang="nl">Gegevens laden...</p>
                 </section>
 
                 <!-- Error message -->
@@ -57,6 +72,7 @@
                         x-model="searchTerm"
                         @input="handleSearchInput()"
                         placeholder="Search places..."
+                        data-i18n-placeholder="search_places"
                         aria-label="Search"
                         list="search-results"
                         autocomplete="off"
@@ -109,9 +125,8 @@
                 <!-- Current level title -->
                 <section x-show="!isLoading && metadata" class="level-title">
                     <h2>
-                        <span x-text="currentLevelName"></span>
                         <span x-show="parentName">
-                            in <span x-text="parentName"></span>
+                            <span x-text="parentName"></span>
                         </span>
                     </h2>
                 </section>
@@ -153,9 +168,11 @@
                                 </template>
                             </div>
                         </div>
-                        <p x-show="metadata?.zoomable" class="map-hint">
-                            Click on a region to zoom in
-                        </p>
+                        <div x-show="metadata?.zoomable" class="map-hint">
+                            <p lang="en">Click on a region to zoom in</p>
+                            <p lang="fr">Cliquez sur une région pour zoomer</p>
+                            <p lang="nl">Klik op een regio om in te zoomen</p>
+                        </div>
                     </div>
 
                     <!-- Chart (only show when metadata indicates) -->
@@ -165,7 +182,9 @@
                         <!-- Chart Controls -->
                         <form class="chart-controls">
                             <label>
-                                X-axis:
+                                <span lang="en">X-axis:</span>
+                                <span lang="fr">Axe X :</span>
+                                <span lang="nl">X-axis:</span>
                                 <select
                                     x-model="chartXAxis"
                                     @change="updateChart()"
@@ -183,7 +202,9 @@
                             </label>
 
                             <label>
-                                Y-axis:
+                                <span lang="en">Y-axis:</span>
+                                <span lang="fr">Axe Y :</span>
+                                <span lang="nl">Y-axis:</span>
                                 <select
                                     x-model="chartYAxis"
                                     @change="updateChart()"
@@ -205,13 +226,6 @@
 
                 <!-- Data Table -->
                 <section x-show="showTable" class="table-section">
-                    <h3>
-                        Data for <span x-text="currentLevelName"></span>
-                        <span x-show="parentName">
-                            in <span x-text="parentName"></span>
-                        </span>
-                    </h3>
-
                     <div class="table-container">
                         <table>
                             <thead>
@@ -254,11 +268,20 @@
                                                     color: getTableCellTextColor(feature, column.id)
                                                 }"
                                             >
-                                                <span
-                                                    x-text="column.id === 'name'
-                                                        ? (feature.properties.name_en || feature.properties.nis)
-                                                        : formatValue(feature.properties[column.id], column.id)"
-                                                ></span>
+                                                <template
+                                                    x-if="column.id === 'name'"
+                                                >
+                                                    <span
+                                                        x-text="getNameInLang(feature, lang)"
+                                                    ></span>
+                                                </template>
+                                                <template
+                                                    x-if="column.id !== 'name'"
+                                                >
+                                                    <span
+                                                        x-text="formatValue(feature.properties[column.id], column.id)"
+                                                    ></span>
+                                                </template>
                                             </td>
                                         </template>
                                     </tr>
@@ -273,9 +296,18 @@
                     x-show="!isLoading && !error && features.length === 0"
                     class="empty-state"
                 >
-                    <p>No data available for this level.</p>
+                    <p lang="en">No data available for this level.</p>
+                    <p lang="fr">Aucune donnée disponible pour ce niveau.</p>
+                    <p lang="nl">Geen gegevens beschikbaar voor dit niveau.</p>
                 </section>
             </main>
         </div>
+
+        <script>
+            // Initialize i18n when DOM is loaded
+            document.addEventListener("DOMContentLoaded", function () {
+                i18n.start(["en", "fr", "nl"]);
+            });
+        </script>
     </body>
 </html>

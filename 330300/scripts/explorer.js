@@ -14,6 +14,7 @@ function explorerApp() {
     isLoading: false,
     error: null,
     searchResults: [], // Filtered search results for datalist
+    lang: "en",
 
     // Chart settings
     chartXAxis: null, // Will be set from available_indicators
@@ -41,21 +42,21 @@ function explorerApp() {
       return this.features.slice().sort((a, b) => {
         let aVal, bVal;
 
-        if (this.sortField === 'name') {
-          aVal = a.properties.name_en || a.properties.nis || '';
-          bVal = b.properties.name_en || b.properties.nis || '';
+        if (this.sortField === "name") {
+          aVal = a.properties.name_en || a.properties.nis || "";
+          bVal = b.properties.name_en || b.properties.nis || "";
         } else {
           aVal = a.properties[this.sortField];
           bVal = b.properties[this.sortField];
         }
 
-        if (aVal == null) aVal = '';
-        if (bVal == null) bVal = '';
-        if (typeof aVal === 'string') aVal = aVal.toLowerCase();
-        if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+        if (aVal == null) aVal = "";
+        if (bVal == null) bVal = "";
+        if (typeof aVal === "string") aVal = aVal.toLowerCase();
+        if (typeof bVal === "string") bVal = bVal.toLowerCase();
 
-        if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
-        if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
+        if (aVal < bVal) return this.sortDirection === "asc" ? -1 : 1;
+        if (aVal > bVal) return this.sortDirection === "asc" ? 1 : -1;
         return 0;
       });
     },
@@ -68,23 +69,12 @@ function explorerApp() {
       return this.metadata?.show_child_indicators && this.features.length > 0;
     },
 
-    get currentLevelName() {
-      if (!this.metadata) return "";
-
-      const levelNames = {
-        prov: "Provinces",
-        mun: "Municipalities",
-        sector: "Statistical Sectors",
-      };
-
-      return levelNames[this.metadata.child_level] || this.metadata.child_level;
-    },
-
     get parentName() {
       if (!this.metadata?.parent_name) return "";
 
       // Use English name if available, fallback to other languages
       return (
+        this.metadata.parent_name[this.lang] ||
         this.metadata.parent_name.en ||
         this.metadata.parent_name.fr ||
         this.metadata.parent_name.nl ||
@@ -224,7 +214,22 @@ function explorerApp() {
           strokeWidth: 2,
           fillOpacity: 0.7,
           tip: true,
-          title: (d) => d.properties.name_en,
+          title: (d) => {
+            const currentLang =
+              (typeof i18n !== "undefined" && i18n.lang) || "en";
+            if (currentLang === "fr" && d.properties.name_fr) {
+              return d.properties.name_fr;
+            } else if (currentLang === "nl" && d.properties.name_nl) {
+              return d.properties.name_nl;
+            } else {
+              return (
+                d.properties.name_en ||
+                d.properties.name_fr ||
+                d.properties.name_nl ||
+                d.properties.nis
+              );
+            }
+          },
         }),
       ];
 
@@ -324,8 +329,17 @@ function explorerApp() {
             strokeWidth: 2,
             r: 6,
             tip: true,
-            title: (d) =>
-              `${d.name_en || d.nis}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`,
+            title: (d) => {
+              const currentLang =
+                (typeof i18n !== "undefined" && i18n.lang) || "en";
+              let displayName = d.name_en || d.nis;
+              if (currentLang === "fr" && d.name_fr) {
+                displayName = d.name_fr;
+              } else if (currentLang === "nl" && d.name_nl) {
+                displayName = d.name_nl;
+              }
+              return `${displayName}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`;
+            },
           }),
         ];
 
@@ -389,6 +403,16 @@ function explorerApp() {
       if (otherIndicator) return otherIndicator;
 
       throw new Error(`Failed to find indicator ${indicatorId}`);
+    },
+
+    getNameInLang(feature, language) {
+      if (language === "fr") {
+        return feature.properties.name_fr;
+      } else if (language === "en") {
+        return feature.properties.name_en;
+      } else if (language === "nl") {
+        return feature.properties.name_nl;
+      }
     },
 
     formatValue(value, indicatorId) {
