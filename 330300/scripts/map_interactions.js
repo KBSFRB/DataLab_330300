@@ -353,6 +353,14 @@ function make_area_popup_text(level) {
     const rule300Score = rule300(f);
     const averageScore = rule3Score + rule30Score + rule300Score;
 
+    // make link to explorer page
+    let explorer_url_param = "";
+    if (level === "PROVI") {
+      explorer_url_param = `mun_in_${f.properties.prov_nis}`;
+    } else if (level === "MUN" || level === "SEC") {
+      explorer_url_param = `sector_in_${f.properties.mun_nis}`;
+    }
+
     return i18n.div({
       fr: `<strong>${areaName}</strong><br><br>
           <strong>🌳 Au moins 3 arbres visibles :</strong><br>
@@ -363,7 +371,15 @@ function make_area_popup_text(level) {
           <strong>🏞️ À moins de 300m d'un parc public :</strong><br>
           <span style="margin-left: 10px;">${format_percent(rule300Score)} des bâtiments</span><br><br>
           <strong>Score moyen :</strong><br>
-          <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
+          <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span><br><br>
+          <hr><br>
+          <a href="explorer.html?v=${explorer_url_param}&lang=fr" target="_blank">
+            Ouvrir dans l'outil d'exploration
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-icon" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+              <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+            </svg>
+          </a>
           `,
       en: `<strong>${areaName}</strong><br><br>
           <strong>🌳 At least 3 trees visible:</strong><br>
@@ -374,7 +390,15 @@ function make_area_popup_text(level) {
           <strong>🏞️ Less than 300m from public park:</strong><br>
           <span style="margin-left: 10px;">${format_percent(rule300Score)} of buildings</span><br><br>
           <strong>Average score:</strong><br>
-          <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
+          <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span><br><br>
+          <hr><br>
+          <a href="explorer.html?v=${explorer_url_param}&lang=fr" target="_blank">
+          Open in the explorer tool
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-icon" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+              <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+            </svg>
+          </a>
           `,
       nl: `<strong>${areaName}</strong><br><br>
           <strong>🌳 Minstens 3 bomen zichtbaar:</strong><br>
@@ -385,7 +409,15 @@ function make_area_popup_text(level) {
           <strong>🏞️ Op minder dan 300m van een publiek toegankelijk park:</strong><br>
           <span style="margin-left: 10px;">${format_percent(rule300Score)} van de gebouwen</span><br><br>
           <strong>Gemiddelde score:</strong><br>
-          <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span>
+          <span style="margin-left: 10px;">${format_score(averageScore)} / 3</span><br><br>
+          <hr><br>
+          <a href="explorer.html?v=${explorer_url_param}&lang=fr" target="_blank">
+          Openen in de verkenner-tool
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-icon" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+              <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+            </svg>
+          </a>
           `,
     });
   };

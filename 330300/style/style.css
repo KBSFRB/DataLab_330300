@@ -1,14 +1,15 @@
 #lang-picker .active {
-	background-color: silver;
+    background-color: silver;
 }
 
-#myModal p:not(:last-child), #myModal ul {
-	margin-bottom: 1em;
+#myModal p:not(:last-child),
+#myModal ul {
+    margin-bottom: 1em;
 }
 
 div h1 {
-    color:#022041;
-    margin-bottom: 1rem !important; 
+    color: #022041;
+    margin-bottom: 1rem !important;
     font-weight: 800;
     font-size: 2.25rem;
     line-height: 2.5rem;
@@ -19,10 +20,17 @@ div h1 {
 p a,
 li a,
 div a {
-    color:#01665E;
-	text-decoration-line: underline;
+    color: #01665e;
+    text-decoration-line: underline;
 }
 
 .font-bold {
     color: #022041;
+}
+
+.inline-icon {
+    display: inline-block;
+    vertical-align: -0.125em;
+    width: 1em;
+    height: 1em;
 }
