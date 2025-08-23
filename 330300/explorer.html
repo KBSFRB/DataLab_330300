@@ -187,7 +187,7 @@
                                 <span lang="nl">X-axis:</span>
                                 <select
                                     x-model="chartXAxis"
-                                    @change="updateChart()"
+                                    @change="updateChart(); renderMap();"
                                 >
                                     <template
                                         x-for="indicator in availableXAxisOptions"
@@ -252,12 +252,17 @@
                                     </template>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody
+                                @mouseleave="activeNis = null; renderMap(); updateChart();"
+                            >
                                 <template
                                     x-for="feature in sortedFeatures"
-                                    :key="feature.properties.nis || feature.properties.id"
+                                    :key="feature.properties.nis"
                                 >
-                                    <tr>
+                                    <tr
+                                        @mouseover="activeNis = feature.properties.nis; renderMap(); updateChart();"
+                                        :class="{'active': activeNis === feature.properties.nis }"
+                                    >
                                         <template
                                             x-for="column in tableColumns"
                                             :key="column.id"

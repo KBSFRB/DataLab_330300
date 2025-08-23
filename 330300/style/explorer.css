@@ -426,7 +426,8 @@ tbody tr:nth-child(even) {
     background-color: #fafafa;
 }
 
-tbody tr:hover {
+tbody tr:hover,
+tbody tr.active {
     background-color: #f0f0f0;
 }
 

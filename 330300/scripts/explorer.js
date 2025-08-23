@@ -4,6 +4,7 @@ function explorerApp() {
     features: [], // Current level features (GeoJSON features)
     metadata: null, // Current level metadata
     searchList: [], // Full search list from API
+    activeNis: null,
 
     // Navigation state
     currentLevel: null, // 'prov', 'mun', 'sector'
@@ -211,7 +212,7 @@ function explorerApp() {
         Plot.geo(geoData, {
           fill: fillColor,
           stroke: "black",
-          strokeWidth: 2,
+          strokeWidth: (d) => (d.properties.nis === this.activeNis ? 3 : 1),
           fillOpacity: 0.7,
           tip: true,
           title: (d) => {
@@ -270,6 +271,15 @@ function explorerApp() {
 
         container.innerHTML = "";
         container.appendChild(this.mapPlot);
+
+        this.mapPlot.addEventListener("input", (e) => {
+          if (this.mapPlot.value) {
+            this.activeNis = this.mapPlot.value.properties.nis;
+          } else {
+            this.activeNis = null;
+          }
+          this.updateChart();
+        });
       });
     },
 
@@ -280,8 +290,8 @@ function explorerApp() {
       try {
         // Load next level data
         await this.loadData(viewName);
-        this.renderMap();
         this.setupDefaultChartAxes();
+        this.renderMap();
         this.updateChart();
       } catch (err) {
         this.error = `Failed to load detailed view: ${err.message}`;
@@ -341,6 +351,17 @@ function explorerApp() {
               return `${displayName}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`;
             },
           }),
+          Plot.dot(
+            featureData.filter((d) => d.nis === this.activeNis),
+            {
+              x: this.chartXAxis,
+              y: this.chartYAxis,
+              fill: fillColor,
+              stroke: "black",
+              strokeWidth: 2,
+              r: 8,
+            },
+          ),
         ];
 
         // Add linear regression line if variables are correlated
@@ -379,10 +400,16 @@ function explorerApp() {
 
         container.innerHTML = "";
         container.appendChild(this.chartPlot);
-      });
 
-      // Update map colors when chart axes change
-      this.renderMap();
+        this.chartPlot.addEventListener("input", (e) => {
+          if (this.chartPlot.value) {
+            this.activeNis = this.chartPlot.value.nis;
+          } else {
+            this.activeNis = null;
+          }
+          this.renderMap();
+        });
+      });
     },
 
     getIndicator(indicatorId) {
