@@ -177,50 +177,58 @@
 
                     <!-- Chart (only show when metadata indicates) -->
                     <div x-show="showChart" class="chart-section">
-                        <div id="chart-container"></div>
-
                         <!-- Chart Controls -->
                         <form class="chart-controls">
-                            <label>
-                                <span lang="en">X-axis:</span>
-                                <span lang="fr">Axe X :</span>
-                                <span lang="nl">X-axis:</span>
-                                <select
-                                    x-model="chartXAxis"
-                                    @change="updateChart(); renderMap();"
+                            <select
+                                x-model="chartXAxis"
+                                @change="updateChart(); renderMap();"
+                            >
+                                <template
+                                    x-for="indicator in availableXAxisOptions"
+                                    :key="indicator.id"
                                 >
-                                    <template
-                                        x-for="indicator in availableXAxisOptions"
-                                        :key="indicator.id"
-                                    >
-                                        <option
-                                            :value="indicator.id"
-                                            x-text="indicator.name"
-                                        ></option>
-                                    </template>
-                                </select>
-                            </label>
-
-                            <label>
-                                <span lang="en">Y-axis:</span>
-                                <span lang="fr">Axe Y :</span>
-                                <span lang="nl">Y-axis:</span>
-                                <select
-                                    x-model="chartYAxis"
-                                    @change="updateChart()"
+                                    <option
+                                        :value="indicator.id"
+                                        x-text="indicator.name"
+                                    ></option>
+                                </template>
+                            </select>
+                            vs.
+                            <select
+                                x-model="chartYAxis"
+                                @change="updateChart()"
+                            >
+                                <template
+                                    x-for="indicator in availableYAxisOptions"
+                                    :key="indicator.id"
                                 >
-                                    <template
-                                        x-for="indicator in availableYAxisOptions"
-                                        :key="indicator.id"
-                                    >
-                                        <option
-                                            :value="indicator.id"
-                                            x-text="indicator.name"
-                                        ></option>
-                                    </template>
-                                </select>
-                            </label>
+                                    <option
+                                        :value="indicator.id"
+                                        x-text="indicator.name"
+                                    ></option>
+                                </template>
+                            </select>
                         </form>
+
+                        <div id="chart-container"></div>
+
+                        <div
+                            x-show="correlation !== null"
+                            class="correlation-legend"
+                        >
+                            <p lang="en">
+                                Those two indicators are correlated (r =
+                                <span x-text="correlation.toFixed(3)"></span>)
+                            </p>
+                            <p lang="fr">
+                                Ces deux indicateurs sont corrélés (r =
+                                <span x-text="correlation.toFixed(3)"></span>)
+                            </p>
+                            <p lang="nl">
+                                Deze twee indicatoren zijn correlatief (r =
+                                <span x-text="correlation.toFixed(3)"></span>)
+                            </p>
+                        </div>
                     </div>
                 </section>
 

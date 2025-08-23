@@ -5,6 +5,7 @@ function explorerApp() {
     metadata: null, // Current level metadata
     searchList: [], // Full search list from API
     activeNis: null,
+    correlation: null,
 
     // Navigation state
     currentLevel: null, // 'prov', 'mun', 'sector'
@@ -375,15 +376,13 @@ function explorerApp() {
               strokeDasharray: "5,5",
             }),
           );
+
+          this.correlation = correlation;
+        } else {
+          this.correlation = null;
         }
 
-        // Update title to include correlation info
-        const titleText = isCorrelated
-          ? `${this.getIndicator(this.chartYAxis).name} vs ${this.getIndicator(this.chartXAxis).name} (r = ${correlation.toFixed(3)})`
-          : `${this.getIndicator(this.chartYAxis).name} vs ${this.getIndicator(this.chartXAxis).name}`;
-
         this.chartPlot = Plot.plot({
-          title: titleText,
           width: containerWidth,
           height: 400,
           grid: true,
