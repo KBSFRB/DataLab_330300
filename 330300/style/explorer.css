@@ -22,6 +22,9 @@ header h1 {
 
 /* Datalab Logo Styling */
 #datalab-logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -93,9 +96,6 @@ header h1 {
 }
 
 .main-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -161,7 +161,8 @@ header h1 {
 
 /* Controls */
 .controls {
-    margin: 20px 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .controls > * {
@@ -169,6 +170,7 @@ header h1 {
 }
 
 input[type="search"] {
+    display: block;
     width: 500px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -184,7 +186,8 @@ input[type="search"]:disabled {
 
 /* Breadcrumbs */
 .breadcrumbs {
-    margin: 15px 0;
+    margin-top: 0;
+    margin-bottom: 30px;
 }
 
 .breadcrumb-list {
@@ -447,6 +450,7 @@ td {
     }
 
     #datalab-logo {
+        position: relative;
         order: -1;
     }
 
