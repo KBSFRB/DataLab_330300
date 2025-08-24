@@ -180,11 +180,11 @@
                         <!-- Chart Controls -->
                         <form class="chart-controls">
                             <select
-                                x-model="chartXAxis"
+                                x-model="chartYAxis"
                                 @change="updateChart(); renderMap();"
                             >
                                 <template
-                                    x-for="indicator in availableXAxisOptions"
+                                    x-for="indicator in availableYAxisOptions"
                                     :key="indicator.id"
                                 >
                                     <option
@@ -195,11 +195,11 @@
                             </select>
                             vs.
                             <select
-                                x-model="chartYAxis"
+                                x-model="chartXAxis"
                                 @change="updateChart()"
                             >
                                 <template
-                                    x-for="indicator in availableYAxisOptions"
+                                    x-for="indicator in availableXAxisOptions"
                                     :key="indicator.id"
                                 >
                                     <option
