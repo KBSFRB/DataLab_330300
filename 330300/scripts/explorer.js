@@ -90,7 +90,12 @@ function explorerApp() {
       let crumbs = this.metadata.breadcrumbs.map((crumb) => ({
         nis: crumb.nis,
         child_level: crumb.child_level,
-        name: crumb.name.en || crumb.name.fr || crumb.name.nl || crumb.nis,
+        name:
+          crumb.name[this.lang] ||
+          crumb.name.en ||
+          crumb.name.fr ||
+          crumb.name.nl ||
+          crumb.nis,
         viewName: `${crumb.child_level}_in_${crumb.nis}`,
         isClickable: true,
       }));
@@ -218,7 +223,7 @@ function explorerApp() {
           tip: true,
           title: (d) => {
             const currentLang =
-              (typeof i18n !== "undefined" && i18n.lang) || "en";
+              this.lang || (typeof i18n !== "undefined" && i18n.lang) || "en";
             if (currentLang === "fr" && d.properties.name_fr) {
               return d.properties.name_fr;
             } else if (currentLang === "nl" && d.properties.name_nl) {
@@ -244,7 +249,7 @@ function explorerApp() {
             cursor: "pointer",
             href: (d) =>
               this.metadata?.zoomable
-                ? `?v=${this.metadata.next_level}_in_${d.properties.nis}`
+                ? `?v=${this.metadata.next_level}_in_${d.properties.nis}&lang=${this.lang}`
                 : null,
           }),
         );
