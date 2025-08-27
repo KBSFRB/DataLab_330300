@@ -436,6 +436,12 @@ function explorerApp() {
       throw new Error(`Failed to find indicator ${indicatorId}`);
     },
 
+    getIndicatorName(indicator, language) {
+      if (indicator.name?.[language]) return indicator.name[language];
+      if (indicator.name?.en) return indicator.name.en;
+      return indicator.name;
+    },
+
     getNameInLang(feature, language) {
       if (language === "fr") {
         return feature.properties.name_fr;

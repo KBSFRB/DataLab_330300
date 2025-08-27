@@ -189,7 +189,7 @@
                                 >
                                     <option
                                         :value="indicator.id"
-                                        x-text="indicator.name"
+                                        x-text="getIndicatorName(indicator, lang)"
                                     ></option>
                                 </template>
                             </select>
@@ -204,7 +204,7 @@
                                 >
                                     <option
                                         :value="indicator.id"
-                                        x-text="indicator.name"
+                                        x-text="getIndicatorName(indicator, lang)"
                                     ></option>
                                 </template>
                             </select>
@@ -250,7 +250,9 @@
                                                 'sorted-desc': sortField === column.id && sortDirection === 'desc'
                                             }"
                                         >
-                                            <span x-text="column.name"></span>
+                                            <span
+                                                x-text="getIndicatorName(column, lang)"
+                                            ></span>
                                             <span
                                                 x-show="sortField === column.id"
                                                 x-text="sortDirection === 'asc' ? '↑' : '↓'"
@@ -312,6 +314,24 @@
                     <p lang="en">No data available for this level.</p>
                     <p lang="fr">Aucune donnée disponible pour ce niveau.</p>
                     <p lang="nl">Geen gegevens beschikbaar voor dit niveau.</p>
+                </section>
+
+                <section>
+                    <dl>
+                        <template
+                            x-for="indicator in availableYAxisOptions.filter(i => i.description)"
+                            :key="indicator.id"
+                        >
+                            <dt x-text="getIndicatorName(indicator, lang)"></dt>
+                            <dd>
+                                <span x-text="indicator.description"></span>
+                                Source:
+                                <a href="{{ indicator.source }}"
+                                    >{{ indicator.source }}</a
+                                >
+                            </dd>
+                        </template>
+                    </dl>
                 </section>
             </main>
         </div>
