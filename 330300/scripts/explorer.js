@@ -437,9 +437,21 @@ function explorerApp() {
     },
 
     getIndicatorName(indicator, language) {
+      if (!indicator || !indicator.name) return "";
       if (indicator.name?.[language]) return indicator.name[language];
       if (indicator.name?.en) return indicator.name.en;
       return indicator.name;
+    },
+
+    // Safe helper for getting legend indicator name
+    getLegendIndicatorName(language) {
+      const legendData = this.getLegendData();
+      return legendData ? this.getIndicatorName(legendData, language) : "";
+    },
+
+    // Safe helper for correlation display
+    getCorrelationText() {
+      return this.correlation ? this.correlation.toFixed(3) : "0.000";
     },
 
     getNameInLang(feature, language) {
@@ -632,7 +644,7 @@ function explorerApp() {
         colors: this.colors_scheme,
         grades: grades,
         range: indicator.range,
-        label: indicator.name,
+        name: indicator.name,
       };
     },
 

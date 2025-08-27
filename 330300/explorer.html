@@ -142,7 +142,7 @@
                         >
                             <div
                                 class="legend-title"
-                                x-text="getLegendData()?.label"
+                                x-text="getLegendIndicatorName(lang)"
                             ></div>
                             <div class="legend-color-bar">
                                 <template
@@ -218,15 +218,15 @@
                         >
                             <p lang="en">
                                 Those two indicators are correlated (r =
-                                <span x-text="correlation.toFixed(3)"></span>)
+                                <span x-text="getCorrelationText()"></span>)
                             </p>
                             <p lang="fr">
                                 Ces deux indicateurs sont corrélés (r =
-                                <span x-text="correlation.toFixed(3)"></span>)
+                                <span x-text="getCorrelationText()"></span>)
                             </p>
                             <p lang="nl">
                                 Deze twee indicatoren zijn correlatief (r =
-                                <span x-text="correlation.toFixed(3)"></span>)
+                                <span x-text="getCorrelationText()"></span>)
                             </p>
                         </div>
                     </div>
