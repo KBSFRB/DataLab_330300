@@ -431,6 +431,67 @@ td {
     color: #555;
 }
 
+/* Definitions Section */
+#definitions {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: white;
+}
+
+#definitions h2 {
+    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 1.5em;
+    font-weight: 500;
+    /*border-bottom: 2px solid #007cba;*/
+    padding-bottom: 10px;
+}
+
+#definitions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+#definitions li {
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #007cba;
+    line-height: 1.5;
+}
+
+#definitions li strong {
+    color: #333;
+    font-weight: 600;
+}
+
+#definitions li span {
+    color: #555;
+    margin-left: 5px;
+}
+
+#definitions a {
+    color: #007cba;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+#definitions a:hover {
+    color: #005a87;
+    text-decoration: underline;
+}
+
+#definitions p {
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 14px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
@@ -499,5 +560,25 @@ td {
     .lang-btn {
         padding: 4px 8px;
         font-size: 11px;
+    }
+
+    #definitions {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    #definitions h2 {
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    #definitions li {
+        padding: 10px;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    #definitions p {
+        font-size: 13px;
     }
 }

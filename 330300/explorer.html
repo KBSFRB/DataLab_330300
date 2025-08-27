@@ -316,22 +316,57 @@
                     <p lang="nl">Geen gegevens beschikbaar voor dit niveau.</p>
                 </section>
 
-                <section>
-                    <dl>
+                <section
+                    id="definitions"
+                    x-show="!isLoading && availableYAxisOptions.filter(i => i.description).length"
+                >
+                    <h2 lang="en">Definition of the indicators</h2>
+                    <h2 lang="fr">Définition des indicateurs</h2>
+                    <h2 lang="nl">Definitie van de indicatoren</h2>
+                    <ul>
                         <template
                             x-for="indicator in availableYAxisOptions.filter(i => i.description)"
                             :key="indicator.id"
                         >
-                            <dt x-text="getIndicatorName(indicator, lang)"></dt>
-                            <dd>
+                            <li>
+                                <strong
+                                    x-text="getIndicatorName(indicator, lang)"
+                                ></strong
+                                >:
                                 <span x-text="indicator.description"></span>
                                 Source:
-                                <a href="{{ indicator.source }}"
-                                    >{{ indicator.source }}</a
-                                >
-                            </dd>
+                                <a
+                                    href="{{ indicator.source }}"
+                                    x-text="indicator.source"
+                                ></a>
+                            </li>
                         </template>
-                    </dl>
+                    </ul>
+                    <p lang="en">
+                        The indicators related to the 3-30-300 rule are produced
+                        by the Datalab. More info in
+                        <a
+                            href="https://thedatalab.be/330300/methodology.html?lang=en"
+                            >our methodology page</a
+                        >.
+                    </p>
+                    <p lang="fr">
+                        Les indicateurs liés à la règle 3-30-300 sont produits
+                        par le Datalab. Plus d'informations sur
+                        <a
+                            href="https://thedatalab.be/330300/methodology.html?lang=fr"
+                            >notre page de méthodologie</a
+                        >.
+                    </p>
+                    <p lang="nl">
+                        De indicatoren die betrekking hebben op de 3-30-300
+                        regel worden geproduceerd door het Datalab. Meer
+                        informatie op
+                        <a
+                            href="https://thedatalab.be/330300/methodology.html?lang=nl"
+                            >onze methodepagina</a
+                        >.
+                    </p>
                 </section>
             </main>
         </div>
