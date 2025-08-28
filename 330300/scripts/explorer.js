@@ -354,7 +354,9 @@ function explorerApp() {
               } else if (currentLang === "nl" && d.name_nl) {
                 displayName = d.name_nl;
               }
-              return `${displayName}\n${this.getIndicator(this.chartXAxis).name}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}\n${this.getIndicator(this.chartYAxis).name}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`;
+              return `${displayName}\n
+${this.getIndicatorName(this.getIndicator(this.chartXAxis), this.lang)}: ${this.formatValue(d[this.chartXAxis], this.chartXAxis)}
+${this.getIndicatorName(this.getIndicator(this.chartYAxis), this.lang)}: ${this.formatValue(d[this.chartYAxis], this.chartYAxis)}`;
             },
           }),
           Plot.dot(
