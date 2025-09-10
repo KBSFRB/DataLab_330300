@@ -122,19 +122,11 @@
                     </nav>
                 </section>
 
-                <!-- Current level title -->
-                <section x-show="!isLoading && metadata" class="level-title">
-                    <h2>
-                        <span x-show="parentName">
-                            <span x-text="parentName"></span>
-                        </span>
-                    </h2>
-                </section>
-
                 <!-- Map and Chart Container -->
                 <section class="viz-container" x-show="!isLoading">
                     <!-- Map -->
                     <div class="map-section">
+                        <h2 x-text="parentName"></h2>
                         <div id="map-container"></div>
                         <div
                             x-show="chartXAxis && getLegendData()"
@@ -177,6 +169,7 @@
 
                     <!-- Chart (only show when metadata indicates) -->
                     <div x-show="showChart" class="chart-section">
+                        <h2 x-text="parentName"></h2>
                         <!-- Chart Controls -->
                         <form class="chart-controls">
                             <select
@@ -234,6 +227,7 @@
 
                 <!-- Data Table -->
                 <section x-show="showTable" class="table-section">
+                    <h2 x-text="parentName"></h2>
                     <div class="table-container">
                         <table>
                             <thead>
