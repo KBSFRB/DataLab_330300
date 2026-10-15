@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Médecins généralistes en Belgique – carte par commune</title>
+  <meta name="description" content="Densité, âge et conventionnement des médecins généralistes par commune en Belgique (2021).">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Third-party libraries are resolved through an import map, so modules can use bare specifiers. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "d3": "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm",
+        "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/+esm"
+      }
+    }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <div class="app" x-data="app" x-cloak @keydown.escape.window="closePopup()">
+
+    <header class="app__header">
+      <div>
+        <h1 class="app__title">Médecins généralistes en Belgique</h1>
+        <p class="app__subtitle">Situation en 2021, par commune</p>
+      </div>
+
+      <fieldset class="picker">
+        <legend class="sr-only">Indicateur affiché sur la carte</legend>
+        <template x-for="indicator in indicators" :key="indicator.key">
+          <label class="picker__option">
+            <input type="radio" name="indicator" :value="indicator.key" x-model="indicatorKey">
+            <span class="picker__label" x-text="indicator.label"></span>
+          </label>
+        </template>
+      </fieldset>
+    </header>
+
+    <main class="map">
+      <div class="map__canvas" x-ref="map"></div>
+
+      <div class="map__status" x-show="status !== 'ready'">
+        <p x-show="status === 'loading'">Chargement des données…</p>
+        <p x-show="status === 'error'" class="map__error" x-text="errorMessage"></p>
+      </div>
+
+      <div class="zoom panel" x-show="status === 'ready'">
+        <button type="button" class="zoom__button" @click="zoomIn()" aria-label="Zoom avant">+</button>
+        <button type="button" class="zoom__button" @click="zoomOut()" aria-label="Zoom arrière">−</button>
+        <button type="button" class="zoom__button" @click="resetZoom()" aria-label="Réinitialiser le zoom">⌂</button>
+      </div>
+
+      <div class="legend panel" x-show="status === 'ready'">
+        <p class="legend__title" x-text="legend.title"></p>
+        <div class="legend__bar" :style="{ background: legend.gradient }"></div>
+        <div class="legend__labels">
+          <span x-text="legend.min"></span>
+          <span x-text="legend.max"></span>
+        </div>
+        <p class="legend__no-data">
+          <span class="legend__swatch" :style="{ background: noDataColor }"></span>
+          Pas de données
+        </p>
+      </div>
+
+      <aside class="popup panel" x-ref="popup" x-show="selected" x-transition.opacity.duration.150ms
+             :class="'popup--' + popupSide" role="dialog" aria-label="Détails de la commune">
+        <header class="popup__header">
+          <div>
+            <h2 class="popup__title" x-text="selected?.name"></h2>
+            <p class="popup__subtitle" x-text="selected?.groupName"></p>
+            <p class="popup__meta" x-text="selected?.gpSummary"></p>
+          </div>
+          <button type="button" class="popup__close" @click="closePopup()" aria-label="Fermer">×</button>
+        </header>
+
+        <div class="popup__body" x-ref="charts"></div>
+
+        <p class="popup__note">
+          Plus la barre est foncée, plus il y a de communes belges à cette valeur.
+          Les moyennes portent sur les communes, sans pondération par la population.
+        </p>
+      </aside>
+    </main>
+
+  </div>
+</body>
+</html>
