@@ -1,737 +1,378 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <base target="_top" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <base target="_top" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <title>The DataLab</title>
-        <meta name="title" content="The DataLab" />
-        <meta
-            name="description"
-            content="The DataLab is a group of young voluntary data experts working together to empower positive change in society through data insights."
-        />
+    <title>The DataLab</title>
+    <meta name="description" content="The DataLab is a group of young voluntary data experts working together to empower positive change in society through data insights." />
 
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://thedatalab.be/" />
-        <meta property="og:title" content="The DataLab" />
-        <meta
-            property="og:description"
-            content="The DataLab is a group of young voluntary data experts working together to empower positive change in society through data insights."
-        />
-        <meta
-            property="og:image"
-            content="https://thedatalab.be/assets/images/logo_horizontal.png"
-        />
+    <!-- Open Graph (X/Twitter falls back to these for title, description and image) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://thedatalab.be/" />
+    <meta property="og:title" content="The DataLab" />
+    <meta property="og:description" content="The DataLab is a group of young voluntary data experts working together to empower positive change in society through data insights." />
+    <meta property="og:image" content="https://thedatalab.be/assets/images/logo_horizontal.png" />
+    <meta name="twitter:card" content="summary_large_image" />
 
-        <!-- X (Twitter) -->
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://thedatalab.be/" />
-        <meta property="twitter:title" content="The DataLab" />
-        <meta
-            property="twitter:description"
-            content="The DataLab is a group of young voluntary data experts working together to empower positive change in society through data insights."
-        />
-        <meta
-            property="twitter:image"
-            content="https://thedatalab.be/assets/images/logo_horizontal.png"
-        />
+    <link rel="icon" type="image/jpeg" href="assets/images/logo_small.jpg" />
 
-        <link
-            rel="shortcut icon"
-            type="image/x-icon"
-            href="assets/images/logo_small.jpg"
-        />
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script>
+        // Brand colours live in style/style.css; expose them as Tailwind classes (text-brand-teal, bg-brand-navy, ...)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: "var(--color-navy)",
+                            "navy-light": "var(--color-navy-light)",
+                            teal: "var(--color-teal)",
+                            "teal-light": "var(--color-teal-light)",
+                            accent: "var(--color-accent)",
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="style/style.css" />
+    <script src="scripts/i18n.js"></script>
+    <script defer data-domain="thedatalab.be" src="https://plausible.io/js/script.js"></script>
+</head>
 
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script src="scripts/i18n.js"></script>
-        <link rel="stylesheet" href="style/style.css" />
+<body>
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+            <a href="#" class="flex items-center gap-2 shrink-0">
+                <img
+                    src="assets/images/logo_small.jpg"
+                    alt=""
+                    class="h-9 w-9 rounded-full object-cover"
+                    onerror="this.style.display='none'"
+                />
+                <span class="font-extrabold tracking-tight text-black text-lg"><span class="text-brand-accent">D</span>ATA<span class="text-brand-accent">L</span>AB</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a lang="en" href="#about">About</a>
+                <a lang="en" href="#projects">Projects</a>
+                <a lang="en" href="#team">Team</a>
+                <a lang="en" href="#join">Join us</a>
 
-        <style>
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-            }
-        </style>
+                <a lang="fr" href="#about">À propos</a>
+                <a lang="fr" href="#projects">Projets</a>
+                <a lang="fr" href="#team">Équipe</a>
+                <a lang="fr" href="#join">Nous rejoindre</a>
 
-        <script
-            defer
-            data-domain="thedatalab.be"
-            src="https://plausible.io/js/script.js"
-        ></script>
-    </head>
-    <body>
-        <menu>
+                <a lang="nl" href="#about">Over ons</a>
+                <a lang="nl" href="#projects">Projecten</a>
+                <a lang="nl" href="#team">Team</a>
+                <a lang="nl" href="#join">Doe mee</a>
+            </nav>
             <div
                 id="lang-picker"
-                class="absolute top-4 right-4 z-[100000] flex flex-col"
+                class="flex bg-white text-xs font-semibold border border-slate-300 rounded overflow-hidden divide-x divide-slate-300 [&>button]:px-2.5 [&>button]:py-1.5"
+                role="group"
+                aria-label="Language"
             >
-                <button
-                    id="i18n-picker-nl"
-                    class="bg-white py-1 px-2 border-black border rounded-t"
-                >
-                    NL
-                </button>
-                <button
-                    id="i18n-picker-fr"
-                    class="bg-white py-1 px-2 border-black border-x"
-                >
-                    FR
-                </button>
-                <button
-                    id="i18n-picker-en"
-                    class="bg-white py-1 px-2 border-black border rounded-b"
-                >
-                    EN
-                </button>
+                <button id="i18n-picker-nl" type="button">NL</button>
+                <button id="i18n-picker-fr" type="button">FR</button>
+                <button id="i18n-picker-en" type="button">EN</button>
             </div>
-        </menu>
-        <main class="container max-w-3xl mx-auto px-4 py-8">
-            <div class="flex flex-col items-center">
-                <img src="assets/images/logo.jpg" class="w-1/4" />
-            </div>
-            <div lang="en" class="flex flex-col gap-4">
-                <h1>What is DataLab?</h1>
-                <p>
-                    The DataLab is a group of young voluntary data experts
-                    working together to empower positive change in society
-                    through data insights.
-                </p>
-                <p>
-                    Our vision is to harness the power of data to support
-                    informed decisions and inspire action and innovation for the
-                    common good. We are dedicated to apply our data expertise to
-                    drive lasting positive change and improve our environment
-                    and societal well-being for the benefit of all.
-                </p>
-                <p>
-                    Our values: collaboration, transparency, accessibility,
-                    open-mindedness, impact-driven.
-                </p>
-                <p>
-                    We are working together in our free time and are supported
-                    by the King Baudouin Foundation.
-                </p>
-                <p>Meet our active team members:</p>
-                <div
-                    class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4"
-                >
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/antoine-dejonckheere-08533233/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/antoine.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Antoine</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/arnon-vandenberghe/"
-                            title="See LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/arnon.jpg"
-                                class="rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Arnon</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/"
-                            title="see linkedin profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/chloe.jfif"
-                                class="rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Chloé</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-grosman-26989191/" 
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/jeremy.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Jérémy</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/kivancgunduz35/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/kivanc.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Kivanc</p></a
-                        >
-                    </div>
-                </div>
-                <p>
-                    In 2024, the DataLab was created and we decided to kick things off
-                    with a sustainability project. Amongst a series of exciting
-                    topics, the group voted to work on the 3-30-300 rule because
-                    we wanted to bring more knowledge to people about the places
-                    they live in. You can explore the map
-                    <a href="330300/index.html?lang=en">here</a>, as well as the
-                    methodology we followed
-                    <a href="330300/methodology.html?lang=en">here</a>.
-                </p>
-                <p>
-                    In 2026, we launched our second project on the topic of healthcare
-                    accessibility. We're still in the early stages of this project, 
-                    defining the exact scope and research question, but we're excited
-                    to share more about it in the future!
-                </p>
-                <p>
-                    In the meantime, we welcome new members and volunteers.
-                    Want to join the DataLab? Volunteer for a meaningful project?
-                    Share an idea for a data-for-good initiative or brainstorm together?
-                    Contact us at…
-                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>.
-                </p>
-                <p>
-                    Stay tuned for other projects of the DataLab in the future!
-                    Follow us on social media:
-                    <a href="https://www.linkedin.com/company/datalab-be/"
-                        ><img
-                            class="inline-block h-6 align-bottom"
-                            src="330300/images/linkedin.png"
-                            alt="LinkedIn"
-                    /></a>
-                    <a
-                        href="https://www.facebook.com/profile.php?id=61559706710432"
-                        ><img
-                            class="inline-block h-6 align-bottom"
-                            src="330300/images/facebook.png"
-                            alt="Facebook"
-                    /></a>
-                </p>
-            </div>
-            <div lang="fr" class="flex flex-col gap-4">
-                <h1 class="text-center text-4xl font-extrabold tracking-tight">
-                    Qu'est-ce que le DataLab ?
-                </h1>
-                <p>
-                    Le DataLab est un groupe de jeunes data experts bénévoles
-                    qui travaillent ensemble pour favoriser un changement
-                    positif dans la société grâce à la connaissance des données.
-                </p>
-                <p>
-                    Notre vision est d'exploiter le pouvoir des données pour
-                    soutenir des décisions éclairées et inspirer l'action et
-                    l'innovation pour le bien commun. Nous sommes déterminés à
-                    appliquer notre expertise en matière de données pour
-                    susciter des changements positifs durables et améliorer
-                    notre environnement et le bien-être de la société pour le
-                    bénéfice de tous.
-                </p>
-                <p>
-                    Nos valeurs : collaboration, transparence, accessibilité,
-                    ouverture d'esprit, impact-driven.
-                </p>
-                <p>
-                    Nous travaillons ensemble pendant notre temps libre et nous
-                    sommes soutenus par la Fondation Roi Baudouin.
-                </p>
-                <p>Rencontrez les membres actifs de notre équipe :</p>
-                <div
-                    class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4"
-                >
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/antoine-dejonckheere-08533233/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/antoine.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Antoine</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/arnon-vandenberghe/"
-                            title="See LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/arnon.jpg"
-                                class="rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Arnon</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/"
-                            title="see linkedin profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/chloe.jfif"
-                                class="rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Chloé</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-grosman-26989191/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/jeremy.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Jérémy</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/kivancgunduz35/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/kivanc.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Kivanc</p></a
-                        >
-                    </div>
-                </div>
-                <p>
-                    En 2024, le DataLab a été créé et nous avons décidé de
-                    commencer par un projet pour l’environnement. Parmi une
-                    série de sujets passionnants, le groupe a voté pour
-                    travailler sur la règle des 3-30-300 parce que nous voulions
-                    apporter plus de connaissances aux gens sur les endroits où
-                    ils vivent. Vous pouvez trouver la carte
-                    <a href="330300/index.html?lang=fr">ici</a>, ainsi que la
-                    méthodologie que nous avons suivie
-                    <a href="330300/methodology.html?lang=fr">ici</a>.
-                </p>
-                <p>
-                    En 2026, nous avons lancé notre deuxième projet sur le thème
-                    de l'accessibilité des soins de santé. Nous en sommes encore aux
-                    premières étapes de ce projet, en train de définir précisément
-                    son périmètre et sa question de recherche, mais nous sommes
-                    impatients d'en partager davantage à l'avenir !
-                </p>
-                <p>
-                    Entre-temps, nous accueillons de nouveaux membres et bénévoles.
-                    Vous souhaitez rejoindre le DataLab ? Faire du bénévolat pour un
-                    projet porteur de sens ? Partager une idée d'initiative data for good
-                    ou réfléchir ensemble ? Contactez-nous à l'addresse 
-                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>.
-                </p>
-                <p>
-                    Suivez-nous pour rester informé des autres projets du
-                    DataLab à l'avenir :
-                    <a href="https://www.linkedin.com/company/datalab-be/"
-                        ><img
-                            class="inline-block h-6 align-bottom"
-                            src="330300/images/linkedin.png"
-                            alt="LinkedIn"
-                    /></a>
-                    <a
-                        href="https://www.facebook.com/profile.php?id=61559706710432"
-                        ><img
-                            class="inline-block h-6 align-bottom"
-                            src="330300/images/facebook.png"
-                            alt="Facebook"
-                    /></a>
-                </p>
-            </div>
+        </div>
+    </header>
+    <main id="about" class="container max-w-3xl mx-auto px-4 py-8">
+        <div class="flex flex-col items-center">
+            <img src="assets/images/logo.jpg" class="w-1/4" />
+        </div>
+        <div lang="en" class="flex flex-col gap-4">
+            <h1>What is DataLab?</h1>
+            <p>
+                The DataLab is a group of young voluntary data experts
+                working together to empower positive change in society
+                through data insights.
+            </p>
+            <p>
+                Our vision is to harness the power of data to support
+                informed decisions and inspire action and innovation for the
+                common good. We are dedicated to apply our data expertise to
+                drive lasting positive change and improve our environment
+                and societal well-being for the benefit of all.
+            </p>
+            <p>
+                Our values: collaboration, transparency, accessibility,
+                open-mindedness, impact-driven.
+            </p>
+            <p>
+                We are working together in our free time and are supported
+                by the King Baudouin Foundation.
+            </p>
+        </div>
+        <div lang="fr" class="flex flex-col gap-4">
+            <h1 class="text-center text-4xl font-extrabold tracking-tight">
+                Qu'est-ce que le DataLab ?
+            </h1>
+            <p>
+                Le DataLab est un groupe de jeunes data experts bénévoles
+                qui travaillent ensemble pour favoriser un changement
+                positif dans la société grâce à la connaissance des données.
+            </p>
+            <p>
+                Notre vision est d'exploiter le pouvoir des données pour
+                soutenir des décisions éclairées et inspirer l'action et
+                l'innovation pour le bien commun. Nous sommes déterminés à
+                appliquer notre expertise en matière de données pour
+                susciter des changements positifs durables et améliorer
+                notre environnement et le bien-être de la société pour le
+                bénéfice de tous.
+            </p>
+            <p>
+                Nos valeurs : collaboration, transparence, accessibilité,
+                ouverture d'esprit, impact-driven.
+            </p>
+            <p>
+                Nous travaillons ensemble pendant notre temps libre et nous
+                sommes soutenus par la Fondation Roi Baudouin.
+            </p>
+        </div>
 
-            <div lang="nl" class="flex flex-col gap-4">
-                <h1>Wat is DataLab?</h1>
-                <p>
-                    DataLab is een groep van jonge vrijwillige data-experts die
-                    samenwerken om positieve verandering in de samenleving te
-                    stimuleren door middel van data-inzichten.
-                </p>
-                <p>
-                    Onze visie is om de kracht van data in te zetten om
-                    weloverwogen beslissingen te ondersteunennemen en actie en
-                    innovatie te inspireren voor het algemeen belang. We zetten
-                    ons in om onze data-expertise toe te passen om blijvende
-                    positieve veranderingen teweeg te brengen en ons milieu en
-                    het welzijn van de samenleving te verbeteren ten gunste van
-                    iedereen.
-                </p>
-                <p>
-                    Onze waarden: samenwerking, transparantie, toegankelijkheid,
-                    openheid, impactgericht.
-                </p>
-                <p>
-                    We werken samen in onze vrije tijd en worden ondersteund
-                    door de Koning Boudewijnstichting.
-                </p>
-                <p>Maak kennis met onze actieve teamleden:</p>
-                <div
-                    class="grid grid-cols-2 md:grid-cols-6 sm:grid-cols-3 gap-2 mt-4"
-                >
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/antoine-dejonckheere-08533233/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/antoine.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Antoine</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/arnon-vandenberghe/"
-                            title="See LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/arnon.jpg"
-                                class="rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Arnon</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/"
-                            title="see linkedin profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/chloe.jfif"
-                                class="rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Chloé</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-grosman-26989191/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/jeremy.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Jérémy</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/kivancgunduz35/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/kivanc.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Kivanc</p></a
-                        >
-                    </div>
-                </div>
-                <p>
-                    In 2024 werd DataLab opgericht en besloten we te beginnen
-                    met een project voor milieuduurzaamheid. Uit een reeks
-                    interessante onderwerpen stemde de groep om te werken aan de
-                    3-30-300 regel omdat we mensen meer kennis wilden geven over
-                    de plekken die hen dierbaar zijn. Bekijk de kaart
-                    <a href="330300/index.html?lang=nl">hier</a> en lees
-                    <a href="330300/methodology.html?lang=nl">hier</a> meer over
-                    de methodologie die wij hebben toegepast.
-                </p>
-                <p>
-                    In 2026 hebben we ons tweede project gelanceerd rond het thema
-                    toegankelijkheid van gezondheidszorg. We bevinden ons nog in een
-                    vroege fase van dit project, waarin we de exacte scope en onderzoeksvraag
-                    bepalen, maar we kijken ernaar uit om hier in de toekomst meer over te delen!
-                </p>
-                <p>
-                    Intussen verwelkomen we nieuwe leden en vrijwilligers.
-                    Wil je je aansluiten bij DataLab? Wil je vrijwilliger worden
-                    voor een nuttig project? Heb je een suggestie voor een "data
-                    for good" project of wil je samen brainstormen? Neem contact met
-                    ons op via
-                    <a href="mailto:info@thedatalab.be">info@thedatalab.be</a>.
-                </p>
-                <p>
-                    Volg ons om op de hoogte te blijven van andere DataLab
-                    projecten in de toekomst:
-                    <a href="https://www.linkedin.com/company/datalab-be/"
-                        ><img
-                            class="inline-block h-6 align-bottom"
-                            src="330300/images/linkedin.png"
-                            alt="LinkedIn"
-                    /></a>
-                    <a
-                        href="https://www.facebook.com/profile.php?id=61559706710432"
-                        ><img
-                            class="inline-block h-6 align-bottom"
-                            src="330300/images/facebook.png"
-                            alt="Facebook"
-                    /></a>
-                </p>
-            </div>
-            <div lang="en" class="flex justify-center mt-6 gap-4 mb-4">
-                <a
-                    href="330300/index.html?lang=en"
-                    class="p-2 border-black rounded text-white text-center"
-                    style="background-color: #01665e; width: max-content"
-                >
-                    Go to the map
-                </a>
-                <a
-                    href="330300/explorer.html?lang=en"
-                    class="p-2 border-black rounded text-white text-center"
-                    style="background-color: #01665e; width: max-content"
-                >
-                    Explore the data
-                </a>
-            </div>
-            <div lang="en" class="flex flex-col gap-0">
-                <p>Former members of DataLab:</p>
-                <div
-                    class="grid grid-cols-2 md:grid-cols-8 sm:grid-cols-3 gap-2 mt-4"
-                >
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/febe.png"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Febe</p>
-                    </div>
-                    <!-- <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/oona-de-blende-62911292/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/oona.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Oona</p></a
-                        >
-                    </div> -->
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/quentin.jfif"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Quentin</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/robin-devooght/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/robin.jpeg"
-                                class="rounded-full w-20 h-20 object-cover"
-                            />
-                            <p>Robin</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/toon.jfif"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Toon</p>
-                    </div>
-                </div>
-            </div>
-            <div lang="fr" class="flex justify-center mt-6 gap-4 mb-4">
-                <a
-                    href="330300/index.html?lang=fr"
-                    class="p-2 border-black rounded text-white text-center"
-                    style="background-color: #01665e; width: max-content"
-                >
-                    Voir la carte
-                </a>
-                <a
-                    href="330300/explorer.html?lang=fr"
-                    class="p-2 border-black rounded text-white text-center"
-                    style="background-color: #01665e; width: max-content"
-                >
-                    Explorer les données
-                </a>
-            </div>
-            <div lang="fr" class="flex flex-col gap-0">
-                <p>Anciens membres du DataLab :</p>
-                <div
-                    class="grid grid-cols-2 md:grid-cols-8 sm:grid-cols-3 gap-2 mt-4"
-                >
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/febe.png"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Febe</p>
-                    </div>
-                    <!-- <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/oona-de-blende-62911292/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/oona.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Oona</p></a
-                        >
-                    </div> -->
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/quentin.jfif"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Quentin</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/robin-devooght/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/robin.jpeg"
-                                class="rounded-full w-20 h-20 object-cover"
-                            />
-                            <p>Robin</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/toon.jfif"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Toon</p>
-                    </div>
-                </div>
-            </div>
-            <div lang="nl" class="flex justify-center mt-6 gap-4 mb-4">
-                <a
-                    href="330300/index.html?lang=nl"
-                    class="p-2 border-black rounded text-white text-center"
-                    style="background-color: #01665e; width: max-content"
-                >
-                    Naar de kaart
-                </a>
-                <a
-                    href="330300/explorer.html?lang=nl"
-                    class="p-2 border-black rounded text-white text-center"
-                    style="background-color: #01665e; width: max-content"
-                >
-                    Verken de data
-                </a>
-            </div>
-            <div lang="nl" class="flex flex-col gap-0">
-                <p>Voormalige leden van DataLab:</p>
-                <div
-                    class="grid grid-cols-2 md:grid-cols-8 sm:grid-cols-3 gap-2 mt-4"
-                >
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/febe.png"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Febe</p>
-                    </div>
-                    <!-- <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/oona-de-blende-62911292/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/oona.jpg"
-                                class="aspect-square object-cover rounded-full max-w-32 md:max-w-full"
-                            />
-                            <p>Oona</p></a
-                        >
-                    </div> -->
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/quentin.jfif"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Quentin</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <a
-                            href="https://www.linkedin.com/in/robin-devooght/"
-                            title="see LinkedIn profile"
-                            class="text-center"
-                        >
-                            <img
-                                src="assets/images/robin.jpeg"
-                                class="rounded-full w-20 h-20 object-cover"
-                            />
-                            <p>Robin</p></a
-                        >
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <img
-                            src="assets/images/toon.jfif"
-                            class="rounded-full w-20 h-20 object-cover"
-                        />
-                        <p>Toon</p>
-                    </div>
-                </div>
-            </div>
-            
-        </main>
+        <div lang="nl" class="flex flex-col gap-4">
+            <h1>Wat is DataLab?</h1>
+            <p>
+                DataLab is een groep van jonge vrijwillige data-experts die
+                samenwerken om positieve verandering in de samenleving te
+                stimuleren door middel van data-inzichten.
+            </p>
+            <p>
+                Onze visie is om de kracht van data in te zetten om
+                weloverwogen beslissingen te ondersteunennemen en actie en
+                innovatie te inspireren voor het algemeen belang. We zetten
+                ons in om onze data-expertise toe te passen om blijvende
+                positieve veranderingen teweeg te brengen en ons milieu en
+                het welzijn van de samenleving te verbeteren ten gunste van
+                iedereen.
+            </p>
+            <p>
+                Onze waarden: samenwerking, transparantie, toegankelijkheid,
+                openheid, impactgericht.
+            </p>
+            <p>
+                We werken samen in onze vrije tijd en worden ondersteund
+                door de Koning Boudewijnstichting.
+            </p>
+        </div>      
+    </main>
 
-        <script type="text/javascript">
-            // start language options
-            i18n.start(["nl", "fr", "en"]);
-            function generateUUID() {
-                return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-                    /[xy]/g,
-                    function (c) {
-                        var r = (Math.random() * 16) | 0,
-                            v = c == "x" ? r : (r & 0x3) | 0x8;
-                        return v.toString(16);
-                    },
-                );
-            }
+    <section id="projects" class="bg-slate-50 border-y border-slate-200">
+        <div class="container max-w-5xl mx-auto px-4 py-12">
+            <h2 class="text-2xl font-bold text-[#0b2a4a] mb-8">
+                <span lang="en">Our projects</span>
+                <span lang="fr">Nos projets</span>
+                <span lang="nl">Onze projecten</span>
+            </h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Project card -->
+                <article class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-md transition">
+                    <div class="h-28 bg-gradient-to-br from-[#01665e] to-[#35b7a7]"></div>
+                    <div class="p-5 flex flex-col gap-3 flex-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="px-2 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800">
+                                <span lang="en">Live</span>
+                                <span lang="fr">En ligne</span>
+                                <span lang="nl">Online</span>
+                            </span>
+                            <span class="text-slate-500 font-medium">2024</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#0b2a4a]">
+                            <span lang="en">3-30-300</span>
+                            <span lang="fr">3-30-300</span>
+                            <span lang="nl">3-30-300</span>
+                        </h3>
+                        <div class="text-sm text-slate-600 flex-1">
+                            <p lang="en">Our first project, on sustainability. The group voted to work on the 3-30-300 rule because we wanted to bring more knowledge to people about the places they live in.</p>
+                            <p lang="fr">Notre premier projet, pour l’environnement. Le groupe a voté pour travailler sur la règle des 3-30-300 parce que nous voulions apporter plus de connaissances aux gens sur les endroits où ils vivent.</p>
+                            <p lang="nl">Ons eerste project, rond milieuduurzaamheid. De groep stemde om te werken aan de 3-30-300 regel omdat we mensen meer kennis wilden geven over de plekken die hen dierbaar zijn.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <a lang="en" href="330300/index.html?lang=en" class="px-3 py-1.5 rounded bg-[#01665e] text-white text-sm font-semibold hover:bg-[#014d47]">Go to the map</a>
+                            <a lang="fr" href="330300/index.html?lang=fr" class="px-3 py-1.5 rounded bg-[#01665e] text-white text-sm font-semibold hover:bg-[#014d47]">Voir la carte</a>
+                            <a lang="nl" href="330300/index.html?lang=nl" class="px-3 py-1.5 rounded bg-[#01665e] text-white text-sm font-semibold hover:bg-[#014d47]">Naar de kaart</a>
+                            <a lang="en" href="330300/explorer.html?lang=en" class="px-3 py-1.5 rounded border border-[#01665e] text-[#01665e] text-sm font-semibold hover:bg-[#e6f2f1]">Explore the data</a>
+                            <a lang="fr" href="330300/explorer.html?lang=fr" class="px-3 py-1.5 rounded border border-[#01665e] text-[#01665e] text-sm font-semibold hover:bg-[#e6f2f1]">Explorer les données</a>
+                            <a lang="nl" href="330300/explorer.html?lang=nl" class="px-3 py-1.5 rounded border border-[#01665e] text-[#01665e] text-sm font-semibold hover:bg-[#e6f2f1]">Verken de data</a>
+                            <a lang="en" href="330300/methodology.html?lang=en" class="px-3 py-1.5 rounded border border-[#01665e] text-[#01665e] text-sm font-semibold hover:bg-[#e6f2f1]">Methodology</a>
+                            <a lang="fr" href="330300/methodology.html?lang=fr" class="px-3 py-1.5 rounded border border-[#01665e] text-[#01665e] text-sm font-semibold hover:bg-[#e6f2f1]">Méthodologie</a>
+                            <a lang="nl" href="330300/methodology.html?lang=nl" class="px-3 py-1.5 rounded border border-[#01665e] text-[#01665e] text-sm font-semibold hover:bg-[#e6f2f1]">Methodologie</a>
+                        </div>
+                    </div>
+                </article>
+                <!-- Project card -->
+                <article class="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-md transition">
+                    <div class="h-28 bg-gradient-to-br from-[#01665e] to-[#35b7a7]"></div>
+                    <div class="p-5 flex flex-col gap-3 flex-1">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="px-2 py-0.5 rounded-full font-semibold bg-amber-100 text-amber-800">
+                                <span lang="en">In progress</span>
+                                <span lang="fr">En cours</span>
+                                <span lang="nl">Lopend</span>
+                            </span>
+                            <span class="text-slate-500 font-medium">2026</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-[#0b2a4a]">
+                            <span lang="en">Healthcare accessibility</span>
+                            <span lang="fr">Accessibilité des soins de santé</span>
+                            <span lang="nl">Toegankelijkheid van gezondheidszorg</span>
+                        </h3>
+                        <div class="text-sm text-slate-600 flex-1">
+                            <p lang="en">Our second project. We're still in the early stages, defining the exact scope and research question, but we're excited to share more about it in the future!</p>
+                            <p lang="fr">Notre deuxième projet. Nous en sommes encore aux premières étapes, en train de définir précisément son périmètre et sa question de recherche, mais nous sommes impatients d'en partager davantage à l'avenir !</p>
+                            <p lang="nl">Ons tweede project. We bevinden ons nog in een vroege fase, waarin we de exacte scope en onderzoeksvraag bepalen, maar we kijken ernaar uit om hier in de toekomst meer over te delen!</p>
+                        </div>
 
-            const session_id = generateUUID();
-            fetch(
-                `https://backend-330300.vandendriesche-c.workers.dev/log?page=main&session_id=${session_id}`,
+                    </div>
+                </article>
+                <!-- "Next project" card-->
+                <article class="rounded-xl border-2 border-dashed border-slate-300 p-5 flex flex-col justify-center items-start gap-3 min-h-[16rem]">
+                    <span class="text-3xl text-[#01665e]">+</span>
+                    <h3 class="text-lg font-bold text-[#0b2a4a]">
+                        <span lang="en">Your idea next?</span>
+                        <span lang="fr">Votre idée ensuite ?</span>
+                        <span lang="nl">Jouw idee als volgende?</span>
+                    </h3>
+                    <div class="text-sm text-slate-600">
+                        <p lang="en">Have a data-for-good idea? We'd love to brainstorm it with you.</p>
+                        <p lang="fr">Une idée data for good ? Réfléchissons-y ensemble.</p>
+                        <p lang="nl">Heb je een idee voor een data for good-project? We brainstormen graag samen.</p>
+                    </div>
+                    <a href="mailto:info@thedatalab.be" class="text-sm font-semibold text-[#01665e] hover:underline">
+                        <span lang="en">Suggest a project →</span>
+                        <span lang="fr">Proposer un projet →</span>
+                        <span lang="nl">Stel een project voor →</span>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="container max-w-3xl mx-auto px-4 py-12">
+        <h2 class="text-2xl font-bold text-brand-navy-light mb-8">
+            <span lang="en">Meet the team</span>
+            <span lang="fr">Notre équipe</span>
+            <span lang="nl">Maak kennis met het team</span>
+        </h2>
+        <!-- .avatar shows data-initial as a fallback when the photo fails to load (see style.css) -->
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-6 [&_.avatar]:size-20 md:[&_.avatar]:size-24 [&_.avatar]:text-xl">
+            <a href="https://www.linkedin.com/in/antoine-dejonckheere-08533233/" title="LinkedIn" class="group text-center">
+                <div class="avatar" data-initial="A"><img src="assets/images/antoine.jpg" alt="Antoine" onerror="this.remove()" /></div>
+                <p class="mt-2 font-medium group-hover:text-brand-teal">Antoine</p>
+            </a>
+            <a href="https://www.linkedin.com/in/arnon-vandenberghe/" title="LinkedIn" class="group text-center">
+                <div class="avatar" data-initial="A"><img src="assets/images/arnon.jpg" alt="Arnon" onerror="this.remove()" /></div>
+                <p class="mt-2 font-medium group-hover:text-brand-teal">Arnon</p>
+            </a>
+            <a href="https://www.linkedin.com/in/chlo%C3%A9-vandendriesche-105ba0104/" title="LinkedIn" class="group text-center">
+                <div class="avatar" data-initial="C"><img src="assets/images/chloe.jfif" alt="Chloé" onerror="this.remove()" /></div>
+                <p class="mt-2 font-medium group-hover:text-brand-teal">Chloé</p>
+            </a>
+            <a href="https://www.linkedin.com/in/j%C3%A9r%C3%A9my-grosman-26989191/" title="LinkedIn" class="group text-center">
+                <div class="avatar" data-initial="J"><img src="assets/images/jeremy.jpg" alt="Jérémy" onerror="this.remove()" /></div>
+                <p class="mt-2 font-medium group-hover:text-brand-teal">Jérémy</p>
+            </a>
+            <a href="https://www.linkedin.com/in/kivancgunduz35/" title="LinkedIn" class="group text-center">
+                <div class="avatar" data-initial="K"><img src="assets/images/kivanc.jpg" alt="Kivanc" onerror="this.remove()" /></div>
+                <p class="mt-2 font-medium group-hover:text-brand-teal">Kivanc</p>
+            </a>
+            <a href="https://www.linkedin.com/in/robin-devooght/" title="LinkedIn" class="group text-center">
+                <div class="avatar" data-initial="R"><img src="assets/images/robin.jpeg" alt="Robin" onerror="this.remove()" /></div>
+                <p class="mt-2 font-medium group-hover:text-brand-teal">Robin</p>
+            </a>
+        </div>
+
+        <h3 class="text-sm font-semibold uppercase tracking-widest text-slate-500 mt-12 mb-4">
+            <span lang="en">Former members</span>
+            <span lang="fr">Anciens membres</span>
+            <span lang="nl">Voormalige leden</span>
+        </h3>
+        <div class="flex flex-wrap gap-6 text-center text-sm opacity-80 [&_.avatar]:size-16 md:[&_.avatar]:size-20 [&_.avatar]:text-lg [&_p]:mt-1">
+            <div>
+                <div class="avatar" data-initial="F"><img src="assets/images/febe.png" alt="Febe" onerror="this.remove()" /></div>
+                <p>Febe</p>
+            </div>
+            <!-- <div>
+                <div class="avatar" data-initial="O"><img src="assets/images/oona.jpg" alt="Oona" onerror="this.remove()" /></div>
+                <p>Oona</p>
+            </div> -->
+            <div>
+                <div class="avatar" data-initial="Q"><img src="assets/images/quentin.jfif" alt="Quentin" onerror="this.remove()" /></div>
+                <p>Quentin</p>
+            </div>
+            <div>
+                <div class="avatar" data-initial="T"><img src="assets/images/toon.jfif" alt="Toon" onerror="this.remove()" /></div>
+                <p>Toon</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="join" class="bg-brand-teal text-brand-teal-light">
+        <div class="container max-w-3xl mx-auto px-4 py-12 flex flex-col md:flex-row md:items-center gap-6">
+            <div class="flex-1">
+                <div lang="en">
+                    <h2 class="text-2xl font-bold mb-3 text-brand-teal-light">Want to get involved?</h2>
+                    <p class="text-brand-teal-light">We welcome new members and volunteers. Want to join the DataLab? Volunteer for a meaningful project? Share an idea for a data-for-good initiative or brainstorm together? Get in touch!</p>
+                </div>
+                <div lang="fr">
+                    <h2 class="text-2xl font-bold mb-3 text-brand-teal-light">Envie de participer ?</h2>
+                    <p class="text-brand-teal-light">Nous accueillons de nouveaux membres et bénévoles. Vous souhaitez rejoindre le DataLab ? Faire du bénévolat pour un projet porteur de sens ? Partager une idée d'initiative data for good ou réfléchir ensemble ? Contactez-nous !</p>
+                </div>
+                <div lang="nl">
+                    <h2 class="text-2xl font-bold mb-3 text-brand-teal-light">Zin om mee te doen?</h2>
+                    <p class="text-brand-teal-light">We verwelkomen nieuwe leden en vrijwilligers. Wil je je aansluiten bij DataLab? Wil je vrijwilliger worden voor een nuttig project? Heb je een suggestie voor een "data for good" project of wil je samen brainstormen? Neem contact met ons op!</p>
+                </div>
+            </div>
+            <a href="mailto:info@thedatalab.be" class="self-start md:self-center shrink-0 px-6 py-3 rounded bg-white text-brand-navy font-semibold hover:bg-brand-teal-light">info@thedatalab.be</a>
+        </div>
+    </section>
+
+    <footer class="border-t border-slate-200">
+        <div class="container max-w-3xl mx-auto px-4 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-sm text-slate-500">
+            <p>
+                <span lang="en">© The DataLab — supported by the King Baudouin Foundation</span>
+                <span lang="fr">© The DataLab — soutenu par la Fondation Roi Baudouin</span>
+                <span lang="nl">© The DataLab — ondersteund door de Koning Boudewijnstichting</span>
+            </p>
+            <div class="flex items-center gap-3">
+                <span lang="en">Follow us</span>
+                <span lang="fr">Suivez-nous</span>
+                <span lang="nl">Volg ons</span>
+                <a href="https://www.linkedin.com/company/datalab-be/" aria-label="LinkedIn"
+                    ><img class="h-6" src="330300/images/linkedin.png" alt="LinkedIn"
+                /></a>
+                <a href="https://www.facebook.com/profile.php?id=61559706710432" aria-label="Facebook"
+                    ><img class="h-6" src="330300/images/facebook.png" alt="Facebook"
+                /></a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        // start language options
+        i18n.start(["nl", "fr", "en"]);
+        function generateUUID() {
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                /[xy]/g,
+                function (c) {
+                    var r = (Math.random() * 16) | 0,
+                        v = c == "x" ? r : (r & 0x3) | 0x8;
+                    return v.toString(16);
+                },
             );
-        </script>
-    </body>
+        }
+
+        const session_id = generateUUID();
+        fetch(
+            `https://backend-330300.vandendriesche-c.workers.dev/log?page=main&session_id=${session_id}`,
+        );
+    </script>
+</body>
 </html>
