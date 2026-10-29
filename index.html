@@ -56,18 +56,48 @@
             </a>
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
                 <a lang="en" href="#about">About</a>
-                <a lang="en" href="#projects">Projects</a>
-                <a lang="en" href="#team">Team</a>
-                <a lang="en" href="#join">Join us</a>
-
                 <a lang="fr" href="#about">À propos</a>
-                <a lang="fr" href="#projects">Projets</a>
-                <a lang="fr" href="#team">Équipe</a>
-                <a lang="fr" href="#join">Nous rejoindre</a>
-
                 <a lang="nl" href="#about">Over ons</a>
-                <a lang="nl" href="#projects">Projecten</a>
+
+                <!-- .nav-dropdown, .nav-submenu and .nav-menu are defined in style.css -->
+                <div class="nav-dropdown">
+                    <a href="#projects">
+                        <span lang="en">Projects</span>
+                        <span lang="fr">Projets</span>
+                        <span lang="nl">Projecten</span>
+                        <span aria-hidden="true">▾</span>
+                    </a>
+                    <div class="nav-menu">
+                        <div class="nav-submenu">
+                            <a href="#project-330300" class="flex justify-between gap-4">3-30-300 <span aria-hidden="true">›</span></a>
+                            <div class="nav-menu">
+                                <a lang="en" href="330300/index.html?lang=en">Go to the map</a>
+                                <a lang="en" href="330300/explorer.html?lang=en">Explore the data</a>
+                                <a lang="en" href="330300/methodology.html?lang=en">Methodology</a>
+
+                                <a lang="fr" href="330300/index.html?lang=fr">Voir la carte</a>
+                                <a lang="fr" href="330300/explorer.html?lang=fr">Explorer les données</a>
+                                <a lang="fr" href="330300/methodology.html?lang=fr">Méthodologie</a>
+
+                                <a lang="nl" href="330300/index.html?lang=nl">Naar de kaart</a>
+                                <a lang="nl" href="330300/explorer.html?lang=nl">Verken de data</a>
+                                <a lang="nl" href="330300/methodology.html?lang=nl">Methodologie</a>
+                            </div>
+                        </div>
+                        <a href="#project-healthcare">
+                            <span lang="en">Healthcare accessibility</span>
+                            <span lang="fr">Accessibilité des soins de santé</span>
+                            <span lang="nl">Toegankelijkheid van gezondheidszorg</span>
+                        </a>
+                    </div>
+                </div>
+
+                <a lang="en" href="#team">Team</a>
+                <a lang="fr" href="#team">Équipe</a>
                 <a lang="nl" href="#team">Team</a>
+
+                <a lang="en" href="#join">Join us</a>
+                <a lang="fr" href="#join">Nous rejoindre</a>
                 <a lang="nl" href="#join">Doe mee</a>
             </nav>
             <div
@@ -180,7 +210,7 @@
             <!-- .project-card, .project-image and .btn-* are defined in style.css -->
             <div class="flex flex-col gap-8">
 
-                <article class="project-card">
+                <article id="project-330300" class="project-card">
                     <div class="project-image"><img src="assets/images/robert-bye.jpg" alt="" onerror="this.remove()" /></div>
                     <div class="p-6 flex flex-col gap-3 flex-1">
                         <div class="flex items-baseline justify-between gap-4">
@@ -206,14 +236,14 @@
                     </div>
                 </article>
 
-                <article class="project-card">
+                <article id="project-healthcare" class="project-card">
                     <div class="project-image"><img src="assets/images/healthcare-image.jpg" alt="" onerror="this.remove()" /></div>
                     <div class="p-6 flex flex-col gap-3 flex-1">
                         <div class="flex items-baseline justify-between gap-4">
                             <h3 class="text-xl font-bold text-brand-navy-light">
                                 <span lang="en">Healthcare accessibility (in progress)</span>
                                 <span lang="fr">Accessibilité des soins de santé (en cours)</span>
-                                <span lang="nl">Toegankelijkheid van gezondheidszorg (lopend)</span>
+                                <span lang="nl">Toegankelijkheid van gezondheidszorg (in ontwikkeling)</span>
                             </h3>
                             <span class="text-xs text-slate-500 font-medium shrink-0">2026</span>
                         </div>
@@ -286,7 +316,7 @@
             <span lang="fr">Anciens membres</span>
             <span lang="nl">Voormalige leden</span>
         </h3>
-        <div class="flex flex-wrap gap-6 text-center text-sm opacity-80 [&_.avatar]:size-16 md:[&_.avatar]:size-20 [&_.avatar]:text-lg [&_p]:mt-1">
+        <div class="flex flex-wrap gap-6 text-center text-sm [&_.avatar]:size-16 md:[&_.avatar]:size-20 [&_.avatar]:text-lg [&_p]:mt-1">
             <div>
                 <div class="avatar" data-initial="F"><img src="assets/images/febe.png" alt="Febe" onerror="this.remove()" /></div>
                 <p>Febe</p>
