@@ -1,61 +1,70 @@
-import { geoArea, group } from 'd3';
+import { geoArea } from 'd3';
+import { asyncBufferFromUrl, parquetReadObjects } from 'hyparquet';
+import proj4 from 'proj4';
 import { INDICATORS } from './config.js';
 
 /** A polygon covering more than a hemisphere is wound the wrong way for d3-geo. */
 const HEMISPHERE_AREA = 2 * Math.PI;
 
-/** Fetches and parses the GeoJSON file. */
-export async function loadGeoJson(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP ${response.status} while loading ${url}`);
-  return response.json();
+const PARQUET_COLUMNS = ['id', 'name', 'boundary_doctors', 'geometry', ...INDICATORS.map(({ property }) => property)];
+const BELGIAN_LAMBERT_2008 = '+proj=lcc +lat_1=49.8333333333333 +lat_2=51.1666666666667 +lat_0=50.797815 +lon_0=4.35921583333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +units=m +no_defs';
+
+/** Reads municipality rows and GeoParquet geometries from the static file. */
+export async function loadParquet(url) {
+  const file = await asyncBufferFromUrl({ url: new URL(url, document.baseURI).href });
+  return parquetReadObjects({ file, columns: PARQUET_COLUMNS });
 }
 
 /**
- * Turns a GeoJSON FeatureCollection into the structures used by the app:
- * a flat list of municipalities, a lookup by id, and groups (provinces, or
- * regions where there is no province) with pre-sorted values per indicator.
+ * Turns Parquet rows into a flat list of municipalities and pre-sorted values
+ * per indicator for the map scales and comparison charts.
  */
-export function prepareDataset(geojson) {
-  const municipalities = geojson.features.map(createMunicipality);
-
-  const groups = new Map();
-  for (const [id, members] of group(municipalities, (municipality) => municipality.groupId)) {
-    groups.set(id, {
-      id,
-      name: members[0].groupName,
-      municipalities: members,
-      sortedValues: collectSortedValues(members),
-    });
-  }
+export function prepareDataset(rows) {
+  const municipalities = rows.map(createMunicipality);
 
   return {
     municipalities,
-    byId: new Map(municipalities.map((municipality) => [municipality.id, municipality])),
-    groups,
     sortedValues: collectSortedValues(municipalities),
   };
 }
 
-function createMunicipality(feature) {
-  const properties = feature.properties;
+function createMunicipality(row) {
+  const feature = {
+    type: 'Feature',
+    properties: row,
+    geometry: projectGeometry(row.geometry),
+  };
   normalizeWinding(feature);
 
   const values = {};
   for (const indicator of INDICATORS) {
-    values[indicator.key] = toNumber(properties[indicator.property]);
+    values[indicator.key] = toNumber(row[indicator.property]);
   }
 
   return {
-    id: properties.mun_nis,
-    name: properties.tx_munty_descr_fr || properties.tx_munty_descr_nl,
-    // The Brussels-Capital Region has no province: fall back to the region.
-    groupId: properties.cd_prov_refnis || properties.cd_rgn_refnis,
-    groupName: properties.tx_prov_descr_fr || properties.tx_rgn_descr_fr,
-    gpCount: toNumber(properties.pr),
+    id: String(row.id),
+    name: row.name,
+    groupName: 'Belgique',
+    gpCount: toNumber(row.boundary_doctors),
     values,
     feature,
   };
+}
+
+/** GeoParquet coordinates use EPSG:3812; D3's geographic projection needs WGS84. */
+function projectGeometry(geometry) {
+  if (!geometry?.type || !Array.isArray(geometry.coordinates)) {
+    throw new Error('Parquet row is missing a supported municipality geometry.');
+  }
+  return {
+    type: geometry.type,
+    coordinates: mapCoordinates(geometry.coordinates),
+  };
+}
+
+function mapCoordinates(value) {
+  if (typeof value[0] === 'number') return proj4(BELGIAN_LAMBERT_2008, 'EPSG:4326', value.slice(0, 2));
+  return value.map(mapCoordinates);
 }
 
 /** Sorted (ascending) finite values of every indicator, keyed by indicator. */

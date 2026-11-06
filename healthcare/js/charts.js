@@ -23,8 +23,8 @@ let gradientCounter = 0;
 
 /**
  * Renders, for every indicator, one density band showing how all Belgian
- * municipalities are spread over the indicator's range, with three markers:
- * the selected municipality, the mean of its province, and the national mean.
+ * municipalities are spread over the indicator's range, with markers for the
+ * selected municipality and the national mean.
  *
  * `scales` is the Map created by createColorScales(); only its domains are used here.
  */
@@ -32,13 +32,9 @@ export function renderComparisons(container, { municipality, dataset, scales }) 
   const root = select(container);
   root.selectAll('*').remove();
 
-  const group = dataset.groups.get(municipality.groupId);
-  const groupKind = municipality.groupName.startsWith('Région') ? 'région' : 'province';
-
   for (const indicator of INDICATORS) {
     const value = municipality.values[indicator.key];
     const countryValues = dataset.sortedValues[indicator.key];
-    const groupMean = mean(group.sortedValues[indicator.key]);
     const countryMean = mean(countryValues);
 
     const section = root.append('section').attr('class', 'comparison');
@@ -50,10 +46,10 @@ export function renderComparisons(container, { municipality, dataset, scales }) 
       indicator,
       domain: scales.get(indicator.key).domain,
       countryValues,
-      markers: { value, groupMean, countryMean },
+      markers: { value, countryMean },
     });
 
-    drawLegend(section, { indicator, groupKind, value, groupMean, countryMean });
+    drawLegend(section, { indicator, value, countryMean });
   }
 }
 
@@ -108,20 +104,13 @@ function drawChart(section, { indicator, domain, countryValues, markers }) {
     .attr('transform', `translate(0, ${AXIS_Y})`)
     .call(axisBottom(x).ticks(5).tickSize(3).tickFormat(formatTick(indicator)));
 
-  // Means: triangles pointing at the band, province above and country below.
-  if (Number.isFinite(markers.groupMean)) {
-    const mx = x(clamp(markers.groupMean));
-    svg
-      .append('path')
-      .attr('class', 'marker marker--group-mean')
-      .attr('d', `M ${mx - MARKER_SIZE} ${BAND_TOP - 11} L ${mx + MARKER_SIZE} ${BAND_TOP - 11} L ${mx} ${BAND_TOP - 4} Z`);
-  }
+  // Country mean: a triangle pointing at the band.
   if (Number.isFinite(markers.countryMean)) {
     const mx = x(clamp(markers.countryMean));
     svg
       .append('path')
       .attr('class', 'marker marker--country-mean')
-      .attr('d', `M ${mx - MARKER_SIZE} ${BAND_BOTTOM + 11} L ${mx + MARKER_SIZE} ${BAND_BOTTOM + 11} L ${mx} ${BAND_BOTTOM + 4} Z`);
+      .attr('d', `M ${mx - MARKER_SIZE} ${BAND_TOP - 11} L ${mx + MARKER_SIZE} ${BAND_TOP - 11} L ${mx} ${BAND_TOP - 4} Z`);
   }
 
   // Municipality: a vertical line across the band, drawn last so it stays on top.
@@ -141,7 +130,7 @@ function drawChart(section, { indicator, domain, countryValues, markers }) {
 }
 
 /** Legend under a chart, giving the key and the numeric value of each marker. */
-function drawLegend(section, { indicator, groupKind, value, groupMean, countryMean }) {
+function drawLegend(section, { indicator, value, countryMean }) {
   const legend = section.append('p').attr('class', 'comparison__legend');
 
   const addKey = (className, text) => {
@@ -149,9 +138,6 @@ function drawLegend(section, { indicator, groupKind, value, groupMean, countryMe
   };
 
   addKey('key--value', Number.isFinite(value) ? 'Commune' : 'Commune : pas de données');
-  if (Number.isFinite(groupMean)) {
-    addKey('key--group-mean', `Moy. ${groupKind} : ${formatValue(indicator, groupMean)}`);
-  }
   if (Number.isFinite(countryMean)) {
     addKey('key--country-mean', `Moy. Belgique : ${formatValue(indicator, countryMean)}`);
   }

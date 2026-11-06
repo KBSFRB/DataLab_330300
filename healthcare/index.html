@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Médecins généralistes en Belgique – carte par commune</title>
-  <meta name="description" content="Densité, âge et conventionnement des médecins généralistes par commune en Belgique (2021).">
+  <meta name="description" content="Densité et accessibilité aux médecins généralistes par commune en Belgique.">
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Third-party libraries are resolved through an import map, so modules can use bare specifiers. -->
@@ -12,7 +12,9 @@
     {
       "imports": {
         "d3": "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm",
-        "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/+esm"
+        "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/+esm",
+        "hyparquet": "https://cdn.jsdelivr.net/npm/hyparquet@1.31.5/+esm",
+        "proj4": "https://cdn.jsdelivr.net/npm/proj4@2.12.1/+esm"
       }
     }
   </script>
@@ -24,7 +26,7 @@
     <header class="app__header">
       <div>
         <h1 class="app__title">Médecins généralistes en Belgique</h1>
-        <p class="app__subtitle">Situation en 2021, par commune</p>
+        <p class="app__subtitle">Densité et accessibilité, par commune</p>
       </div>
 
       <fieldset class="picker">

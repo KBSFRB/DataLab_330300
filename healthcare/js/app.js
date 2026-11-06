@@ -1,6 +1,6 @@
 import { renderComparisons } from './charts.js';
 import { DATA_URL, INDICATORS, NO_DATA_COLOR } from './config.js';
-import { loadGeoJson, prepareDataset } from './data.js';
+import { loadParquet, prepareDataset } from './data.js';
 import { formatValue } from './format.js';
 import { createMap } from './map.js';
 import { createColorScales, gradientCss } from './scales.js';
@@ -36,7 +36,7 @@ export function createApp() {
 
     async init() {
       try {
-        dataset = prepareDataset(await loadGeoJson(DATA_URL));
+        dataset = prepareDataset(await loadParquet(DATA_URL));
       } catch (error) {
         console.error(error);
         this.status = 'error';
