@@ -1,5 +1,5 @@
 import { geoArea } from 'd3';
-import { asyncBufferFromUrl, parquetReadObjects } from 'hyparquet';
+import { parquetReadObjects } from 'hyparquet';
 import proj4 from 'proj4';
 import { INDICATORS } from './config.js';
 
@@ -11,7 +11,10 @@ const BELGIAN_LAMBERT_2008 = '+proj=lcc +lat_1=49.8333333333333 +lat_2=51.166666
 
 /** Reads municipality rows and GeoParquet geometries from the static file. */
 export async function loadParquet(url) {
-  const file = await asyncBufferFromUrl({ url: new URL(url, document.baseURI).href });
+  const absoluteUrl = new URL(url, document.baseURI).href;
+  const response = await fetch(absoluteUrl);
+  if (!response.ok) throw new Error(`HTTP ${response.status} while loading ${absoluteUrl}`);
+  const file = await response.arrayBuffer();
   return parquetReadObjects({ file, columns: PARQUET_COLUMNS });
 }
 
