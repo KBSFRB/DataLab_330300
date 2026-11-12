@@ -1,29 +1,30 @@
 import { geoArea } from 'd3';
 import { parquetReadObjects } from 'hyparquet';
-import proj4 from 'proj4';
 import { INDICATORS } from './config.js';
 
 /** A polygon covering more than a hemisphere is wound the wrong way for d3-geo. */
 const HEMISPHERE_AREA = 2 * Math.PI;
 
-const PARQUET_COLUMNS = ['id', 'name', 'boundary_doctors', 'geometry', ...INDICATORS.map(({ property }) => property)];
-const BELGIAN_LAMBERT_2008 = '+proj=lcc +lat_1=49.8333333333333 +lat_2=51.1666666666667 +lat_0=50.797815 +lon_0=4.35921583333333 +x_0=649328 +y_0=665262 +ellps=GRS80 +units=m +no_defs';
-
-/** Reads municipality rows and GeoParquet geometries from the static file. */
-export async function loadParquet(url) {
+/** Reads selected columns from a static Parquet file. */
+export async function loadParquet(url, columns) {
   const absoluteUrl = new URL(url, document.baseURI).href;
   const response = await fetch(absoluteUrl);
   if (!response.ok) throw new Error(`HTTP ${response.status} while loading ${absoluteUrl}`);
   const file = await response.arrayBuffer();
-  return parquetReadObjects({ file, columns: PARQUET_COLUMNS });
+  return parquetReadObjects({ file, columns });
 }
 
 /**
  * Turns Parquet rows into a flat list of municipalities and pre-sorted values
  * per indicator for the map scales and comparison charts.
  */
-export function prepareDataset(rows) {
-  const municipalities = rows.map(createMunicipality);
+export function prepareDataset(geometryRows, indicatorRows) {
+  const indicatorsByName = new Map(indicatorRows.map((row) => [row.name, row]));
+  const municipalities = geometryRows.map((geometryRow) => {
+    const indicatorRow = indicatorsByName.get(geometryRow.name);
+    if (!indicatorRow) throw new Error(`No indicator data found for municipality “${geometryRow.name}”.`);
+    return createMunicipality(geometryRow, indicatorRow);
+  });
 
   return {
     municipalities,
@@ -31,43 +32,35 @@ export function prepareDataset(rows) {
   };
 }
 
-function createMunicipality(row) {
+function createMunicipality(geometryRow, indicatorRow) {
   const feature = {
     type: 'Feature',
-    properties: row,
-    geometry: projectGeometry(row.geometry),
+    properties: { name: geometryRow.name },
+    geometry: validateGeometry(geometryRow.geometry),
   };
   normalizeWinding(feature);
 
   const values = {};
   for (const indicator of INDICATORS) {
-    values[indicator.key] = toNumber(row[indicator.property]);
+    values[indicator.key] = toNumber(indicatorRow[indicator.property]);
   }
 
   return {
-    id: String(row.id),
-    name: row.name,
+    id: geometryRow.name,
+    name: geometryRow.name,
     groupName: 'Belgique',
-    gpCount: toNumber(row.boundary_doctors),
+    practitionerCount: toNumber(indicatorRow.doctors),
     values,
     feature,
   };
 }
 
-/** GeoParquet coordinates use EPSG:3812; D3's geographic projection needs WGS84. */
-function projectGeometry(geometry) {
+/** The shared geometry file already contains WGS84 coordinates. */
+function validateGeometry(geometry) {
   if (!geometry?.type || !Array.isArray(geometry.coordinates)) {
     throw new Error('Parquet row is missing a supported municipality geometry.');
   }
-  return {
-    type: geometry.type,
-    coordinates: mapCoordinates(geometry.coordinates),
-  };
-}
-
-function mapCoordinates(value) {
-  if (typeof value[0] === 'number') return proj4(BELGIAN_LAMBERT_2008, 'EPSG:4326', value.slice(0, 2));
-  return value.map(mapCoordinates);
+  return geometry;
 }
 
 /** Sorted (ascending) finite values of every indicator, keyed by indicator. */

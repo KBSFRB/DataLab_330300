@@ -1,14 +1,18 @@
 # Médecins généralistes en Belgique – carte par commune
 
-Site statique (Alpine.js, D3, hyparquet et proj4 en modules ES, sans étape de build).
+Site statique (Alpine.js, D3 et hyparquet en modules ES, sans étape de build).
 
 ## Données
 
-Le site lit le fichier GeoParquet ici :
+Le site lit les géométries WGS84 partagées ici :
 
-    data/municipality_accessibility_3km.parquet
+    data/municipality_geometry_WGS84.parquet
 
-Le chargement et le décodage sont faits dans le navigateur avec hyparquet. Les géométries EPSG:3812 sont converties en coordonnées WGS84 pour D3 avec proj4. Le chemin est défini dans `js/config.js`.
+Les indicateurs sont chargés depuis un fichier par profession, par exemple :
+
+    data/municipality_accessibility_3km_gp.parquet
+
+Le chargement et le décodage sont faits dans le navigateur avec hyparquet. Les indicateurs sont associés aux géométries par le nom de la commune. Les géométries sont déjà en WGS84. Les professions et leurs fichiers sont définis dans `js/config.js`.
 
 ## Lancer le site
 

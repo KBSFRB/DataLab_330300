@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Médecins généralistes en Belgique – carte par commune</title>
-  <meta name="description" content="Densité et accessibilité aux médecins généralistes par commune en Belgique.">
+  <title>Accessibilité aux soins en Belgique – carte par commune</title>
+  <meta name="description" content="Densité et accessibilité aux professionnels de santé par commune en Belgique.">
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Third-party libraries are resolved through an import map, so modules can use bare specifiers. -->
@@ -13,8 +13,7 @@
       "imports": {
         "d3": "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm",
         "alpinejs": "https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/+esm",
-        "hyparquet": "https://cdn.jsdelivr.net/npm/hyparquet@1.31.5/+esm",
-        "proj4": "https://cdn.jsdelivr.net/npm/proj4@2.12.1/+esm"
+        "hyparquet": "https://cdn.jsdelivr.net/npm/hyparquet@1.31.5/+esm"
       }
     }
   </script>
@@ -25,9 +24,18 @@
 
     <header class="app__header">
       <div>
-        <h1 class="app__title">Médecins généralistes en Belgique</h1>
+        <h1 class="app__title">Accessibilité aux soins en Belgique</h1>
         <p class="app__subtitle">Densité et accessibilité, par commune</p>
       </div>
+
+      <label class="profession-picker">
+        <span class="profession-picker__label">Profession</span>
+        <select x-model="professionKey" aria-label="Profession affichée sur la carte">
+          <template x-for="profession in professions" :key="profession.key">
+            <option :value="profession.key" x-text="profession.label"></option>
+          </template>
+        </select>
+      </label>
 
       <fieldset class="picker">
         <legend class="sr-only">Indicateur affiché sur la carte</legend>
@@ -73,7 +81,7 @@
           <div>
             <h2 class="popup__title" x-text="selected?.name"></h2>
             <p class="popup__subtitle" x-text="selected?.groupName"></p>
-            <p class="popup__meta" x-text="selected?.gpSummary"></p>
+            <p class="popup__meta" x-text="selected?.countSummary"></p>
           </div>
           <button type="button" class="popup__close" @click="closePopup()" aria-label="Fermer">×</button>
         </header>
