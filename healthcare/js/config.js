@@ -1,7 +1,16 @@
 import { interpolateBuPu, interpolateOrRd, interpolateYlGnBu, quantile } from "d3";
 
-/** Location of the GeoParquet file, relative to index.html. */
-export const DATA_URL = "data/municipality_accessibility_3km.parquet";
+/** Location of the shared geometry GeoParquet file, relative to index.html. */
+export const GEOMETRY_URL = "data/municipality_geometry_WGS84.parquet";
+
+/** Indicator files available on the map. */
+export const PROFESSIONS = [
+  { key: 'gp', label: 'Médecins généralistes', file: 'data/municipality_accessibility_3km_gp.parquet', countLabel: 'médecin généraliste', countLabelPlural: 'médecins généralistes' },
+  { key: 'dentiste', label: 'Dentistes', file: 'data/municipality_accessibility_3km_dentiste.parquet', countLabel: 'dentiste', countLabelPlural: 'dentistes' },
+  { key: 'kinesitherapeute', label: 'Kinésithérapeutes', file: 'data/municipality_accessibility_3km_kinesitherapeute.parquet', countLabel: 'kinésithérapeute', countLabelPlural: 'kinésithérapeutes' },
+  { key: 'pharmacien', label: 'Pharmaciens', file: 'data/municipality_accessibility_3km_pharmacien.parquet', countLabel: 'pharmacien', countLabelPlural: 'pharmaciens' },
+  { key: 'sage_femme', label: 'Sages-femmes', file: 'data/municipality_accessibility_3km_sage_femme.parquet', countLabel: 'sage-femme', countLabelPlural: 'sages-femmes' },
+];
 
 /** Fill color of municipalities without a value for the selected indicator. */
 export const NO_DATA_COLOR = "#d9dde3";
@@ -22,9 +31,9 @@ export const NO_DATA_COLOR = "#d9dde3";
 export const INDICATORS = [
   {
     key: "density",
-    property: "boundary_doctors_per_10000",
+    property: "doctors_per_10000",
     label: "Densité",
-    description: "Médecins généralistes pour 10 000 habitants",
+    description: "Professionnels pour 10 000 habitants",
     decimals: 1,
     valueSuffix: "",
     interpolator: interpolateYlGnBu,
@@ -35,7 +44,7 @@ export const INDICATORS = [
     key: "twoSfca",
     property: "two_sfca_score",
     label: "Accessibilité 2SFCA",
-    description: "Score d’accessibilité aux médecins (2SFCA)",
+    description: "Score d’accessibilité (2SFCA)",
     decimals: 4,
     valueSuffix: "",
     interpolator: interpolateYlGnBu,

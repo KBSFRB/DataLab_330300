@@ -1,5 +1,5 @@
 import { renderComparisons } from './charts.js';
-import { DATA_URL, INDICATORS, NO_DATA_COLOR } from './config.js';
+import { GEOMETRY_URL, INDICATORS, NO_DATA_COLOR, PROFESSIONS } from './config.js';
 import { loadParquet, prepareDataset } from './data.js';
 import { formatValue } from './format.js';
 import { createMap } from './map.js';
@@ -7,9 +7,8 @@ import { createColorScales, gradientCss } from './scales.js';
 
 const ZOOM_STEP = 1.6;
 
-const LOAD_ERROR_MESSAGE =
-  `Impossible de charger les données (${DATA_URL}). ` +
-  'Vérifiez que le fichier est présent et que le site est servi par un serveur HTTP.';
+const INDICATOR_COLUMNS = ['name', 'doctors', ...INDICATORS.map(({ property }) => property)];
+const GEOMETRY_COLUMNS = ['name', 'geometry'];
 
 /**
  * Alpine component driving the whole page.
@@ -22,9 +21,13 @@ export function createApp() {
   let dataset = null;
   let scales = null;
   let mapView = null;
+  let geometryRows = null;
+  let loadVersion = 0;
 
   return {
     // Reactive state used by the template.
+    professions: PROFESSIONS.map(({ key, label }) => ({ key, label })),
+    professionKey: 'gp',
     indicators: INDICATORS.map(({ key, label }) => ({ key, label })),
     indicatorKey: INDICATORS[0].key,
     status: 'loading', // 'loading' | 'ready' | 'error'
@@ -36,24 +39,49 @@ export function createApp() {
 
     async init() {
       try {
-        dataset = prepareDataset(await loadParquet(DATA_URL));
+        geometryRows = await loadParquet(GEOMETRY_URL, GEOMETRY_COLUMNS);
+        await this.loadProfession(this.professionKey);
       } catch (error) {
         console.error(error);
         this.status = 'error';
-        this.errorMessage = LOAD_ERROR_MESSAGE;
+        this.errorMessage = 'Impossible de charger les données. Vérifiez que les fichiers Parquet sont présents et que le site est servi par un serveur HTTP.';
         return;
       }
-
-      scales = createColorScales(dataset);
-      mapView = createMap(this.$refs.map, {
-        municipalities: dataset.municipalities,
-        onSelect: (municipality, anchor) => this.openPopup(municipality, anchor),
-        onDeselect: () => this.closePopup(),
-      });
-
-      this.status = 'ready';
-      this.applyIndicator();
+      this.$watch('professionKey', (key) => this.loadProfession(key));
       this.$watch('indicatorKey', () => this.applyIndicator());
+    },
+
+    /** Loads the selected profession's indicators and joins them to shared geometry. */
+    async loadProfession(key) {
+      const version = ++loadVersion;
+      const profession = PROFESSIONS.find((item) => item.key === key);
+      try {
+        const indicatorRows = await loadParquet(profession.file, INDICATOR_COLUMNS);
+        if (version !== loadVersion) return;
+
+        dataset = prepareDataset(geometryRows, indicatorRows);
+        scales = createColorScales(dataset);
+        if (!mapView) {
+          mapView = createMap(this.$refs.map, {
+            municipalities: dataset.municipalities,
+            onSelect: (municipality, anchor) => this.openPopup(municipality, anchor),
+            onDeselect: () => this.closePopup(),
+          });
+        } else {
+          mapView.setMunicipalities(dataset.municipalities);
+        }
+
+        this.status = 'ready';
+        this.errorMessage = '';
+        this.selected = null;
+        mapView.setSelected(null);
+        this.applyIndicator();
+      } catch (error) {
+        if (version !== loadVersion) return;
+        console.error(error);
+        this.status = 'error';
+        this.errorMessage = `Impossible de charger les données pour ${profession.label}. Vérifiez que le fichier ${profession.file} est présent.`;
+      }
     },
 
     /** Recolors the map and refreshes the legend for the chosen indicator. */
@@ -75,7 +103,7 @@ export function createApp() {
       this.selected = {
         name: municipality.name,
         groupName: municipality.groupName,
-        gpSummary: describeGpCount(municipality.gpCount),
+        countSummary: describeCount(municipality.practitionerCount, PROFESSIONS.find(({ key }) => key === this.professionKey)),
       };
       // Open the popup on the side opposite to the click, so it never hides the municipality.
       this.popupSide = anchor.x < anchor.width / 2 ? 'right' : 'left';
@@ -104,8 +132,8 @@ export function createApp() {
   };
 }
 
-function describeGpCount(count) {
+function describeCount(count, profession) {
   if (!Number.isFinite(count)) return '';
-  const plural = count > 1 ? 's' : '';
-  return `${count} médecin${plural} généraliste${plural}`;
+  const label = count > 1 ? profession.countLabelPlural : profession.countLabel;
+  return `${count} ${label}`;
 }

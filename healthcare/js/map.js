@@ -44,7 +44,7 @@ export function createMap(container, { municipalities, onSelect, onDeselect }) {
   // Project every municipality once; the outlines below reuse the result.
   const pathData = new Map(municipalities.map((municipality) => [municipality.id, path(municipality.feature)]));
 
-  const paths = viewport
+  let paths = viewport
     .append('g')
     .selectAll('path')
     .data(municipalities, (municipality) => municipality.id)
@@ -97,6 +97,26 @@ export function createMap(container, { municipalities, onSelect, onDeselect }) {
           (municipality) =>
             `${municipality.name} (${municipality.groupName}) : ${formatValue(indicator, value(municipality))}`,
         );
+    },
+
+    /** Rebinds map paths when a different profession's municipality values load. */
+    setMunicipalities(nextMunicipalities) {
+      paths = viewport
+        .select('g')
+        .selectAll('path.municipality')
+        .data(nextMunicipalities, (municipality) => municipality.id)
+        .join('path')
+        .attr('class', 'municipality')
+        .attr('d', (municipality) => pathData.get(municipality.id));
+      paths.selectAll('title').data((municipality) => [municipality]).join('title');
+
+      paths
+        .on('mouseenter', (event, municipality) => hoverOutline.attr('d', pathData.get(municipality.id)))
+        .on('mouseleave', () => hoverOutline.attr('d', null))
+        .on('click', (event, municipality) => {
+          const box = container.getBoundingClientRect();
+          onSelect(municipality, { x: event.clientX - box.left, width: box.width });
+        });
     },
 
     /** Highlights a municipality, or clears the highlight when given null. */
